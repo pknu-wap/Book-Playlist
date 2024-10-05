@@ -1,46 +1,53 @@
-.App {
-  background-color: black;
-  color: white;
+/* 기본 레이아웃 스타일 */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
-.header {
+header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #ddd;
-  box-shadow:0 4px 4px rgb(0, 0, 0, 0.1);
+  background-color: #f4f4f4;
+  padding: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.search-bar {
-  flex-grow: 1;
-  margin: 0 20px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  outline: none;
-}
-
-.user-menu a {
-  margin-left: 20px;
+  width: 50px;
   text-decoration: none;
   color: #333;
 }
 
+.search-bar {
+  width:50%;
+  margin-right: 200px;
+  flex-grow: 1;
+  margin-left: 200px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+.user-menu a {
+  margin-left: 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+/* 레이아웃 */
+.container {
+  display: flex;
+  flex-direction: row; /* 가로 배치 */
+  height: 100vh; /* 화면 전체 높이 */
+}
+
 .sidebar {
-  width: 150px;
-  height: 6000px;
+  min-width: 200px;
+  width: 200px;
+  background-color: #f8f8f8;
   padding: 20px;
-  background-color: #ffffff;
-  border-right:1px solid #c7c7c7;
-  box-shadow:0 0 4px rgb(0, 0, 0, 0.1);
+  height: 100vh; /* 전체 화면 높이 */
 }
 
 .sidebar nav ul {
@@ -55,10 +62,117 @@
 .sidebar nav ul li a {
   text-decoration: none;
   color: #333;
-  font-size: 13px;
 }
 
-.sidebar nav ul li a:hover {
-  text-decoration: underline;
+.content {
+  flex-grow: 1;
+  padding: 20px;
 }
 
+.bestseller-container {
+  margin-left:100px;
+  display:table;
+  background-color: #ffffff; /* 회색 배경 */
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.bestseller-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.bestseller-item {
+  flex: 1 1 calc(10% - 10px); /* 각 아이템의 너비 감소 */
+  margin: 5px;
+  text-align: center;
+}
+
+.bestseller-item img {
+  width: 50%; /* 이미지의 너비를 줄임 */
+  height: auto;
+}
+
+.bestseller-title {
+  font-size: 30px; /* 제목의 폰트 크기를 줄임 */
+  margin-bottom: 5px;
+}
+
+.bestseller-author {
+  font-size: 10px; /* 저자 폰트 크기를 줄임 */
+  color: gray;
+}
+.pagination-container {
+  margin-left: 20px;
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  margin-top: 20px;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+  display: flex;
+  list-style: none; /* 점 제거 */
+  padding: 0;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  text-decoration: none;
+  padding: 8px 12px;
+  background-color: #c8c4c4;
+  color: rgb(255, 255, 255);
+  border-radius: 5px;
+  flex: 1;
+  text-align: center;
+}
+
+.page-link:hover {
+  background-color: #d9d6d6;
+}
+
+.active .page-link {
+  background-color: #afb1b2;
+}
+
+.TodayPlaylist-container {
+  margin-left:100px;
+  display:table-call;
+  background-color: #ffffff; /* 흰색 배경 */
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.TodayPlaylist-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.TodayPlaylist-item {
+  flex: 1 1 calc(10% - 10px); /* 각 아이템의 너비 감소 */
+  margin: 5px;
+  text-align: center;
+}
+
+.TodayPlaylist-item img {
+  width: 50%; /* 이미지의 너비를 줄임 */
+  height: auto;
+}
+
+.TodayPlaylist-title {
+  font-size: 30px; /* 제목의 폰트 크기를 줄임 */
+  margin-bottom: 5px;
+}
+
+.TodayPlaylist-author {
+  font-size: 10px; /* 저자 폰트 크기를 줄임 */
+  color: gray;
+}
