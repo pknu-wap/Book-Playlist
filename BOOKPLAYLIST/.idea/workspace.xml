@@ -33,6 +33,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -52,6 +53,7 @@
   "keyToString": {
     "Gradle.BOOKPLAYLIST [:BookplaylistApplication.main()].executor": "Run",
     "Gradle.BOOKPLAYLIST [:Main.main()].executor": "Run",
+    "Gradle.BookplaylistApplicationTests.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "kotlin-language-version-configured": "true",

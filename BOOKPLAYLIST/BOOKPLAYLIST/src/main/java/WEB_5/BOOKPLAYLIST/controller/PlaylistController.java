@@ -1,11 +1,11 @@
 // controller/PlaylistController.java
-package controller;
+package WEB_5.BOOKPLAYLIST.controller;
 
-import domain.entity.Playlist;
+import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
+import WEB_5.BOOKPLAYLIST.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.PlaylistService;
 
 import java.util.List;
 

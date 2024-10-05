@@ -1,7 +1,7 @@
 // repository/BookRepository.java
-package repository;
+package WEB_5.BOOKPLAYLIST.repository;
 
-import domain.entity.Book;
+import WEB_5.BOOKPLAYLIST.domain.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

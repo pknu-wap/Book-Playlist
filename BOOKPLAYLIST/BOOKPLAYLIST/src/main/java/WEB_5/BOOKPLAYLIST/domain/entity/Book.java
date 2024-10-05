@@ -1,4 +1,6 @@
-package domain.entity;
+package WEB_5.BOOKPLAYLIST.domain.entity;
+
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,6 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

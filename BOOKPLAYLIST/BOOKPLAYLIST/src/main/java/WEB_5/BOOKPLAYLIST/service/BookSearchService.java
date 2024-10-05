@@ -1,14 +1,14 @@
 // service/BookSearchService.java
-package service;
+package WEB_5.BOOKPLAYLIST.service;
 
-import domain.dto.NaverBookResponse;
+import WEB_5.BOOKPLAYLIST.domain.dto.NaverBookResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.net.URI;
 
 @Service
 public class BookSearchService {
@@ -20,12 +20,14 @@ public class BookSearchService {
     private String clientSecret;
 
     public ResponseEntity<NaverBookResponse> searchBooks(String query) {
-        String apiUrl;
-        try {
-            apiUrl = "https://openapi.naver.com/v1/search/book.json?query=" + URLEncoder.encode(query, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        // URI 구성
+        URI uri = UriComponentsBuilder
+                .fromUriString("https://openapi.naver.com")
+                .path("/v1/search/book.json")
+                .queryParam("query", query)
+                .encode()
+                .build()
+                .toUri();
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Naver-Client-Id", clientId);
@@ -36,7 +38,7 @@ public class BookSearchService {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<NaverBookResponse> response;
         try {
-            response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, NaverBookResponse.class);
+            response = restTemplate.exchange(uri, HttpMethod.GET, entity, NaverBookResponse.class);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
         }

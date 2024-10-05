@@ -1,4 +1,4 @@
-package domain.entity;
+package WEB_5.BOOKPLAYLIST.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 

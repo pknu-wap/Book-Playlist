@@ -1,11 +1,11 @@
 // controller/BookSearchController.java
-package controller;
+package WEB_5.BOOKPLAYLIST.controller;
 
-import domain.dto.NaverBookResponse;
+import WEB_5.BOOKPLAYLIST.service.BookSearchService;
+import WEB_5.BOOKPLAYLIST.domain.dto.NaverBookResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.BookSearchService;
 
 @RestController
 @RequestMapping("/api/search")

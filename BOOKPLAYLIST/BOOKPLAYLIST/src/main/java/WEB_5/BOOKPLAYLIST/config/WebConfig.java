@@ -1,5 +1,5 @@
 // config/WebConfig.java
-package config;
+package WEB_5.BOOKPLAYLIST.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;

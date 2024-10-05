@@ -1,16 +1,16 @@
 // service/PlaylistService.java
-package service;
+package WEB_5.BOOKPLAYLIST.service;
 
-import domain.dto.NaverBookResponse;
-import domain.entity.Book;
-import domain.entity.Playlist;
-import domain.entity.User;
+import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
+import WEB_5.BOOKPLAYLIST.repository.BookRepository;
+import WEB_5.BOOKPLAYLIST.repository.PlaylistRepository;
+import WEB_5.BOOKPLAYLIST.domain.dto.NaverBookResponse;
+import WEB_5.BOOKPLAYLIST.domain.entity.Book;
+import WEB_5.BOOKPLAYLIST.domain.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import repository.BookRepository;
-import repository.PlaylistRepository;
-import repository.UserRepository;
+import WEB_5.BOOKPLAYLIST.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
