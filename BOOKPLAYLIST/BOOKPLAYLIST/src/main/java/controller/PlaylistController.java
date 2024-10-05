@@ -1,3 +1,4 @@
+// controller/PlaylistController.java
 package controller;
 
 import domain.entity.Playlist;
@@ -7,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import service.PlaylistService;
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/playlist")
@@ -26,13 +26,15 @@ public class PlaylistController {
 
     // 책을 플레이리스트에 추가 (POST /api/playlist/addBook)
     @PostMapping("/addBook")
-    public ResponseEntity<String> addBookToPlaylist(@RequestParam Long playlistId, @RequestParam Long bookId) {
-        return playlistService.addBookToPlaylist(playlistId, bookId);
+    public ResponseEntity<String> addBookToPlaylist(@RequestParam Long playlistId,
+                                                    @RequestParam String isbn) {
+        return playlistService.addBookToPlaylist(playlistId, isbn);
     }
 
     // 플레이리스트 내 순서 조정 (PATCH /api/playlist/updateOrder)
     @PatchMapping("/updateOrder")
-    public ResponseEntity<String> updateBookOrder(@RequestParam Long playlistId, @RequestBody List<Long> bookOrder) {
+    public ResponseEntity<String> updateBookOrder(@RequestParam Long playlistId,
+                                                  @RequestBody List<Long> bookOrder) {
         return playlistService.updateBookOrder(playlistId, bookOrder);
     }
 
@@ -42,7 +44,7 @@ public class PlaylistController {
         return playlistService.getPlaylist(playlistId);
     }
 
-    // 공개된 모든 플레이리스트 조회 (GET /api/playlists)
+    // 공개된 모든 플레이리스트 조회 (GET /api/playlist/playlists)
     @GetMapping("/playlists")
     public ResponseEntity<List<Playlist>> getAllPlaylists() {
         return playlistService.getAllPlaylists();
