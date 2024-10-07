@@ -54,6 +54,7 @@
     "Gradle.BOOKPLAYLIST [:BookplaylistApplication.main()].executor": "Run",
     "Gradle.BOOKPLAYLIST [:Main.main()].executor": "Run",
     "Gradle.BookplaylistApplicationTests.executor": "Run",
+    "Gradle.Gradle 종속성 로드.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "kotlin-language-version-configured": "true",
