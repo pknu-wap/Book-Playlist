@@ -56,7 +56,7 @@ export default function Register() {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/checkUserld', {
+            const response = await fetch('http://localhost:3000/api/auth/checkUserld', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -90,7 +90,7 @@ export default function Register() {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/checkUsername', {
+            const response = await fetch('http://localhost:3000/api/auth/checkUsername', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -133,7 +133,7 @@ export default function Register() {
             return;
         }
         try {
-            const response = await fetch('http://localhost:5000/api/auth/signup', {
+            const response = await fetch('http://localhost:3000/api/auth/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
