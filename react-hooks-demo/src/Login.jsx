@@ -31,7 +31,7 @@ export default function Login() {
     // 로그인 버튼 클릭 핸들러
     const onClickConfirmButton = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/auth/login', {
+            const response = await fetch('http://localhost:8080/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

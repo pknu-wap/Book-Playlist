@@ -4,8 +4,8 @@ import './index.css'; // 스타일 파일 경로 확인 필수
 
 export default function Register() {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [password1, setPassword1] = useState(''); // password1으로 변경
+    const [password2, setPassword2] = useState(''); // password2로 추가
     const [username, setUsername] = useState('');
 
     const [emailValid, setEmailValid] = useState(false);
@@ -28,17 +28,17 @@ export default function Register() {
     };
 
     // 비밀번호 입력 핸들러 (유효성 검사 포함)
-    const handlePassword = (e) => {
-        setPassword(e.target.value);
+    const handlePassword1 = (e) => {
+        setPassword1(e.target.value);
         const regex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
         setPasswordValid(regex.test(e.target.value));
-        setPasswordMatch(e.target.value === confirmPassword);
+        setPasswordMatch(e.target.value === password2); // password1과 password2 일치 확인
     };
 
     // 비밀번호 재확인 입력 핸들러
-    const handleConfirmPassword = (e) => {
-        setConfirmPassword(e.target.value);
-        setPasswordMatch(e.target.value === password);
+    const handlePassword2 = (e) => {
+        setPassword2(e.target.value);
+        setPasswordMatch(e.target.value === password1); // password1과 password2 일치 확인
     };
 
     // 사용자 이름 입력 핸들러
@@ -56,7 +56,7 @@ export default function Register() {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/auth/checkUserld', {
+            const response = await fetch('http://localhost:8080/api/auth/checkUserId', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -66,7 +66,7 @@ export default function Register() {
 
             if (response.ok) {
                 const data = await response.json();
-                if (data.available) {
+                if (data.success) {
                     alert('사용 가능한 이메일입니다.');
                     setIsEmailChecked(true);
                 } else {
@@ -90,7 +90,7 @@ export default function Register() {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/auth/checkUsername', {
+            const response = await fetch('http://localhost:8080/api/auth/checkUsername', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -100,19 +100,19 @@ export default function Register() {
 
             if (response.ok) {
                 const data = await response.json();
-                if (data.available) {
-                    alert('사용 가능한 아이디입니다.');
+                if (data.success) {
+                    alert('사용 가능한 닉네임입니다.');
                     setIsUsernameChecked(true);
                 } else {
-                    alert('이미 사용 중인 아이디입니다.');
+                    alert('이미 사용 중인 닉네임입니다.');
                     setIsUsernameChecked(false);
                 }
             } else {
                 alert('서버 응답에 문제가 발생했습니다. 다시 시도해 주세요.');
             }
         } catch (error) {
-            console.error('아이디 중복 확인 오류:', error);
-            alert('아이디 중복 확인 중 오류가 발생했습니다. 다시 시도해 주세요.');
+            console.error('닉네임 중복 확인 오류:', error);
+            alert('닉네임 중복 확인 중 오류가 발생했습니다. 다시 시도해 주세요.');
         }
     };
 
@@ -133,14 +133,15 @@ export default function Register() {
             return;
         }
         try {
-            const response = await fetch('http://localhost:3000/api/auth/signup', {
+            const response = await fetch('http://localhost:8080/api/auth/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     email: email,
-                    password: password,
+                    password1: password1,  // password1으로 전송
+                    password2: password2,  // password2으로 전송
                     username: username
                 })
             });
@@ -197,14 +198,14 @@ export default function Register() {
                                 value={email}
                                 onChange={handleEmail}
                             />
-                            <button 
-                                onClick={checkEmailAvailability} 
-                                className="bottomButton" 
-                                style={{ 
-                                    marginLeft: "10px", 
+                            <button
+                                onClick={checkEmailAvailability}
+                                className="bottomButton"
+                                style={{
+                                    marginLeft: "10px",
                                     width: "30%", // 버튼 폭을 조절
                                     height: "48px", // 회원가입 버튼과 같은 높이로 조절
-                                    fontSize: "0.9em" 
+                                    fontSize: "0.9em"
                                 }}>
                                 중복 확인
                             </button>
@@ -223,12 +224,12 @@ export default function Register() {
                                 type='password'
                                 className="input"
                                 placeholder="비밀번호를 입력하세요"
-                                value={password}
-                                onChange={handlePassword}
+                                value={password1}
+                                onChange={handlePassword1}
                             />
                         </div>
                         <div className="errorMessageWrap">
-                            {!passwordValid && password.length > 0 && (
+                            {!passwordValid && password1.length > 0 && (
                                 <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>
                             )}
                         </div>
@@ -240,12 +241,12 @@ export default function Register() {
                                 type='password'
                                 className="input"
                                 placeholder="비밀번호를 한번 더 입력하세요"
-                                value={confirmPassword}
-                                onChange={handleConfirmPassword}
+                                value={password2}
+                                onChange={handlePassword2}
                             />
                         </div>
                         <div className="errorMessageWrap">
-                            {!passwordMatch && confirmPassword.length > 0 && (
+                            {!passwordMatch && password2.length > 0 && (
                                 <div>비밀번호가 일치하지 않습니다.</div>
                             )}
                         </div>
@@ -260,11 +261,11 @@ export default function Register() {
                                 value={username}
                                 onChange={handleUsername}
                             />
-                            <button 
-                                onClick={checkUsernameAvailability} 
-                                className="bottomButton" 
-                                style={{ 
-                                    marginLeft: "10px", 
+                            <button
+                                onClick={checkUsernameAvailability}
+                                className="bottomButton"
+                                style={{
+                                    marginLeft: "10px",
                                     width: "30%", // 버튼 폭을 조절
                                     height: "48px", // 회원가입 버튼과 같은 높이로 조절
                                     fontSize: "0.9em"
@@ -285,3 +286,25 @@ export default function Register() {
         </div>
     );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
