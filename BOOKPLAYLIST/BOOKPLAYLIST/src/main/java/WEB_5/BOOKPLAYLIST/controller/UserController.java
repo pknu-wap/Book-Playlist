@@ -38,7 +38,9 @@ public class UserController {
     }
 
     @PostMapping("/checkUserId")
-    public ResponseEntity<Map<String, Object>> checkUserid(@RequestBody String email) {
+    public ResponseEntity<Map<String, Object>> checkUserid(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        System.out.println("Received email: " + email);
         Map<String, Object> response = new HashMap<>();
         boolean isDuplicate = userService.isEmailDuplicate(email);
         if (isDuplicate) {
@@ -51,8 +53,11 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+
+
     @PostMapping("/checkUsername")
     public ResponseEntity<Map<String, Object>> checkUsername(@RequestBody String username) {
+        System.out.println("Received username: " + username); // 추가
         Map<String, Object> response = new HashMap<>();
         boolean isDuplicate = userService.isUsernameDuplicate(username);
         if (isDuplicate) {
@@ -64,6 +69,7 @@ public class UserController {
         response.put("message", "사용 가능한 닉네임입니다.");
         return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/login")
     public ResponseEntity<Map<String, Object>> login() {

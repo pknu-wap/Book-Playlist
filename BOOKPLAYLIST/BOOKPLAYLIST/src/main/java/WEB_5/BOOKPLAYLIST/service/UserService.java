@@ -24,9 +24,13 @@ public class UserService {
 
     public boolean isEmailDuplicate(String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        return user.isPresent();  // 이메일이 이미 존재하면 true 반환
+        if (user.isPresent()) {
+            System.out.println("이메일 중복: " + email); // 추가: 이메일이 이미 존재하는 경우 로그 출력
+            return true;
+        }
+        System.out.println("이메일 사용 가능: " + email); // 추가: 이메일이 사용 가능한 경우 로그 출력
+        return false;
     }
-
     public boolean isUsernameDuplicate(String username){
         Optional<User> user = userRepository.findByUsername(username);
         return user.isPresent();
