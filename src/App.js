@@ -61,17 +61,17 @@ const Header = () => {
   return (
     <header className="header">
 
-      <img src="logo192.png" alt="책 이미지" className='logo' />
+      <img src="logo192.png" alt="책 이미지" className='logo' href="./App.js"/>
 
       <SearchBar />
-
+      <button className="login">로그인/회원가입</button>
     </header>
   );
 };
 
 const SearchBar = () => {
   return (
-    <input className="search-bar" type="text" placeholder="검색어를 입력하세요" />
+    <input className="search-bar" type="text" placeholder=" 🔍 검색어를 입력하세요" />
   );
 };
 
@@ -91,6 +91,14 @@ const Sidebar = () => {
   );
 };
 
+const PlaylistButton = () => {
+  return (
+    <div className="MakePlaylist">
+      <button className="playlistButton" type="button">플레이리스트 만들기</button>
+    </div>
+  );
+}
+
 const BestSeller = ({ posts, loading }) => {
   if (loading) {
     return <h2>Loading...</h2>;
@@ -106,7 +114,7 @@ const BestSeller = ({ posts, loading }) => {
             <div key={post.id} className='bestseller-item'>
               <img src="logo192.png" alt="책 이미지" className='bestseller-image' />
               <h3 className='bestseller-book-title'>{post.title}</h3>
-              <p className='bestseller-author'>저자: {post.author || '작가명'}</p>
+              <p className='bestseller-author'><span className="author">저자: {post.author || '작가명'}</span></p>
             </div>
           ))}
         </div>
@@ -198,6 +206,7 @@ function App() {
               />
             </div>
           </div>
+            <PlaylistButton></PlaylistButton>
         </main>   
       </div>
     </div>
