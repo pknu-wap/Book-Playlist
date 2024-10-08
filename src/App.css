@@ -1,32 +1,86 @@
+.login {
+  margin-right: 10px;
+  position: absolute;
+  width: 100px;
+  height:50px;
+}
+
+.MakePlaylist { 
+  position: sticky;
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  bottom: 0;
+  margin-bottom: 5px;
+}
+
+.playlistButton {
+    /* Rectangle 5 */
+
+  width: 350px;
+  height: 50px;
+
+  background: #999999;
+  box-shadow: 0px 0px 10px #999999;
+  border-radius: 30px;
+
+}
+
+
 /* 기본 레이아웃 스타일 */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  max-width:100%;
+  width:1500px;    
+  margin-left: auto;    
+  margin-right: auto;
 }
 
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f4f4f4;
-  padding: 30px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Rectangle 12 */
+
+height: 130px;
+max-width:100%;
+width:1500px;    
+margin-left: auto;    
+margin-right: auto;
+
+background: #FFFFFF;
+box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+
 }
 
 .logo {
-  width: 50px;
-  text-decoration: none;
-  color: #333;
+  /* Group 7 */
+
+  position: absolute;
+  width: 219px;
+  height: 70px;
+  padding-left:10px;
+  top: 29px;
+  margin-left: auto;    
+  margin-right: auto;
 }
 
 .search-bar {
-  width:50%;
-  margin-right: 200px;
-  flex-grow: 1;
-  margin-left: 200px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
+  /* Rectangle 5 */
+
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 690px;
+  height: 62px;
+  top: 34px;
+
+  background: #FFFFFF;
+  border: 2px solid #9D9D9D;
+  box-shadow: 0px 0px 7px #999999;
+  border-radius: 30px;
+
+  padding-left:50px;
+  margin-left: 500px;    
+  margin-right: auto;
 }
 
 .user-menu a {
@@ -43,6 +97,7 @@ header {
 }
 
 .sidebar {
+  margin-top:10px;
   min-width: 200px;
   width: 200px;
   background-color: #f8f8f8;
@@ -76,6 +131,7 @@ header {
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
+  transition: transform 0.3s ease;
 }
 
 .bestseller-list {
@@ -93,11 +149,21 @@ header {
 .bestseller-item img {
   width: 50%; /* 이미지의 너비를 줄임 */
   height: auto;
+  transition: transform 0.3s ease;
 }
+
+.bestseller-item img:hover {
+  transform: scale(1.2);
+}
+
 
 .bestseller-title {
   font-size: 30px; /* 제목의 폰트 크기를 줄임 */
   margin-bottom: 5px;
+}
+
+.bestseller-book-title{
+  font-size: 15px;
 }
 
 .bestseller-author {
@@ -105,7 +171,6 @@ header {
   color: gray;
 }
 .pagination-container {
-  margin-left: 20px;
   display: flex;
   justify-content: center;
   align-items:center;
@@ -132,15 +197,6 @@ header {
   flex: 1;
   text-align: center;
 }
-
-.page-link:hover {
-  background-color: #d9d6d6;
-}
-
-.active .page-link {
-  background-color: #afb1b2;
-}
-
 .TodayPlaylist-container {
   margin-left:100px;
   display:table-call;
@@ -165,6 +221,11 @@ header {
 .TodayPlaylist-item img {
   width: 50%; /* 이미지의 너비를 줄임 */
   height: auto;
+  transition: transform 0.3s ease;
+}
+
+.TodayPlaylist-item img:hover {
+  transform: scale(1.2); 
 }
 
 .TodayPlaylist-title {
