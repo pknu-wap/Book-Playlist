@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";  // 페이지 이동을 위한 useNavigate 가져오기
-import './index.css'; // 스타일 파일 경로 확인 필수
+import { useNavigate } from "react-router-dom";  // 페이지 이동을 위한 useNavigate 가져오기import './index.css'; // 스타일 파일 경로 확인 필수
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -46,7 +45,14 @@ export default function Login() {
                 const data = await response.json();
                 if (data.success) {
                     alert('로그인에 성공했습니다.');
-                    navigate('/dashboard'); // 대시보드 페이지로 이동
+
+                    // If a token is returned, store it (e.g., in localStorage)
+                    if (data.token) {
+                        localStorage.setItem('token', data.token);  // Save token for later requests
+                    }
+
+                    // 로그인 성공 시 대시보드 페이지로 이동
+                    navigate('/dashboard'); 
                 } else {
                     alert('로그인 정보가 올바르지 않습니다.');
                 }
