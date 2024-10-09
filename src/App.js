@@ -1,6 +1,15 @@
 import './App.css';
 import React, { useState, useEffect } from "react"; 
 
+// const Slide = () => {
+//   return (
+//     <div className='train'>
+//       <div className='show'>보여줄 화면</div> // 보여줄 화면
+//     </div>
+//   );
+// };
+
+
 const Pagination = ({ totalPosts, postsPerPage, currentPage, setCurrentPage }) => {
   const totalPages = Math.ceil(totalPosts / postsPerPage);
   const pageNumbers = [];
