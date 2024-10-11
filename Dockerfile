@@ -1,11 +1,11 @@
 # 빌드 단계
 FROM openjdk:17-jdk-slim AS build
 
-# 작업 디렉터리 설정
+# 작업 디렉토리 설정
 WORKDIR /app
 
-# 모든 파일을 컨테이너에 복사
-COPY . .
+# BOOKPLAYLIST 폴더의 내용만 복사
+COPY BOOKPLAYLIST/ .
 
 # gradlew에 실행 권한 부여
 RUN chmod +x gradlew
@@ -16,7 +16,7 @@ RUN ./gradlew clean build
 # 실행 단계
 FROM openjdk:17-jdk-slim
 
-# 작업 디렉터리 설정
+# 작업 디렉토리 설정
 WORKDIR /app
 
 # 빌드된 JAR 파일을 복사
