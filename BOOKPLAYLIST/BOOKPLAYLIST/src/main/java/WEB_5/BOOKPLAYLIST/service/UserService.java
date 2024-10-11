@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -36,3 +37,5 @@ public class UserService {
         return user.isPresent();
     }
 }
+
+
