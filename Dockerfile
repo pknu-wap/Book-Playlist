@@ -8,11 +8,10 @@ WORKDIR /app
 COPY . .
 
 # Gradle Wrapper가 있는지 확인하고, Gradle을 설치
-RUN apt-get update && apt-get install -y curl unzip \
+RUN apk update && apk add curl unzip \
     && curl -s "https://get.sdkman.io" | bash \
-    && source "/root/.sdkman/bin/sdkman-init.sh" \
+    && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && sdk install gradle 8.10.2
-
 # Gradle을 사용하여 JAR 파일 빌드
 RUN ./gradlew build
 
