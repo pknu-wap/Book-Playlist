@@ -28,7 +28,7 @@ function Button() {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/search/books`, {
+      const response = await axios.get(`https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books`, {
         params: { query: searchQuery },  // query 파라미터 전달
       });
 
