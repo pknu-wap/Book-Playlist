@@ -22,6 +22,11 @@ public class UserService {
         return user;
     }
 
+    public boolean authenticate(String username, String password){
+        Optional<User> user0pt = userRepository.findByUsername(username);
+        return user0pt.map(user -> passwordEncoder.matches(password, user.getPassword())).orElse(false);
+    }
+
     public boolean isEmailDuplicate(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {

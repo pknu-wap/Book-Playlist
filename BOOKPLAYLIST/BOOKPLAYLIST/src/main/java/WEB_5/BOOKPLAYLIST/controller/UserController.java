@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,10 +74,30 @@ public class UserController {
 
 
     @GetMapping("/login")
-    public ResponseEntity<Map<String, Object>> login() {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginData, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        String username = loginData.get("username");
+        String password = loginData.get("password");
+        if (userService.authenticate(username, password)){
+            session.setAttribute("user", username);
+            response.put("success", true);
+            response.put("message", "로그인 페이지");
+            return ResponseEntity.ok(response);
+        }else{
+            response.put("success", false);
+            response.put("message", "로그인 실패");
+            return ResponseEntity.status(401).body(response);
+        }
+
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Map<String, Object>> logout(HttpSession session){
+        session.invalidate();
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
-        response.put("message", "로그인 페이지");
+        response.put("message", "로그아웃 성공");
         return ResponseEntity.ok(response);
     }
+
 }
