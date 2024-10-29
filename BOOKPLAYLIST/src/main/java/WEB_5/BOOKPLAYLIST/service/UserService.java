@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -23,9 +22,9 @@ public class UserService {
         return user;
     }
 
-    public boolean authenticate(String username, String password){
-        Optional<User> user0pt = userRepository.findByUsername(username);
-        return user0pt.map(user -> passwordEncoder.matches(password, user.getPassword())).orElse(false);
+    public boolean authenticate(String email, String password){
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        return userOpt.map(user -> passwordEncoder.matches(password, user.getPassword())).orElse(false);
     }
 
     public boolean isEmailDuplicate(String email) {
@@ -37,10 +36,12 @@ public class UserService {
         System.out.println("이메일 사용 가능: " + email); // 추가: 이메일이 사용 가능한 경우 로그 출력
         return false;
     }
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     public boolean isUsernameDuplicate(String username){
         Optional<User> user = userRepository.findByUsername(username);
         return user.isPresent();
     }
 }
-
-

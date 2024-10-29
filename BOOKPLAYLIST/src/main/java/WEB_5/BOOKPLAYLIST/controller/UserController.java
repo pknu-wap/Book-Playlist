@@ -1,6 +1,7 @@
 package WEB_5.BOOKPLAYLIST.controller;
 
 import WEB_5.BOOKPLAYLIST.domain.dto.UserCreateForm;
+import WEB_5.BOOKPLAYLIST.domain.entity.User;
 import WEB_5.BOOKPLAYLIST.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,9 +13,10 @@ import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
-@RestController // @Controller를 @RestController로 변경
+@RestController
 @RequestMapping("/api/auth")
 public class UserController {
     private final UserService userService;
@@ -55,8 +57,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-
-
     @PostMapping("/checkUsername")
     public ResponseEntity<Map<String, Object>> checkUsername(@RequestBody String username) {
         System.out.println("Received username: " + username); // 추가
@@ -72,24 +72,36 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginData, HttpSession session) {
         Map<String, Object> response = new HashMap<>();
-        String username = loginData.get("username");
+        String email = loginData.get("email");
         String password = loginData.get("password");
-        if (userService.authenticate(username, password)){
-            session.setAttribute("user", username);
-            response.put("success", true);
-            response.put("message", "로그인 페이지");
-            return ResponseEntity.ok(response);
-        }else{
+        if (userService.authenticate(email, password)){
+            session.setAttribute("user", email); // 세션에 이메일 저장
+            Optional<User> userOpt = userService.findByEmail(email); // 사용자 정보 조회
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                response.put("success", true);
+                response.put("message", "로그인 성공");
+                response.put("user", Map.of(
+                        "username", user.getUsername(),
+                        "email", user.getEmail()
+                ));
+                return ResponseEntity.ok(response);
+            } else {
+                // 이 경우는 거의 발생하지 않겠지만, 예외 처리
+                response.put("success", false);
+                response.put("message", "사용자 정보를 찾을 수 없습니다.");
+                return ResponseEntity.status(500).body(response);
+            }
+        } else {
             response.put("success", false);
             response.put("message", "로그인 실패");
             return ResponseEntity.status(401).body(response);
         }
-
     }
+
 
     @GetMapping("/logout")
     public ResponseEntity<Map<String, Object>> logout(HttpSession session){
@@ -99,5 +111,4 @@ public class UserController {
         response.put("message", "로그아웃 성공");
         return ResponseEntity.ok(response);
     }
-
 }
