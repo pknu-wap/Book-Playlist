@@ -73,7 +73,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginData, HttpSession session) {
         Map<String, Object> response = new HashMap<>();
         String username = loginData.get("username");
