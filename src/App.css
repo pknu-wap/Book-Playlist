@@ -2,11 +2,11 @@
 .login {
   position: absolute;
   margin-left: 1300px;
-  width: 150px;
+  width: 200px;
   height:40px;
-  top: 40px;
+  top: 36px;
   border: none;
-  background-color: #FFFFFF;
+  background: #C6E898;
 }
 
 .MakePlaylist { 
@@ -16,19 +16,17 @@
   align-items:center;
   bottom: 5px;
   margin-bottom: 5px;
+
 }
 
 .playlistButton {
-    /* Rectangle 5 */
-
-  width: 350px;
-  height: 50px;
-
-  background: #999999;
+  width: 464px;
+  height: 60px;
+  background: #66A217;
   box-shadow: 0px 0px 10px #999999;
   border-radius: 30px;
-
 }
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -42,15 +40,13 @@ header {
   top: 0px;
   margin-top: 0;
   padding-top: 0;
-  height: 130px;
+  height: 114px;
   max-width:100%;
   width:1500px;    
   margin-left: auto;    
   margin-right: auto;
-  
-  background: #FFFFFF;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-  
+  background: #C6E898;
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.1);
   }
 .logo {
   /* Group 7 */
@@ -59,7 +55,7 @@ header {
   width: 219px;
   height: 70px;
   padding-left:10px;
-  top: 29px;
+  top: 23px;
   margin-left: auto;    
   margin-right: auto;
 }
@@ -69,17 +65,19 @@ header {
   position: absolute;
   width: 690px;
   height: 62px;
-  top: 34px;
+  top: 24px;
 
   background: #FFFFFF;
-  border: 2px solid #9D9D9D;
-  box-shadow: 0px 0px 7px #999999;
+  border: 2px solid #42ff51;
+  box-shadow: 0px 0px 7px #177728;
   border-radius: 30px;
 
   padding-left:50px;
-  margin-left: 500px;    
+  margin-left: 450px;    
   margin-right: auto;
 }
+
+
 
 .user-menu a {
   margin-left: 10px;
@@ -91,10 +89,11 @@ header {
   margin-top:10px;
   min-width: 200px;
   width: 200px;
-  background-color: #f8f8f8;
+  background-color: #ffffff;
   padding: 20px;
   height: 100vh; /* 전체 화면 높이 */
   list-style: none;
+  border-right: 0.1px solid #e7e4e4;
 }
 
 .sidebar nav ul {
