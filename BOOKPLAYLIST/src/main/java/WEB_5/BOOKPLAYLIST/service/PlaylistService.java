@@ -1,6 +1,7 @@
 // service/PlaylistService.java
 package WEB_5.BOOKPLAYLIST.service;
 
+import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
 import WEB_5.BOOKPLAYLIST.repository.BookRepository;
 import WEB_5.BOOKPLAYLIST.repository.PlaylistRepository;
@@ -14,6 +15,8 @@ import WEB_5.BOOKPLAYLIST.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+
+import static WEB_5.BOOKPLAYLIST.auth.SecurityUtil.getCurrentUserIdFromSession;
 
 @Service
 public class PlaylistService {
@@ -31,8 +34,10 @@ public class PlaylistService {
     private BookSearchService bookSearchService;
 
     // 플레이리스트 생성
-    public ResponseEntity<Playlist> createPlaylist(String title, String description, Long userId) {
+    public ResponseEntity<Playlist> createPlaylist(String title, String description) {
+        Long userId = SecurityUtil.getCurrentUserIdFromSession(); // 세션에서 사용자 ID 가져오기
         Optional<User> userOpt = userRepository.findById(userId);
+
         if (!userOpt.isPresent()) {
             return ResponseEntity.badRequest().body(null);
         }

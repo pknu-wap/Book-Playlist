@@ -1,4 +1,3 @@
-// controller/PlaylistController.java
 package WEB_5.BOOKPLAYLIST.controller;
 
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
@@ -19,9 +18,8 @@ public class PlaylistController {
     // 플레이리스트 생성 (POST /api/playlist/create)
     @PostMapping("/create")
     public ResponseEntity<Playlist> createPlaylist(@RequestParam String title,
-                                                   @RequestParam String description,
-                                                   @RequestParam Long userId) {
-        return playlistService.createPlaylist(title, description, userId);
+                                                   @RequestParam String description) {
+        return playlistService.createPlaylist(title, description);
     }
 
     // 책을 플레이리스트에 추가 (POST /api/playlist/addBook)
