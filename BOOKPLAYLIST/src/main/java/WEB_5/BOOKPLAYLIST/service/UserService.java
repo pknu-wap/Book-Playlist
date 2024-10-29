@@ -36,6 +36,7 @@ public class UserService {
         System.out.println("이메일 사용 가능: " + email); // 추가: 이메일이 사용 가능한 경우 로그 출력
         return false;
     }
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
