@@ -25,8 +25,8 @@ const Sidebar = () => {
     <aside>
       <div className="sidebar" style={{width:'150px', height:'1000px', float:'left'}}>
         <nav>
-          <ul>
-            <li><a href="#">로그인</a></li>
+          <ul style={{ width: '250px', height: '40px', fontFamily: 'Pretendard Variable', fontStyle: 'normal', fontWeight: 500, fontSize: '18px', lineHeight: '42px', color: '#000000' }}>
+            <li><a href="#" >로그인</a></li>
             <li><a href="#">회원가입</a></li>
             <li><a href="#">마이페이지</a></li>
             <li><a href="#">북 카테고리</a></li>
@@ -54,14 +54,14 @@ const Header = () => {
       <img src="logo192.png" alt="책 이미지" className='logo' href="./App.js"/>
 
       <SearchBar />
-      <button className="login">로그인      /     회원가입</button>
+      <button className="login" style={{fontSize:'18px'}}>로그인 / 회원가입</button>
     </header>
   );
 };
 
 const SearchBar = () => {
   return (
-    <input className="search-bar" type="text" placeholder=" 🔍 검색어를 입력하세요" />
+    <input className="search-bar" type="text" placeholder="  검색어를 입력하세요" />
   );
 };
 
@@ -85,26 +85,25 @@ function App() {
       <main className="main-content">
         <div className="slider-container">
           <section className="slider-section" style={{padding: '10px', marginRight:'200px'}}>
-            <h2 style={{marginLeft:'120px'}}>BEST SELLER</h2>
+            <h2 style={{marginLeft:'120px'}}>🔥 BEST SELLER</h2>
+            
             <SimpleSlider {...settings}>
               {books.map((book) => (
                 <div key={book.id} style={{ textAlign: 'center', padding: '10px'}}>
                   <img src={book.imageUrl} alt={book.title} />
                   <h4 style={{ margin: '10px 0' }}>{book.title}</h4>
-                  <p style={{ margin: '0' }}>저자: {book.author}</p>
                 </div>
               ))}
             </SimpleSlider>
           </section>
 
           <section className="slider-section" style={{padding: '10px', marginRight:'200px'}}>
-            <h2 style={{marginLeft:'120px'}}>TODAY'S PLAYLIST</h2>
+            <h2 style={{marginLeft:'120px'}}>🔥 TODAY'S PLAYLIST</h2>
             <SimpleSlider1 playlists={playlists} {...settings}>
               {playlists.map((playlist) => (
                 <div key={playlist.id} style={{ textAlign: 'center', padding: '10px' }}>
                   <img src={playlist.imageUrl} alt={playlist.title} />
                   <h4 style={{ margin: '10px 0' }}>{playlist.title}</h4>
-                  <p style={{ margin: '0' }}>만든이: {playlist.author}</p>
                 </div>
               ))}
             </SimpleSlider1>
