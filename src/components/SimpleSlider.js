@@ -36,11 +36,10 @@ function SamplePrevArrow(props) {
 function SimpleSlider() {
   const settings = {
     arrows: true,
-    dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 5,
+    slidesToShow: 4,
+    slidesToScroll: 4,
     centerPadding: '20px',
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />
@@ -48,15 +47,15 @@ function SimpleSlider() {
 
   const containerStyle = {
     width: '100%',
-    maxWidth: '1100px', // 최대 너비
+    maxWidth: '800px', // 최대 너비
     minWidth: '800px',  // 최소 너비
     padding: '0 20px',
     boxSizing: 'border-box',
-    marginLeft: '100px',
+    marginLeft: '400px',
     marginRight: '100px',
     marginBottom: '100px',
-  };
 
+  };
 
     return (
       <main  className="slider-container" style={containerStyle}>
@@ -66,12 +65,13 @@ function SimpleSlider() {
             {books.map((book) => (
               <div key={book.id} style={{ textAlign: 'center', margin: '0 5px', padding: '10'}}>
                 <img src={book.imageUrl} alt={book.title} style={{
-                  marginLeft:'40px',
-                  width: '100px', // 이미지 너비 100%
+                  marginLeft : '20px',
                   objectFit: 'cover', // 이미지 비율 유지
+                  width: '143.81px',
+                  height: '190.4px',
+                  borderRadius: '10px'
                 }} />
                 <h4 className='book-title' style={{marginLeft:'40px', width:'100px', paddingRight:'20px', marginBottom:'0'}}>{book.title}</h4>
-                <p className="author" style={{marginLeft:'40px', marginTop:'10px'}}>저자: {book.author}</p>
               </div>
             ))}
           </Slider>
