@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -55,6 +54,7 @@ public class SecurityConfig {
                 // 요청 권한 설정
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/login", "/api/auth/signup", "/api/auth/checkUserId", "/api/auth/checkUsername").permitAll()
+                        .requestMatchers("/api/search/books/**").permitAll() // 추가: 검색 API 허용
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 )
                 // 로그인 설정 (폼 로그인 비활성화)
