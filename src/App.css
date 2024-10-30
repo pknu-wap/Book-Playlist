@@ -56,7 +56,7 @@ header {
   height: 70px;
   padding-left:10px;
   top: 23px;
-  margin-left: auto;    
+  margin-left: 60px;    
   margin-right: auto;
 }
 
@@ -87,22 +87,40 @@ header {
 
 .sidebar {
   margin-top:10px;
-  min-width: 200px;
-  width: 200px;
+  width: 250px;
   background-color: #ffffff;
   padding: 20px;
   height: 100vh; /* 전체 화면 높이 */
   list-style: none;
   border-right: 0.1px solid #e7e4e4;
+  float: left;
+
 }
 
-.sidebar nav ul {
-  list-style: none;
+.sidebar ul {
+  width: 250px;
   padding: 0;
+  margin: 0;
+  list-style-type: none;
+  font-family: 'Pretendard Variable', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  color: #000000;
 }
 
-.sidebar nav ul li {
-  margin-bottom: 10px;
+
+.sidebar li {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-bottom:20px;
+}
+
+.sidebar img {
+  width: 30px;
+  height: 30px;
+  margin-left: 15px;
+  margin-right: 10px;
 }
 
 .sidebar nav ul li a {

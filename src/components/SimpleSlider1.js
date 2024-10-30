@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/SimpleSlider.css";
+import { SiCalendly } from "react-icons/si";
 
-const playlists = Array.from({ length: 100 }, (_, index) => ({
+const playlists = Array.from({ length: 20 }, (_, index) => ({
   id: `playlist-${index + 1}`,
   title: `플레이리스트 ${index + 1}`,
   author: '저자명',
@@ -34,8 +35,10 @@ function SamplePrevArrow(props) {
 }
 
 function SimpleSlider() {
+  const [hoveredPlaylist, setHoveredPlaylist] = useState(null);
   const settings = {
     arrows: true,
+    lazyLoad: true,
     infinite: true,
     speed: 500,
     slidesToShow: 5,
@@ -65,12 +68,17 @@ function SimpleSlider() {
             {playlists.map((book) => (
               <div key={book.id} style={{ textAlign: 'center', margin: '0 5px', padding: '10px'}}>
                 <img src={book.imageUrl} alt={book.title} style={{
+                  marginTop: '20px',
                   marginLeft : '20px',  
                   objectFit: 'cover', // 이미지 비율 유지
                   width: '180px',
                   height:'282px',
-                  borderRadius: '10px',                  
-                }} />
+                  borderRadius: '10px',
+                  transition: 'transform 0.3s ease',
+                  transform: hoveredPlaylist === book.id ? 'scale(1.1)' :'scale(1)',
+                }}
+                onMouseEnter={() => setHoveredPlaylist(book.id)}
+                onMouseLeave={() => setHoveredPlaylist(null)}/>
                 <h4 className='book-title' style={{marginLeft:'40px', width:'110px', paddingRight:'20px', marginBottom:'0'}}>{book.title}</h4>
                 <p className='playlist-author' style={{color : 'gray', fontSize:'13px', marginLeft:'40px'}}>만든이 : {book.author}</p>
               </div>
