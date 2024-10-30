@@ -1,6 +1,5 @@
 package WEB_5.BOOKPLAYLIST.domain.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +10,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,5 +21,7 @@ public class Book {
     private String link;
     private String image;
     private String isbn;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
 }
