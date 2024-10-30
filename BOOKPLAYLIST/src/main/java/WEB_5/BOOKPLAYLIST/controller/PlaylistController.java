@@ -1,5 +1,6 @@
 package WEB_5.BOOKPLAYLIST.controller;
 
+import WEB_5.BOOKPLAYLIST.domain.dto.SavePlaylistRequest;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
 import WEB_5.BOOKPLAYLIST.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,15 @@ public class PlaylistController {
 
     // 책 리스트를 포함하여 플레이리스트 저장 (POST /api/playlist/save)
     @PostMapping("/save")
-    public ResponseEntity<String> savePlaylist(@RequestParam Long playlistId,
-                                               @RequestParam String title,
-                                               @RequestParam String description,
-                                               @RequestBody List<String> isbns) {
-        System.out.println("Received isbns: " + isbns); // 로그 추가
-        return playlistService.savePlaylist(playlistId, title, description, isbns);
+    public ResponseEntity<String> savePlaylist(@RequestBody SavePlaylistRequest request) {
+        return playlistService.savePlaylist(
+                request.getPlaylistId(),
+                request.getTitle(),
+                request.getDescription(),
+                request.getIsbns()
+        );
     }
-    
+
     // 특정 플레이리스트 조회 (GET /api/playlist/{playlistId})
     @GetMapping("/{playlistId}")
     public ResponseEntity<Playlist> getPlaylist(@PathVariable Long playlistId) {
