@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import './App.css';
 import 'slick-carousel/slick/slick.css';
@@ -98,23 +97,23 @@ const Sidebar = () => {
         <nav>
           <ul>
             <li>
-              <img src={Icon1}/>
+              <img src={Icon1} alt="로그인 아이콘" />
               <a href="#">로그인</a>
             </li>
             <li>
-              <img src={Icon2}/>
+              <img src={Icon2} alt="회원가입 아이콘" />
               <a href="#">회원가입</a>
             </li>
             <li>
-              <img src={Icon3}/>
+              <img src={Icon3} alt="마이페이지 아이콘" />
               <a href="#">마이페이지</a>
             </li>
             <li>
-              <img src={Icon4} />
+              <img src={Icon4} alt="북 카테고리 아이콘" />
               <a href="#">북 카테고리</a>
             </li>
             <li>
-              <img src={Icon5}/>
+              <img src={Icon5} alt="전체 북 플레이리스트 아이콘" />
               <a href="#">전체 북 플레이리스트</a>
             </li>
           </ul>
@@ -136,7 +135,7 @@ const Header = () => {
   return (
     <header className="header">
 
-      <img src={Logo} alt="책 이미지" className='logo' href="./App.js"/>
+      <img src={Logo} alt="로고 이미지" className='logo' />
 
       <SearchBar />
       <button className="login" style={{fontSize:'18px'}}>로그인 / 회원가입</button>
@@ -163,7 +162,7 @@ function App() {
 
   return (
     <div className="App">
-        <Header />
+      <Header />
       <div>
         <Sidebar />
       </div>
@@ -194,7 +193,7 @@ function App() {
             </SimpleSlider1>
           </section>
         </div>
-         <PlaylistButton></PlaylistButton>
+         <PlaylistButton />
       </main>
     </div>
   );
