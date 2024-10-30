@@ -29,9 +29,10 @@ public class PlaylistController {
                                                @RequestParam String title,
                                                @RequestParam String description,
                                                @RequestBody List<String> isbns) {
+        System.out.println("Received isbns: " + isbns); // 로그 추가
         return playlistService.savePlaylist(playlistId, title, description, isbns);
     }
-
+    
     // 특정 플레이리스트 조회 (GET /api/playlist/{playlistId})
     @GetMapping("/{playlistId}")
     public ResponseEntity<Playlist> getPlaylist(@PathVariable Long playlistId) {
