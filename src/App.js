@@ -184,6 +184,10 @@ function App() {
     setIsPlaylistModalOpen(false);
   };
 
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+  
   const handleLogout = () => {
     localStorage.removeItem('user');
     setIsLoggedIn(false);
@@ -238,7 +242,7 @@ function App() {
                 {isPlaylistOpen && <Playlist onClose={closePlaylistModal} />}
               </>
             } />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login onLogin={handleLogin}/>} />
             <Route path="/register" element={<Register />} />
           </Routes>
         </main>
