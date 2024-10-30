@@ -14,6 +14,9 @@ function PlaylistModal({ onClose }) {
   });
   const [bookList, setBookList] = useState([]);
 
+  // 최대 책 아이템 수
+  const MAX_BOOK_ITEMS = 5;
+
   // State variables for playlist title and description
   const [playlistTitle, setPlaylistTitle] = useState('플레이리스트 제목');
   const [playlistDescription, setPlaylistDescription] = useState('플레이리스트 설명');
@@ -37,7 +40,7 @@ function PlaylistModal({ onClose }) {
   const handleSearch = async () => {
     try {
       const response = await axios.get(
-        `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books`,
+        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books',
         {
           params: { query: searchQuery }, // query parameter
         }
@@ -50,6 +53,10 @@ function PlaylistModal({ onClose }) {
   };
 
   const handleAddBook = (book) => {
+    if (bookList.length >= MAX_BOOK_ITEMS) {
+      alert('최대 5개의 책만 추가할 수 있습니다.');
+      return;
+    }
     const isbn = book.isbn || book.isbn13 || book.isbn10 || '';
     setBookList((prevBookList) => [
       ...prevBookList,
@@ -61,6 +68,12 @@ function PlaylistModal({ onClose }) {
         isbn: isbn,
       },
     ]);
+  };
+
+  const handleRemoveBook = (index) => {
+    setBookList((prevBookList) =>
+      prevBookList.filter((_, i) => i !== index)
+    );
   };
 
   const handleBookClick = (book) => {
@@ -94,6 +107,7 @@ function PlaylistModal({ onClose }) {
             title: playlistTitle,
             description: playlistDescription,
           },
+          withCredentials: true,
         }
       );
 
@@ -112,6 +126,7 @@ function PlaylistModal({ onClose }) {
               playlistId: newPlaylistId,
               isbn: book.isbn,
             },
+            withCredentials: true,
           }
         );
       }
@@ -203,27 +218,46 @@ function PlaylistModal({ onClose }) {
           </div>
 
           <div className="book-list">
-            {bookList.map((book, index) => (
-              <div
-                key={index}
-                className="book-item"
-                onClick={() => handleBookClick(book)}
-              >
-                <div className="book-info">
-                  <img
-                    src={book.cover}
-                    alt={book.title}
-                    className="book-mcover"
-                  />
-                  <div className="booktitle">
-                    <h3>{book.title}</h3>
-                    <p>
-                      {book.author}/{book.publisher}
-                    </p>
+            {Array.from({ length: MAX_BOOK_ITEMS }).map((_, index) => {
+              const book = bookList[index];
+              return book ? (
+                <div
+                  key={index}
+                  className="book-item"
+                  onClick={() => handleBookClick(book)}
+                >
+                  <div className="book-info">
+                    <img
+                      src={book.cover}
+                      alt={book.title}
+                      className="book-mcover"
+                    />
+                    <div className="booktitle">
+                      <h3>{book.title}</h3>
+                      <p>
+                        {book.author}/{book.publisher}
+                      </p>
+                    </div>
+                    <button
+                      className="remove-book-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveBook(index);
+                      }}
+                    >
+                      <span className='material-symbols-outlined'>delete</span>
+                    </button>
                   </div>
                 </div>
-              </div>
-            ))}
+              ) : (
+                // 빈 책 아이템 자리 표시자
+                <div key={index} className="book-item empty">
+                  <div className="booktitle">
+                   <h3>책이름 | 저자</h3>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
