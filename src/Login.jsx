@@ -1,12 +1,10 @@
-// Login.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './styles/Login.css';
 
-export default function Login() {
+export default function Login({ onLogin }) { // onLogin prop을 통해 로그인 상태 업데이트
     const [email, setEmail] = useState('');
     const [pw, setPw] = useState('');
-
     const [emailValid, setEmailValid] = useState(false);
     const [pwValid, setPwValid] = useState(false);
     const [notAllow, setNotAllow] = useState(true);
@@ -15,7 +13,7 @@ export default function Login() {
 
     const handleEmail = (e) => {
         setEmail(e.target.value);
-        const regex = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 이메일 유효성 검사 정규표현식 간소화
         setEmailValid(regex.test(e.target.value));
     };
 
@@ -42,7 +40,8 @@ export default function Login() {
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
-                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('user', JSON.stringify(data.user)); // 로컬 스토리지에 사용자 정보 저장
+                    onLogin(); // 로그인 상태 업데이트 함수 호출
                     alert('로그인에 성공했습니다.');
                     navigate('/'); // 메인 페이지로 이동
                 } else {
@@ -59,7 +58,7 @@ export default function Login() {
     };
 
     useEffect(() => {
-        setNotAllow(!(emailValid && pwValid));
+        setNotAllow(!(emailValid && pwValid)); // 이메일과 비밀번호 유효성 검사 결과에 따라 버튼 비활성화
     }, [emailValid, pwValid]);
 
     const goToRegister = () => {

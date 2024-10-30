@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import './App.css';
 import 'slick-carousel/slick/slick.css';
@@ -90,10 +90,10 @@ const books = [
 ];
 
 const playlists = Array.from({ length: 20 }, (_, index) => ({
-  id: `playlist-${index + 1}`,
-  title: `플레이리스트 ${index + 1}`,
+  id: `playlist-${index + 1}`, // 백틱 추가
+  title: `플레이리스트 ${index + 1}`, // 백틱 추가
   author: '저자명',
-  imageUrl: `https://via.placeholder.com/150?text=Item+${index + 1}`,
+  imageUrl: `https://via.placeholder.com/150?text=Item+${index + 1}`, // 백틱 추가
 }));
 
 const Sidebar = () => {
@@ -137,19 +137,24 @@ const PlaylistButton = ({onClick}) => {
   );
 }
 
-
-const Header = () => {
+const Header = ({ isLoggedIn, onLogout }) => {
   const navigate = useNavigate();
 
-  const handleLoginClick = () => {
-    navigate('/login'); // 로그인 페이지로 이동
+  const handleAuthClick = () => {
+    if (isLoggedIn) {
+      onLogout(); // 로그아웃 수행
+    } else {
+      navigate('/login'); // 로그인 페이지로 이동
+    }
   };
 
   return (
     <header className="header">
-      <img src={Logo} alt="책 이미지" className='logo' />
+      <img src={Logo} alt="책 이미지" className="logo" />
       <SearchBar />
-      <button className="login" style={{ fontSize: '18px' }} onClick={handleLoginClick}>로그인 / 회원가입</button>
+      <button className="login" style={{ fontSize: '18px' }} onClick={handleAuthClick}>
+        {isLoggedIn ? '로그아웃' : '로그인 / 회원가입'}
+      </button>
     </header>
   );
 };
@@ -162,6 +167,14 @@ const SearchBar = () => {
 
 function App() {
   const [isPlaylistOpen, setIsPlaylistModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const openPlaylistModal = () => {
     setIsPlaylistModalOpen(true);
@@ -169,6 +182,12 @@ function App() {
 
   const closePlaylistModal = () => {
     setIsPlaylistModalOpen(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setIsLoggedIn(false);
+    alert('로그아웃 되었습니다.');
   };
 
   const settings = {
@@ -183,7 +202,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Header />
+        <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
         <div>
           <Sidebar />
         </div>
@@ -219,8 +238,8 @@ function App() {
                 {isPlaylistOpen && <Playlist onClose={closePlaylistModal} />}
               </>
             } />
-            <Route path="/login" element={<Login />} /> {/* 로그인 페이지 경로 */}
-            <Route path="/register" element={<Register />} /> {/* 회원가입 페이지 경로 */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </main>
       </div>
