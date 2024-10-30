@@ -21,18 +21,20 @@ public class SecurityConfig {
         http
                 // CORS 설정 활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                // CSRF 비활성화 (세션 기반이므로 필요에 따라 설정)
+                // CSRF 비활성화 (세션 기반 인증에서는 필요에 따라 활성화 가능)
                 .csrf(csrf -> csrf.disable())
                 // 세션 관리 설정
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 상태 무시
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션이 필요할 때 생성
                 )
-                // 모든 요청을 인증 없이 허용
+                // 특정 요청에 대한 인증 설정
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/playlist/**").authenticated() // "/api/playlist" 경로에 인증 적용
+                        .anyRequest().permitAll() // 그 외 모든 요청은 허용
                 )
-                // 로그인 및 로그아웃 설정 비활성화
-                .formLogin(form -> form.disable())
+                // 기본 로그인 폼 활성화
+                .formLogin() // withDefaults()를 제거
+                // HTTP 기본 인증 비활성화
                 .httpBasic().disable();
 
         return http.build();
@@ -42,7 +44,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // 프론트엔드 도메인
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://boolplaylist.netlify.app/")); // 프론트엔드 도메인
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true); // 세션 정보를 포함한 요청 허용
