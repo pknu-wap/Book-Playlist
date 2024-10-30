@@ -1,22 +1,20 @@
-// service/PlaylistService.java
 package WEB_5.BOOKPLAYLIST.service;
 
-import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
+import WEB_5.BOOKPLAYLIST.domain.entity.Book;
+import WEB_5.BOOKPLAYLIST.domain.entity.User;
 import WEB_5.BOOKPLAYLIST.repository.BookRepository;
 import WEB_5.BOOKPLAYLIST.repository.PlaylistRepository;
 import WEB_5.BOOKPLAYLIST.domain.dto.NaverBookResponse;
-import WEB_5.BOOKPLAYLIST.domain.entity.Book;
-import WEB_5.BOOKPLAYLIST.domain.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import WEB_5.BOOKPLAYLIST.repository.UserRepository;
+import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 
 import java.util.List;
 import java.util.Optional;
-
-import static WEB_5.BOOKPLAYLIST.auth.SecurityUtil.getCurrentUserIdFromSession;
+import java.util.stream.Collectors;
 
 @Service
 public class PlaylistService {
@@ -33,101 +31,78 @@ public class PlaylistService {
     @Autowired
     private BookSearchService bookSearchService;
 
-    // 플레이리스트 생성
-    public ResponseEntity<Playlist> createPlaylist(String title, String description) {
-        Long userId = SecurityUtil.getCurrentUserIdFromSession(); // 세션에서 사용자 ID 가져오기
+    // 빈 플레이리스트 생성
+    public Long createEmptyPlaylist() {
+        Long userId = SecurityUtil.getCurrentUserIdFromSession();
         Optional<User> userOpt = userRepository.findById(userId);
 
         if (!userOpt.isPresent()) {
-            return ResponseEntity.badRequest().body(null);
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
         }
 
         User user = userOpt.get();
         Playlist playlist = new Playlist();
-        playlist.setTitle(title);
-        playlist.setDescription(description);
         playlist.setUser(user);
         playlist.setBooks(List.of());
 
         Playlist savedPlaylist = playlistRepository.save(playlist);
-        return ResponseEntity.ok(savedPlaylist);
+        return savedPlaylist.getId(); // 생성된 playlistId만 반환
     }
 
-    // 책을 플레이리스트에 추가
-    public ResponseEntity<String> addBookToPlaylist(Long playlistId, String isbn) {
-        // 플레이리스트 조회
+    // 책 리스트를 포함하여 플레이리스트 저장
+    public ResponseEntity<String> savePlaylist(Long playlistId, String title, String description, List<String> isbns) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         if (!playlistOpt.isPresent()) {
             return ResponseEntity.badRequest().body("플레이리스트를 찾을 수 없습니다.");
         }
 
         Playlist playlist = playlistOpt.get();
+        playlist.setTitle(title);
+        playlist.setDescription(description);
 
-        // ISBN으로 책 조회
-        Optional<Book> bookOpt = bookRepository.findByIsbn(isbn);
-        Book book;
+        // 중복되지 않는 책들만 추가
+        List<Book> booksToAdd = isbns.stream()
+                .distinct()
+                .map(isbn -> {
+                    Optional<Book> bookOpt = bookRepository.findByIsbn(isbn);
+                    if (bookOpt.isPresent()) {
+                        return bookOpt.get();
+                    } else {
+                        return fetchAndSaveBook(isbn);
+                    }
+                })
+                .filter(book -> book != null && !playlist.getBooks().contains(book))
+                .collect(Collectors.toList());
 
-        if (bookOpt.isPresent()) {
-            book = bookOpt.get();
-        } else {
-            // 책 정보 검색 (ISBN을 검색어로 사용)
-            ResponseEntity<NaverBookResponse> response = bookSearchService.searchBooks(isbn);
-            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                List<NaverBookResponse.NaverBookItem> items = response.getBody().getItems();
-                // ISBN으로 정확히 일치하는 책 찾기
-                Optional<NaverBookResponse.NaverBookItem> matchedItem = items.stream()
-                        .filter(item -> item.getIsbn().replaceAll("-", "").equals(isbn.replaceAll("-", "")))
-                        .findFirst();
+        playlist.getBooks().addAll(booksToAdd);
+        playlistRepository.save(playlist);
+        return ResponseEntity.ok("플레이리스트가 성공적으로 저장되었습니다.");
+    }
 
-                if (matchedItem.isPresent()) {
-                    NaverBookResponse.NaverBookItem item = matchedItem.get();
-                    book = new Book();
-                    book.setTitle(item.getTitle());
-                    book.setAuthor(item.getAuthor());
-                    book.setPublisher(item.getPublisher());
-                    book.setLink(item.getLink());
-                    book.setImage(item.getImage());
-                    book.setIsbn(item.getIsbn());
-                    book.setDescription(item.getDescription());
+    // 책을 외부 API에서 검색하여 저장
+    private Book fetchAndSaveBook(String isbn) {
+        ResponseEntity<NaverBookResponse> response = bookSearchService.searchBooks(isbn);
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            List<NaverBookResponse.NaverBookItem> items = response.getBody().getItems();
+            Optional<NaverBookResponse.NaverBookItem> matchedItem = items.stream()
+                    .filter(item -> item.getIsbn().replaceAll("-", "").equals(isbn.replaceAll("-", "")))
+                    .findFirst();
 
-                    // 책 정보 저장
-                    book = bookRepository.save(book);
-                } else {
-                    return ResponseEntity.badRequest().body("해당 ISBN에 맞는 책을 찾을 수 없습니다.");
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("외부 API로부터 책 정보를 가져오는 데 실패했습니다.");
+            if (matchedItem.isPresent()) {
+                NaverBookResponse.NaverBookItem item = matchedItem.get();
+                Book book = new Book();
+                book.setTitle(item.getTitle());
+                book.setAuthor(item.getAuthor());
+                book.setPublisher(item.getPublisher());
+                book.setLink(item.getLink());
+                book.setImage(item.getImage());
+                book.setIsbn(item.getIsbn());
+                book.setDescription(item.getDescription());
+
+                return bookRepository.save(book);
             }
         }
-
-        // 플레이리스트에 책 추가
-        if (!playlist.getBooks().contains(book)) {
-            playlist.getBooks().add(book);
-            playlistRepository.save(playlist);
-            return ResponseEntity.ok("플레이리스트에 책이 추가되었습니다.");
-        } else {
-            return ResponseEntity.badRequest().body("이미 플레이리스트에 해당 책이 포함되어 있습니다.");
-        }
-    }
-
-    // 플레이리스트 내 책 순서 조정
-    public ResponseEntity<String> updateBookOrder(Long playlistId, List<Long> bookOrder) {
-        Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
-        if (!playlistOpt.isPresent()) {
-            return ResponseEntity.badRequest().body("플레이리스트를 찾을 수 없습니다.");
-        }
-
-        Playlist playlist = playlistOpt.get();
-        List<Book> books = playlist.getBooks();
-
-        // 책의 순서를 재배열 (간단한 예시)
-        books.clear();
-        for (Long bookId : bookOrder) {
-            bookRepository.findById(bookId).ifPresent(books::add);
-        }
-
-        playlistRepository.save(playlist);
-        return ResponseEntity.ok("플레이리스트 내 책의 순서가 업데이트되었습니다.");
+        return null;
     }
 
     // 특정 플레이리스트 조회
