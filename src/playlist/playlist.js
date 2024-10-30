@@ -19,6 +19,9 @@ function PlaylistModal({ onClose }) {
   const [playlistDescription, setPlaylistDescription] = useState('플레이리스트 설명');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
+  // State variable for playlist ID
+  const [playlistId, setPlaylistId] = useState(null);
+
   const closeModal = () => {
     if (onClose) onClose();
   };
@@ -36,17 +39,18 @@ function PlaylistModal({ onClose }) {
       const response = await axios.get(
         `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books`,
         {
-          params: { query: searchQuery }, // query 파라미터 전달
+          params: { query: searchQuery }, // query parameter
         }
       );
 
-      setSearchResults(response.data.items); // response.data에서 items를 가져옴
+      setSearchResults(response.data.items);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   const handleAddBook = (book) => {
+    const isbn = book.isbn || book.isbn13 || book.isbn10 || '';
     setBookList((prevBookList) => [
       ...prevBookList,
       {
@@ -54,6 +58,7 @@ function PlaylistModal({ onClose }) {
         author: book.author,
         publisher: book.publisher,
         cover: book.image,
+        isbn: isbn,
       },
     ]);
   };
@@ -77,9 +82,54 @@ function PlaylistModal({ onClose }) {
     setIsEditingTitle(false);
   };
 
+  // Function to handle saving the playlist
+  const handleSavePlaylist = async () => {
+    try {
+      // 플레이리스트 생성 요청을 쿼리 파라미터로 변경
+      const createResponse = await axios.post(
+        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/create',
+        null, // POST 요청의 본문은 비워둠
+        {
+          params: {
+            title: playlistTitle,
+            description: playlistDescription,
+          },
+        }
+      );
+
+      // playlistId를 숫자 타입으로 변환
+      const newPlaylistId = Number(createResponse.data.playlistId);
+
+      setPlaylistId(newPlaylistId);
+
+      // 각 책을 플레이리스트에 추가
+      for (const book of bookList) {
+        await axios.post(
+          'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/addBook',
+          null, // POST 요청의 본문은 비워둠
+          {
+            params: {
+              playlistId: newPlaylistId,
+              isbn: book.isbn,
+            },
+          }
+        );
+      }
+
+      // 모달 닫기 또는 성공 메시지 표시
+      closeModal();
+    } catch (error) {
+      console.error(
+        'Error saving playlist:',
+        error.response ? error.response.data : error.message
+      );
+      // 에러 처리 (예: 에러 메시지 표시)
+    }
+  };
+
   return (
     <>
-      {/* 첫 번째 모달 */}
+      {/* First Modal */}
       <div className="modal-overlay" onClick={closeModal}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <button className="close-btn" onClick={closeModal}>
@@ -88,41 +138,35 @@ function PlaylistModal({ onClose }) {
 
           <div className="plname">
             {isEditingTitle ? (
-              <>
               <div className='pledit2'>
-               <div className='edittitle2'>
-                <input
-                  type="text"
-                  value={playlistTitle}
-                  onChange={(e) => setPlaylistTitle(e.target.value)}
-                  placeholder="플레이리스트 제목을 입력하세요"
-                />
-                <input
-                  type="text"
-                  value={playlistDescription}
-                  onChange={(e) => setPlaylistDescription(e.target.value)}
-                  placeholder="플레이리스트 설명을 입력하세요"
-                />
-               </div>
+                <div className='edittitle2'>
+                  <input
+                    type="text"
+                    value={playlistTitle}
+                    onChange={(e) => setPlaylistTitle(e.target.value)}
+                    placeholder="플레이리스트 제목을 입력하세요"
+                  />
+                  <input
+                    type="text"
+                    value={playlistDescription}
+                    onChange={(e) => setPlaylistDescription(e.target.value)}
+                    placeholder="플레이리스트 설명을 입력하세요"
+                  />
+                </div>
                 <button onClick={handleSaveTitle} className='pltitlesave'>
-                    <span className="material-symbols-outlined">edit</span>
+                  <span className="material-symbols-outlined">edit</span>
                 </button>
               </div>
-                
-              </>
             ) : (
-              <>
-
-               <div className='pledit1'>
+              <div className='pledit1'>
                 <div className='edittitle1'>
-                 <h2>{playlistTitle}</h2>
-                 <p>{playlistDescription}</p>
+                  <h2>{playlistTitle}</h2>
+                  <p>{playlistDescription}</p>
                 </div>
                 <button onClick={handleEditTitle}>
-                <span className="material-symbols-outlined">edit</span>
+                  <span className="material-symbols-outlined">edit</span>
                 </button>
-               </div>
-              </>
+              </div>
             )}
           </div>
 
@@ -134,7 +178,7 @@ function PlaylistModal({ onClose }) {
             +
           </button>
 
-          <button className="plsave">
+          <button className="plsave" onClick={handleSavePlaylist}>
             <span className="material-symbols-outlined">check</span>
             <p>저장</p>
           </button>
@@ -184,7 +228,7 @@ function PlaylistModal({ onClose }) {
         </div>
       </div>
 
-      {/* 두 번째 모달 */}
+      {/* Second Modal */}
       {isSecondModalOpen && (
         <div className="modal-overlay" onClick={closeSecondModal}>
           <div

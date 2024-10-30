@@ -1,10 +1,10 @@
-// App.js
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import SimpleSlider from './components/SimpleSlider.js'
-import SimpleSlider1 from './components/SimpleSlider1.js'
+import SimpleSlider from './components/SimpleSlider.js';
+import SimpleSlider1 from './components/SimpleSlider1.js';
+import Playlist from './playlist/playlist.js';
 
 const books = Array.from({ length: 20 }, (_, index) => ({
   id: `book-${index + 1}`,
@@ -38,10 +38,10 @@ const Sidebar = () => {
   );
 }
 
-const PlaylistButton = () => {
+const PlaylistButton = ({onClick}) => {
   return (
     <div className="MakePlaylist">
-      <button className="playlistButton" type="button">플레이리스트 만들기</button>
+      <button className="playlistButton" type="button" onClick={onClick}>플레이리스트 만들기</button>
     </div>
   );
 }
@@ -67,6 +67,15 @@ const SearchBar = () => {
 
 
 function App() {
+  const [isPlaylistOpen, setIsPlaylistModalOpen] = useState(false);
+
+  const openPlaylistModal = () => {
+    setIsPlaylistModalOpen(true);
+  };
+
+  const closePlaylistModal = () => {
+    setIsPlaylistModalOpen(false);
+  };
   const settings = {
     arrows: true,
     dots: true,
@@ -109,7 +118,8 @@ function App() {
             </SimpleSlider1>
           </section>
         </div>
-         <PlaylistButton></PlaylistButton>
+        <PlaylistButton onClick={openPlaylistModal} />
+        {isPlaylistOpen && <Playlist onClose={closePlaylistModal} />}
       </main>
     </div>
   );
