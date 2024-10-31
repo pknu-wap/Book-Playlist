@@ -59,17 +59,13 @@ public class PlaylistService {
         playlist.setTitle(title);
         playlist.setDescription(description);
 
-        // 중복되지 않는 책들만 추가
         List<Book> booksToAdd = isbns.stream()
                 .distinct()
                 .map(isbn -> {
-                    // ISBN을 기준으로 책 조회
-                    Optional<Book> bookOpt = bookRepository.findByIsbn(isbn);
+                    Optional<Book> bookOpt = bookRepository.findTopByIsbn(isbn); // ISBN이 중복될 경우 첫 번째 책만 반환
                     if (bookOpt.isPresent()) {
-                        // 책이 이미 DB에 있으면 기존 책 사용
                         return bookOpt.get();
                     } else {
-                        // 없으면 외부 API를 통해 저장 후 반환
                         return fetchAndSaveBook(isbn);
                     }
                 })
