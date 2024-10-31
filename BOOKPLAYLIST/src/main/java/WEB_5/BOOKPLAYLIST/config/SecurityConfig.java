@@ -25,7 +25,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/playlist/**").authenticated() // 세션 로그인 필요
                         .anyRequest().permitAll()
-                );
+                )
+                .httpBasic();
 
         return http.build();
     }
