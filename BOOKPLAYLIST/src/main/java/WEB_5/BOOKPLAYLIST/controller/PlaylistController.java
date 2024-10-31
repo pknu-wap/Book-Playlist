@@ -35,6 +35,7 @@ public class PlaylistController {
                 request.getIsbns()
         );
     }
+    //메인화면 플레이리스트 띄우기 (GET /api/playlist/top)
     @GetMapping("/top")
     public ResponseEntity<List<PlaylistSummaryDTO>> getTopPlaylists() {
         List<PlaylistSummaryDTO> topPlaylists = playlistService.getTopPlaylists(10);
