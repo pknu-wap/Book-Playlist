@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -168,6 +168,9 @@ const SearchBar = () => {
 function App() {
   const [isPlaylistOpen, setIsPlaylistModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
+
+  const isLoginOrRegisterPage = location.pathname === '/login' || location.pathname === '/register';
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -204,12 +207,10 @@ function App() {
   };
 
   return (
-    <Router>
       <div className="App">
-        <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-        <div>
-          <Sidebar />
-        </div>
+        {/* 로그인 또는 회원가입 페이지가 아니면 Header와 Sidebar 표시 */}
+        {!isLoginOrRegisterPage && <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />}
+        {!isLoginOrRegisterPage && <Sidebar />}
         <main className="main-content">
           <Routes>
             <Route path="/" element={
@@ -247,7 +248,6 @@ function App() {
           </Routes>
         </main>
       </div>
-    </Router>
   );
 }
 
