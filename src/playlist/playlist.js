@@ -14,13 +14,15 @@ function PlaylistModal({ onClose }) {
   });
   const [bookList, setBookList] = useState([]);
 
-  // State variables for playlist title and description
+  const MAX_EMPTY_ITEMS = 5; 
+
   const [playlistTitle, setPlaylistTitle] = useState('플레이리스트 제목');
   const [playlistDescription, setPlaylistDescription] = useState('플레이리스트 설명');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
-  // State variable for playlist ID
-  const [playlistId, setPlaylistId] = useState(null);
+
+
+  const [successMessage, setSuccessMessage] = useState('');
 
   const closeModal = () => {
     if (onClose) onClose();
@@ -37,9 +39,9 @@ function PlaylistModal({ onClose }) {
   const handleSearch = async () => {
     try {
       const response = await axios.get(
-        `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books`,
+        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books',
         {
-          params: { query: searchQuery }, // query parameter
+          params: { query: searchQuery },
         }
       );
 
@@ -63,6 +65,12 @@ function PlaylistModal({ onClose }) {
     ]);
   };
 
+  const handleRemoveBook = (index) => {
+    setBookList((prevBookList) =>
+      prevBookList.filter((_, i) => i !== index)
+    );
+  };
+
   const handleBookClick = (book) => {
     setSelectedBook({
       title: book.title,
@@ -72,64 +80,47 @@ function PlaylistModal({ onClose }) {
     });
   };
 
-  // Function to handle editing playlist title and description
   const handleEditTitle = () => {
     setIsEditingTitle(true);
   };
 
-  // Function to save edited title and description
   const handleSaveTitle = () => {
     setIsEditingTitle(false);
   };
 
-  // Function to handle saving the playlist
   const handleSavePlaylist = async () => {
     try {
-      // 플레이리스트 생성 요청을 쿼리 파라미터로 변경
       const createResponse = await axios.post(
         'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/create',
-        null, // POST 요청의 본문은 비워둠
-        {
-          params: {
-            title: playlistTitle,
-            description: playlistDescription,
-          },
-        }
+        null,
+        { withCredentials: true }
       );
 
-      // playlistId를 숫자 타입으로 변환
-      const newPlaylistId = Number(createResponse.data.playlistId);
-
-      setPlaylistId(newPlaylistId);
-
-      // 각 책을 플레이리스트에 추가
-      for (const book of bookList) {
-        await axios.post(
-          'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/addBook',
-          null, // POST 요청의 본문은 비워둠
-          {
-            params: {
-              playlistId: newPlaylistId,
-              isbn: book.isbn,
-            },
-          }
-        );
-      }
-
-      // 모달 닫기 또는 성공 메시지 표시
-      closeModal();
+      await axios.post(
+        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save',
+        {
+          playlistId: Number(createResponse.data.playlistId),
+          title: playlistTitle,
+          description: playlistDescription,
+          isbns: bookList.map((book) => book.isbn),
+        },
+        {
+          withCredentials: true,
+        }
+      );
+;
+      setSuccessMessage('플레이리스트가 저장되었습니다');
     } catch (error) {
       console.error(
         'Error saving playlist:',
         error.response ? error.response.data : error.message
       );
-      // 에러 처리 (예: 에러 메시지 표시)
     }
   };
 
   return (
     <>
-      {/* First Modal */}
+      {/* 첫 번째 모달 */}
       <div className="modal-overlay" onClick={closeModal}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <button className="close-btn" onClick={closeModal}>
@@ -183,6 +174,13 @@ function PlaylistModal({ onClose }) {
             <p>저장</p>
           </button>
 
+          {/* 성공 메시지 표시 */}
+          {successMessage && (
+            <div className="success-message">
+              {successMessage}
+            </div>
+          )}
+
           <div className="book-cover-box">
             {selectedBook.cover ? (
               <img
@@ -203,32 +201,53 @@ function PlaylistModal({ onClose }) {
           </div>
 
           <div className="book-list">
-            {bookList.map((book, index) => (
-              <div
-                key={index}
-                className="book-item"
-                onClick={() => handleBookClick(book)}
-              >
-                <div className="book-info">
-                  <img
-                    src={book.cover}
-                    alt={book.title}
-                    className="book-mcover"
-                  />
+            {bookList.length === 0 ? (
+              // 책이 없을 때 빈 아이템 박스 5개 표시
+              Array.from({ length: MAX_EMPTY_ITEMS }).map((_, index) => (
+                <div key={index} className="book-item empty">
                   <div className="booktitle">
-                    <h3>{book.title}</h3>
-                    <p>
-                      {book.author}/{book.publisher}
-                    </p>
+                    <h3>책이름 | 저자</h3>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              // 책이 추가되면 추가된 책들만 표시
+              bookList.map((book, index) => (
+                <div
+                  key={index}
+                  className="book-item"
+                  onClick={() => handleBookClick(book)}
+                >
+                  <div className="book-info">
+                    <img
+                      src={book.cover}
+                      alt={book.title}
+                      className="book-mcover"
+                    />
+                    <div className="booktitle">
+                      <h3>{book.title}</h3>
+                      <p>
+                        {book.author}/{book.publisher}
+                      </p>
+                    </div>
+                    <button
+                      className="remove-book-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveBook(index);
+                      }}
+                    >
+                      <span className='material-symbols-outlined'>delete</span>
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
 
-      {/* Second Modal */}
+      {/* 두 번째 모달 */}
       {isSecondModalOpen && (
         <div className="modal-overlay" onClick={closeSecondModal}>
           <div
