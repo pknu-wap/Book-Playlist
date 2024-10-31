@@ -12,8 +12,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -25,10 +23,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/playlist/**").authenticated()
+                        .requestMatchers("/api/playlist/**").permitAll() // 모든 요청에 접근 허용
                         .anyRequest().permitAll()
-                )
-                .httpBasic(withDefaults()); // 기본 HTTP Basic 인증 설정
+                );
+        // .httpBasic(withDefaults()); 기본 인증 비활성화 (이 줄을 제거 또는 주석 처리)
 
         return http.build();
     }
