@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Slider from "react-slick";
@@ -129,6 +130,7 @@ const SimpleSlider = () => {
                   onMouseLeave={() => setHoveredBook(null)}
                 />
               </a>
+
               <h4
                 className="book-title"
                 style={{

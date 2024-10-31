@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react"; // useEffect 추가
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";

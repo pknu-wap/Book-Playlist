@@ -106,7 +106,6 @@ function App() {
       setIsLoggedIn(true);
     }
   }, []);
-
   // API 요청을 위한 useEffect
   useEffect(() => {
     const fetchBooks = async () => {
@@ -131,9 +130,6 @@ function App() {
 
     fetchBooks(); // API 요청 함수 호출
   }, []); // 컴포넌트가 마운트될 때만 호출
-
-  
-
   const openPlaylistModal = () => {
     setIsPlaylistModalOpen(true);
   };
