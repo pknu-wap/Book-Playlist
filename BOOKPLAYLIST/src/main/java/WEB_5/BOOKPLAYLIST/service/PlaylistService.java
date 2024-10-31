@@ -1,5 +1,6 @@
 package WEB_5.BOOKPLAYLIST.service;
 
+import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistSummaryDTO;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
 import WEB_5.BOOKPLAYLIST.domain.entity.Book;
 import WEB_5.BOOKPLAYLIST.domain.entity.User;
@@ -114,5 +115,21 @@ public class PlaylistService {
     public ResponseEntity<List<Playlist>> getAllPlaylists() {
         List<Playlist> playlists = playlistRepository.findAll();
         return ResponseEntity.ok(playlists);
+    }
+
+    public List<PlaylistSummaryDTO> getTopPlaylists(int limit) {
+        List<Playlist> playlists = playlistRepository.findTop10ByOrderByIdAsc();
+
+        return playlists.stream()
+                .map(playlist -> {
+                    String firstBookImage = playlist.getBooks().isEmpty() ? null : playlist.getBooks().get(0).getImage();
+                    return new PlaylistSummaryDTO(
+                            playlist.getId(),
+                            playlist.getTitle(),
+                            playlist.getUser().getUsername(),
+                            firstBookImage
+                    );
+                })
+                .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,6 @@
 package WEB_5.BOOKPLAYLIST.controller;
 
+import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistSummaryDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.SavePlaylistRequest;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
 import WEB_5.BOOKPLAYLIST.service.PlaylistService;
@@ -34,7 +35,11 @@ public class PlaylistController {
                 request.getIsbns()
         );
     }
-
+    @GetMapping("/top")
+    public ResponseEntity<List<PlaylistSummaryDTO>> getTopPlaylists() {
+        List<PlaylistSummaryDTO> topPlaylists = playlistService.getTopPlaylists(10);
+        return ResponseEntity.ok(topPlaylists);
+    }
     // 특정 플레이리스트 조회 (GET /api/playlist/{playlistId})
     @GetMapping("/{playlistId}")
     public ResponseEntity<Playlist> getPlaylist(@PathVariable Long playlistId) {
