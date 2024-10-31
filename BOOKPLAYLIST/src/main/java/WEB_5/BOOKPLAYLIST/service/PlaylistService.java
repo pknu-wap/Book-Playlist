@@ -49,7 +49,6 @@ public class PlaylistService {
         return savedPlaylist.getId(); // 생성된 playlistId만 반환
     }
 
-    // 책 리스트를 포함하여 플레이리스트 저장
     public ResponseEntity<String> savePlaylist(Long playlistId, String title, String description, List<String> isbns) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         if (!playlistOpt.isPresent()) {
@@ -64,10 +63,13 @@ public class PlaylistService {
         List<Book> booksToAdd = isbns.stream()
                 .distinct()
                 .map(isbn -> {
+                    // ISBN을 기준으로 책 조회
                     Optional<Book> bookOpt = bookRepository.findByIsbn(isbn);
                     if (bookOpt.isPresent()) {
+                        // 책이 이미 DB에 있으면 기존 책 사용
                         return bookOpt.get();
                     } else {
+                        // 없으면 외부 API를 통해 저장 후 반환
                         return fetchAndSaveBook(isbn);
                     }
                 })
