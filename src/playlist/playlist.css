@@ -183,17 +183,43 @@
   
   .book-list {
     display: flex;
+  
     flex-direction: column;
     position: absolute;
     left: 470px;
     top: 170px;
-    width: 660px;
+    width: 665px;
     height: 390px;
     overflow-y: auto;
     max-height: 420px;
     max-height: 650px;
   }
   
+  .book-list::-webkit-scrollbar {
+    width: 10px;
+    
+  }
+  .book-list::-webkit-scrollbar-track { 
+    background-color: rgb(221, 219, 219);
+  }
+  .book-list::-webkit-scrollbar-thumb { 
+    background-color: rgb(193, 251, 166);
+  }  
+  .book-list::-webkit-scrollbar-button {
+    display: none;
+  }
+
+/* hover ȿ�� */
+.book-list::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(231, 255, 214);
+    transition: all 0.2s; /* �۵� �� �� */
+}
+
+/* �ڳʿ� ���� ȿ�� */
+.book-list::-webkit-scrollbar-track,
+.book-list::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+}
   .book-item {
     display: flex;
     align-items: center;
@@ -239,7 +265,7 @@
     margin-left: 30px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* 왼쪽 정렬 */
+    align-items: flex-start; /* ?���? ?��?�� */
   }
   .result-title h3 {
     margin-bottom: 0px;
@@ -249,6 +275,8 @@
     overflow-y: auto;
     max-height: 460px;
   }
+
+  
   
   .mystudy {
     border-top: 1px solid #333;
@@ -264,7 +292,7 @@
     height: 40px;
     font-size: 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);;
-    margin-left: auto; /* 버튼을 오른쪽 끝으로 이동 */
+    margin-left: auto; /* 버튼?�� ?��른쪽 ?��?���? ?��?�� */
     margin-right: 40px;
   }
   
@@ -384,4 +412,23 @@
     margin-left: 50px;
     margin-bottom: 10px;
     
+}
+
+.booktitle {
+  margin-bottom: 15px;
+}
+
+.remove-book-btn {
+  margin-left: auto;
+  background-color: white;
+  border: 1px solid rgb(236, 235, 235);
+  border-radius: 30px;
+  width: 50px;
+  height: 50px;
+  margin-top: 15px;
+  margin-right: 10px;
+}
+
+.remove-book-btn:hover {
+  background-color: #ffe8e8;
 }
