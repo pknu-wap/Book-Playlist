@@ -21,9 +21,6 @@ function PlaylistModal({ onClose }) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
 
-
-  const [successMessage, setSuccessMessage] = useState('');
-
   const closeModal = () => {
     if (onClose) onClose();
   };
@@ -109,7 +106,7 @@ function PlaylistModal({ onClose }) {
         }
       );
 ;
-      setSuccessMessage('플레이리스트가 저장되었습니다');
+      alert("플레이리스트가 저장되었습니다.")
     } catch (error) {
       console.error(
         'Error saving playlist:',
@@ -173,13 +170,6 @@ function PlaylistModal({ onClose }) {
             <span className="material-symbols-outlined">check</span>
             <p>저장</p>
           </button>
-
-          {/* 성공 메시지 표시 */}
-          {successMessage && (
-            <div className="success-message">
-              {successMessage}
-            </div>
-          )}
 
           <div className="book-cover-box">
             {selectedBook.cover ? (
