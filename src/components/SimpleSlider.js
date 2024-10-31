@@ -1,106 +1,76 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/SimpleSlider.css";
+import { PiX } from "react-icons/pi";
 
-const books = [
-  {
-    id: 1,
-    title: "소년이 온다",
-    author: "한강",
-    imageUrl: "https://shopping-phinf.pstatic.net/main_3249140/32491401626.20231004072435.jpg",
-    link: "https://search.shopping.naver.com/book/catalog/32491401626",
-  },
-  {
-    id: 2,
-    title: "채식주의자",
-    author: "한강",
-    imageUrl: "https://shopping-phinf.pstatic.net/main_3248204/32482041666.20230725121007.jpg",
-    link: "https://search.shopping.naver.com/book/catalog/32482041666",
-  },
-  {
-    id: 3,
-    title: "작별하지 않는다",
-    author: "한강",
-    imageUrl: "https://shopping-phinf.pstatic.net/main_3243636/32436366634.20231124160335.jpg",
-    link: "https://search.shopping.naver.com/book/catalog/32436366634",
-  },
-  {
-    id: 4,
-    title: "서랍에 저녁을 넣어 두었다",
-    author: "한강",
-    imageUrl: "https://shopping-phinf.pstatic.net/main_3246312/32463129802.20230906071157.jpg",
-    link: "https://search.shopping.naver.com/book/catalog/32463129802",
-  },
-  {
-    id: 5,
-    title: "흰",
-    author: "한강",
-    imageUrl: "https://shopping-phinf.pstatic.net/main_3247462/32474620790.20230411162531.jpg",
-    link: "https://search.shopping.naver.com/book/catalog/32474620790",
-  },
-  {
-    id: 6,
-    title: "디 에센셜: 한강(무선 보급판)",
-    author: "한강",
-    imageUrl: "https://shopping-phinf.pstatic.net/main_4033456/40334563624.20230905101215.jpg",
-    link: "https://search.shopping.naver.com/book/catalog/40334563624",
-  },
-  {
-    id: 7,
-    title: "희랍어 시간",
-    author: "한강",
-    imageUrl: "https://shopping-phinf.pstatic.net/main_3247609/32476098329.20230829085010.jpg",
-    link: "https://search.shopping.naver.com/book/catalog/32476098329",
-  },
-  {
-    id: 8,
-    title: "바람이 분다 가라",
-    author: "한강",
-    imageUrl: "https://shopping-phinf.pstatic.net/main_3243612/32436121771.20240420071014.jpg",
-    link: "https://search.shopping.naver.com/book/catalog/32436121771",
-  },
-  {
-    id: 9,
-    title: "여수의 사랑",
-    author: "한강",
-    imageUrl: "https://shopping-phinf.pstatic.net/main_3247665/32476659958.20221019142626.jpg",
-    link: "https://search.shopping.naver.com/book/catalog/32476659958",
-  },
-  {
-    id: 10,
-    title: "천둥 꼬마 선녀 번개 꼬마 선녀",
-    author: "한강",
-    imageUrl: "https://shopping-phinf.pstatic.net/main_3249260/32492607737.20230502164320.jpg",
-    link: "https://search.shopping.naver.com/book/catalog/32492607737",
-  }
-];
+// Arrow components for the slider
+const SampleNextArrow = ({ className, style, onClick }) => (
+  <div
+    className={className}
+    style={{
+      ...style,
+      display: "block",
+      background: "gray",
+      width: "18px",
+      height: "16px",
+      borderRadius: "50%",
+    }}
+    onClick={onClick}
+  />
+);
 
-function SampleNextArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "block", background: "gray", width: "18px", height: "16px", borderRadius: "50%" }}
-      onClick={onClick}
-    />
-  );
-}
+const SamplePrevArrow = ({ className, style, onClick }) => (
+  <div
+    className={className}
+    style={{
+      ...style,
+      display: "block",
+      background: "gray",
+      width: "18px",
+      height: "16px",
+      borderRadius: "50%",
+    }}
+    onClick={onClick}
+  />
+);
 
-function SamplePrevArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "block", background: "gray", width: "18px", height: "16px", borderRadius: "50%" }}
-      onClick={onClick}
-    />
-  );
-}
-
-function SimpleSlider() {
+const SimpleSlider = () => {
+  const [searchResults, setSearchResults] = useState([]); // API로부터 받은 책 목록
   const [hoveredBook, setHoveredBook] = useState(null); // 현재 hover된 책의 ID
+  const [loading, setLoading] = useState(true); // 로딩 상태 관리
+
+  // API 요청을 위한 함수
+  const handleSearch = async () => {
+    setLoading(true); // 요청 시작 시 로딩 상태 true로 설정
+    try {
+      const response = await axios.get(
+        `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books`,
+        {
+          params: { query: "한강" }, // 검색할 쿼리
+        }
+      );
+  
+      // JSON 응답에서 items에 순서 부여
+      const itemsWithId = response.data.items.map((item, index) => ({
+        ...item, // 기존 item의 모든 속성을 복사
+        id: index + 1, // index + 1로 id 속성 추가
+      }));
+  
+      setSearchResults(itemsWithId); // API 응답으로부터 책 목록 설정
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false); // 요청 완료 후 로딩 상태 false로 설정
+    }
+  };
+  
+  useEffect(() => {
+    handleSearch(); // 컴포넌트가 마운트될 때 API 요청
+  }, []);
 
   const settings = {
     arrows: true,
@@ -111,7 +81,7 @@ function SimpleSlider() {
     slidesToScroll: 5,
     centerPadding: "20px",
     nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />
+    prevArrow: <SamplePrevArrow />,
   };
 
   const containerStyle = {
@@ -120,45 +90,63 @@ function SimpleSlider() {
     minWidth: "1100px",
     padding: "0 20px",
     boxSizing: "border-box",
-    marginLeft: "100px",
-    marginRight: "100px",
-    marginBottom: "100px"
+    margin: "0 100px 100px",
   };
 
   return (
     <main className="slider-container" style={containerStyle}>
-      <div>
-        <h3>지금 가장 핫한 책을 만나보세요!</h3>
+      <h3>지금 가장 핫한 책을 만나보세요!</h3>
+      {loading ? ( // 로딩 상태에 따라 로딩 메시지 표시
+        <div style={{ textAlign: "center", margin: "20px 0" }}>
+          <img src ="loading-gif-png-5.gif" style ={{
+            width: '200px', height:'200px'
+          }}></img>
+        </div>
+      ) : (
         <Slider {...settings}>
-          {books.map((book) => (
-            <div key={book.id} style={{ textAlign: "center", margin: "0 5px", padding: "10" }}>
-              <a href={book.link}>
+          {searchResults.map((book) => (
+            <div
+              key={book.id}
+              style={{
+                textAlign: "center",
+                margin: "0 5px",
+                padding: "10px",
+              }}
+            >
+              <a href={book.link} target="_blank" rel="noopener noreferrer">
                 <img
-                  src={book.imageUrl}
+                  src={book.image}
                   alt={book.title}
                   style={{
                     marginTop: "20px",
-                    marginLeft: "20px",
                     objectFit: "cover",
                     width: "143.81px",
                     height: "190.4px",
                     borderRadius: "10px",
                     transition: "transform 0.3s ease",
-                    transform: hoveredBook === book.id ? "scale(1.1)" : "scale(1)"
+                    transform: hoveredBook === book.id ? "scale(1.1)" : "scale(1)",
                   }}
                   onMouseEnter={() => setHoveredBook(book.id)}
                   onMouseLeave={() => setHoveredBook(null)}
                 />
               </a>
-              <h4 className="book-title" style={{ marginLeft: "40px", width: "100px", paddingRight: "20px", marginBottom: "0" }}>
-                {book.title}
+
+              <h4
+                className="book-title"
+                style={{
+                  margin: "10px 0 0",
+                  paddingRight: "20px",
+                  width: "100px",
+                }}
+              >
+                {book.title.length > 6 ? `${book.title.slice(0, 6)}...` : book.title}
               </h4>
             </div>
           ))}
         </Slider>
-      </div>
+      )}
     </main>
   );
-}
+};
 
 export default SimpleSlider;

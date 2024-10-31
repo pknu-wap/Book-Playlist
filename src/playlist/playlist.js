@@ -19,8 +19,6 @@ function PlaylistModal({ onClose }) {
   const [playlistTitle, setPlaylistTitle] = useState('플레이리스트 제목');
   const [playlistDescription, setPlaylistDescription] = useState('플레이리스트 설명');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-
-
   const closeModal = () => {
     if (onClose) onClose();
   };
@@ -106,6 +104,7 @@ function PlaylistModal({ onClose }) {
         }
       );
 ;
+
       alert("플레이리스트가 저장되었습니다.")
     } catch (error) {
       console.error(
@@ -170,7 +169,6 @@ function PlaylistModal({ onClose }) {
             <span className="material-symbols-outlined">check</span>
             <p>저장</p>
           </button>
-
           <div className="book-cover-box">
             {selectedBook.cover ? (
               <img
