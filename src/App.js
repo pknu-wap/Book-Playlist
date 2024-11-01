@@ -129,7 +129,7 @@ const Sidebar = () => {
   );
 }
 
-const PlaylistButton = ({onClick}) => {
+const PlaylistButton = ({ onClick }) => {
   return (
     <div className="MakePlaylist">
       <button className="playlistButton" type="button" onClick={onClick}>플레이리스트 만들기</button>
@@ -168,6 +168,7 @@ const SearchBar = () => {
 function App() {
   const [isPlaylistOpen, setIsPlaylistModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
   const location = useLocation();
 
   const isLoginOrRegisterPage = location.pathname === '/login' || location.pathname === '/register';
@@ -180,7 +181,12 @@ function App() {
   }, []);
 
   const openPlaylistModal = () => {
-    setIsPlaylistModalOpen(true);
+    if (!isLoggedIn) {
+      alert('로그인/회원가입을 해주세요.');
+      navigate('/login');
+    } else {
+      setIsPlaylistModalOpen(true);
+    }
   };
 
   const closePlaylistModal = () => {
@@ -207,47 +213,46 @@ function App() {
   };
 
   return (
-      <div className="App">
-        {/* 로그인 또는 회원가입 페이지가 아니면 Header와 Sidebar 표시 */}
-        {!isLoginOrRegisterPage && <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />}
-        {!isLoginOrRegisterPage && <Sidebar />}
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={
-              <>
-                <div className="slider-container">
-                  <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
-                    <h2 style={{ marginLeft: '120px' }}>🔥 BEST SELLER</h2>
-                    <SimpleSlider {...settings}>
-                      {books.map((book) => (
-                        <div key={book.id} style={{ textAlign: 'center', padding: '10px' }}>
-                          <img src={book.imageUrl} alt={book.title} />
-                          <h4 style={{ margin: '10px 0' }}>{book.title}</h4>
-                        </div>
-                      ))}
-                    </SimpleSlider>
-                  </section>
-                  <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
-                    <h2 style={{ marginLeft: '120px' }}>🔥 TODAY'S PLAYLIST</h2>
-                    <SimpleSlider1 playlists={playlists} {...settings}>
-                      {playlists.map((playlist) => (
-                        <div key={playlist.id} style={{ textAlign: 'center', padding: '10px' }}>
-                          <img src={playlist.imageUrl} alt={playlist.title} />
-                          <h4 style={{ margin: '10px 0' }}>{playlist.title}</h4>
-                        </div>
-                      ))}
-                    </SimpleSlider1>
-                  </section>
-                </div>
-                <PlaylistButton onClick={openPlaylistModal} />
-                {isPlaylistOpen && <Playlist onClose={closePlaylistModal} />}
-              </>
-            } />
-            <Route path="/login" element={<Login onLogin={handleLogin}/>} />
-            <Route path="/register" element={<Register />} />
-          </Routes>
-        </main>
-      </div>
+    <div className="App">
+      {!isLoginOrRegisterPage && <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />}
+      {!isLoginOrRegisterPage && <Sidebar />}
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={
+            <>
+              <div className="slider-container">
+                <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
+                  <h2 style={{ marginLeft: '120px' }}>🔥 BEST SELLER</h2>
+                  <SimpleSlider {...settings}>
+                    {books.map((book) => (
+                      <div key={book.id} style={{ textAlign: 'center', padding: '10px' }}>
+                        <img src={book.imageUrl} alt={book.title} />
+                        <h4 style={{ margin: '10px 0' }}>{book.title}</h4>
+                      </div>
+                    ))}
+                  </SimpleSlider>
+                </section>
+                <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
+                  <h2 style={{ marginLeft: '120px' }}>🔥 TODAY'S PLAYLIST</h2>
+                  <SimpleSlider1 playlists={playlists} {...settings}>
+                    {playlists.map((playlist) => (
+                      <div key={playlist.id} style={{ textAlign: 'center', padding: '10px' }}>
+                        <img src={playlist.imageUrl} alt={playlist.title} />
+                        <h4 style={{ margin: '10px 0' }}>{playlist.title}</h4>
+                      </div>
+                    ))}
+                  </SimpleSlider1>
+                </section>
+              </div>
+              <PlaylistButton onClick={openPlaylistModal} />
+              {isPlaylistOpen && <Playlist onClose={closePlaylistModal} />}
+            </>
+          } />
+          <Route path="/login" element={<Login onLogin={handleLogin}/>} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
