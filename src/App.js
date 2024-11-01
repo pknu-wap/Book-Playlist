@@ -56,7 +56,7 @@ const Sidebar = () => {
   );
 }
 
-const PlaylistButton = ({onClick}) => {
+const PlaylistButton = ({ onClick }) => {
   return (
     <div className="MakePlaylist">
       <button className="playlistButton" type="button" onClick={onClick}>플레이리스트 만들기</button>
@@ -95,7 +95,8 @@ const SearchBar = () => {
 function App() {
   const [isPlaylistOpen, setIsPlaylistModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [books, setBooks] = useState([]); // 책 목록을 저장할 상태 추가
+  const navigate = useNavigate();
+  const [books, setBooks] = useState([]);
   const location = useLocation();
 
   const isLoginOrRegisterPage = location.pathname === '/login' || location.pathname === '/register';
@@ -106,6 +107,7 @@ function App() {
       setIsLoggedIn(true);
     }
   }, []);
+
   // API 요청을 위한 useEffect
   useEffect(() => {
     const fetchBooks = async () => {
@@ -113,25 +115,31 @@ function App() {
         const response = await axios.get(
           "https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books",
           {
-            params: { query: "한강" }, // 검색할 쿼리
+            params: { query: "한강" },
           }
         );
 
         const itemsWithId = response.data.items.map((item, index) => ({
-          ...item, // 기존 item의 모든 속성을 복사
-          id: index + 1, // index + 1로 id 속성 추가
+          ...item,
+          id: index + 1,
         }));
 
-        setBooks(response.data.items); // API 응답으로부터 책 목록 설정
+        setBooks(itemsWithId);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchBooks(); // API 요청 함수 호출
-  }, []); // 컴포넌트가 마운트될 때만 호출
+    fetchBooks();
+  }, []);
+
   const openPlaylistModal = () => {
-    setIsPlaylistModalOpen(true);
+    if (!isLoggedIn) {
+      alert('로그인/회원가입을 해주세요.');
+      navigate('/login');
+    } else {
+      setIsPlaylistModalOpen(true);
+    }
   };
 
   const closePlaylistModal = () => {
@@ -157,48 +165,54 @@ function App() {
     slidesToScroll: 5,
   };
 
+  const playlists = Array.from({ length: 20 }, (_, index) => ({
+    id: `playlist-${index + 1}`,
+    title: `플레이리스트 ${index + 1}`,
+    author: '저자명',
+    imageUrl: `https://via.placeholder.com/150?text=Item+${index + 1}`,
+  }));
+
   return (
-      <div className="App">
-        {/* 로그인 또는 회원가입 페이지가 아니면 Header와 Sidebar 표시 */}
-        {!isLoginOrRegisterPage && <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />}
-        {!isLoginOrRegisterPage && <Sidebar />}
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={
-              <>
-                <div className="slider-container">
-                  <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
-                    <h2 style={{ marginLeft: '120px' }}>🔥 BEST SELLER</h2>
-                    <SimpleSlider {...settings}>
-                      {books.map((book) => ( // books를 사용
-                        <div key={book.id} style={{ textAlign: 'center', padding: '10px' }}>
-                          <img src={book.imageUrl} alt={book.title} />
-                          <h4 style={{ margin: '10px 0' }}>{book.title}</h4>
-                        </div>
-                      ))}
-                    </SimpleSlider>
-                  </section>
-                  <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
-                    <h2 style={{ marginLeft: '120px' }}>🔥 TODAY'S PLAYLIST</h2>
-                    <SimpleSlider1 playlists={playlists} {...settings}>
-                      {playlists.map((playlist) => (
-                        <div key={playlist.id} style={{ textAlign: 'center', padding: '10px' }}>
-                          <img src={playlist.imageUrl} alt={playlist.title} />
-                          <h4 style={{ margin: '10px 0' }}>{playlist.title}</h4>
-                        </div>
-                      ))}
-                    </SimpleSlider1>
-                  </section>
-                </div>
-                <PlaylistButton onClick={openPlaylistModal} />
-                {isPlaylistOpen && <Playlist onClose={closePlaylistModal} />}
-              </>
-            } />
-            <Route path="/login" element={<Login onLogin={handleLogin}/>} />
-            <Route path="/register" element={<Register />} />
-          </Routes>
-        </main>
-      </div>
+    <div className="App">
+      {!isLoginOrRegisterPage && <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />}
+      {!isLoginOrRegisterPage && <Sidebar />}
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={
+            <>
+              <div className="slider-container">
+                <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
+                  <h2 style={{ marginLeft: '120px' }}>🔥 BEST SELLER</h2>
+                  <SimpleSlider {...settings}>
+                    {books.map((book) => (
+                      <div key={book.id} style={{ textAlign: 'center', padding: '10px' }}>
+                        <img src={book.imageUrl} alt={book.title} />
+                        <h4 style={{ margin: '10px 0' }}>{book.title}</h4>
+                      </div>
+                    ))}
+                  </SimpleSlider>
+                </section>
+                <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
+                  <h2 style={{ marginLeft: '120px' }}>🔥 TODAY'S PLAYLIST</h2>
+                  <SimpleSlider1 playlists={playlists} {...settings}>
+                    {playlists.map((playlist) => (
+                      <div key={playlist.id} style={{ textAlign: 'center', padding: '10px' }}>
+                        <img src={playlist.imageUrl} alt={playlist.title} />
+                        <h4 style={{ margin: '10px 0' }}>{playlist.title}</h4>
+                      </div>
+                    ))}
+                  </SimpleSlider1>
+                </section>
+              </div>
+              <PlaylistButton onClick={openPlaylistModal} />
+              {isPlaylistOpen && <Playlist onClose={closePlaylistModal} />}
+            </>
+          } />
+          <Route path="/login" element={<Login onLogin={handleLogin}/>} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
