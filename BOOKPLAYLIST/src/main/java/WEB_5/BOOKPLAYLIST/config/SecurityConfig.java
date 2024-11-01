@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -12,8 +13,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-@Configuration
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig {
 
     @Bean
@@ -26,7 +27,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/playlist/**").authenticated() // 세션 로그인 필요
                         .anyRequest().permitAll()
                 )
-                .httpBasic();
+                .formLogin(); // 폼 기반 인증 활성화
+
+        http.httpBasic(AbstractHttpConfigurer::disable); // HTTP Basic 인증 비활성화
 
         return http.build();
     }
@@ -34,7 +37,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://book-playlist.netlify.app/"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://book-playlist.netlify.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
