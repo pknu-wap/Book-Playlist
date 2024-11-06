@@ -29,14 +29,7 @@ const Sidebar = () => {
       <div className="sidebar">
         <nav>
           <ul>
-            <li>
-              <img src={Icon1} alt="Icon1" />
-              <Link to="/login">로그인</Link>
-            </li>
-            <li>
-              <img src={Icon2} alt="Icon2" />
-              <Link to="/register">회원가입</Link>
-            </li>
+      
             <li>
               <img src={Icon3} alt="Icon3" />
               <a href="#">마이페이지</a>
