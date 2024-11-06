@@ -1,0 +1,28 @@
+/* Rectangle 9 */
+
+position: absolute;
+width: 213px;
+height: 282px;
+left: 738px;
+top: 317px;
+
+background: #D9D9D9;
+box-shadow: 4px 4px 30px rgba(0, 0, 0, 0.1);
+border-radius: 10px;
+
+
+/* Rectangle 5 */
+
+box-sizing: border-box;
+
+{position: absolute;
+width: 690px;
+height: 62px;
+left: 619px;
+top: 34px;
+
+background: #FFFFFF;
+border: 2px solid #9D9D9D;
+box-shadow: 0px 0px 7px #999999;
+border-radius: 30px;
+}

@@ -16,14 +16,9 @@ function PlaylistModal({ onClose }) {
 
   const MAX_EMPTY_ITEMS = 5; 
 
-  const [playlistTitle, setPlaylistTitle] = useState('플레이리스트 제목');
-  const [playlistDescription, setPlaylistDescription] = useState('플레이리스트 설명');
+  const [playlistTitle, setPlaylistTitle] = useState('');
+  const [playlistDescription, setPlaylistDescription] = useState('');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-
-
-
-  const [successMessage, setSuccessMessage] = useState('');
-
   const closeModal = () => {
     if (onClose) onClose();
   };
@@ -109,7 +104,8 @@ function PlaylistModal({ onClose }) {
         }
       );
 ;
-      setSuccessMessage('플레이리스트가 저장되었습니다');
+
+      alert("플레이리스트가 저장되었습니다.")
     } catch (error) {
       console.error(
         'Error saving playlist:',
@@ -135,24 +131,24 @@ function PlaylistModal({ onClose }) {
                     type="text"
                     value={playlistTitle}
                     onChange={(e) => setPlaylistTitle(e.target.value)}
-                    placeholder="플레이리스트 제목을 입력하세요"
+                    placeholder="플레이리스트 제목"
                   />
                   <input
                     type="text"
                     value={playlistDescription}
                     onChange={(e) => setPlaylistDescription(e.target.value)}
-                    placeholder="플레이리스트 설명을 입력하세요"
+                    placeholder="플레이리스트 설명"
                   />
                 </div>
                 <button onClick={handleSaveTitle} className='pltitlesave'>
-                  <span className="material-symbols-outlined">edit</span>
+                  <span className="material-symbols-outlined">check_circle</span>
                 </button>
               </div>
             ) : (
               <div className='pledit1'>
                 <div className='edittitle1'>
-                  <h2>{playlistTitle}</h2>
-                  <p>{playlistDescription}</p>
+                 <h2>{playlistTitle || '플레이리스트 제목'}</h2>
+                 <p>{playlistDescription || '플레이리스트 설명'}</p>
                 </div>
                 <button onClick={handleEditTitle}>
                   <span className="material-symbols-outlined">edit</span>
@@ -173,14 +169,6 @@ function PlaylistModal({ onClose }) {
             <span className="material-symbols-outlined">check</span>
             <p>저장</p>
           </button>
-
-          {/* 성공 메시지 표시 */}
-          {successMessage && (
-            <div className="success-message">
-              {successMessage}
-            </div>
-          )}
-
           <div className="book-cover-box">
             {selectedBook.cover ? (
               <img

@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/SimpleSlider.css";
 import { SiCalendly } from "react-icons/si";
+import ImageExam from '../logos/playlistexam.png';
 
 const playlists = Array.from({ length: 20 }, (_, index) => ({
   id: `playlist-${index + 1}`,
@@ -67,7 +68,7 @@ function SimpleSlider() {
           <Slider {...settings}>
             {playlists.map((book) => (
               <div key={book.id} style={{ textAlign: 'center', margin: '0 5px', padding: '10px'}}>
-                <img src={book.imageUrl} alt={book.title} style={{
+                <img src={ImageExam} alt={book.title} style={{
                   marginTop: '20px',
                   marginLeft : '20px',  
                   objectFit: 'cover', // 이미지 비율 유지

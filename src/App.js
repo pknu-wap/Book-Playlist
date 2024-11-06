@@ -14,80 +14,7 @@ import Icon5 from './logos/아이콘5.png';
 import Logo from './logos/로고.png';
 import Login from './Login.jsx';
 import Register from './Register.jsx';
-
-const books = [
-  {
-    id: 1,
-    title: "소년이 온다",
-    author: "한강",
-    imageUrl: "https://shopping-phinf.pstatic.net/main_3249140/32491401626.20231004072435.jpg",
-    link: "https://search.shopping.naver.com/book/catalog/32491401626",
-  },
-
-{
-  id: 2,
-  title: "채식주의자",
-  author: "한강",
-  imageUrl: "https://shopping-phinf.pstatic.net/main_3248204/32482041666.20230725121007.jpg",
-  link: "https://search.shopping.naver.com/book/catalog/32482041666",
-},
-{
-  id: 3,
-  title: "작별하지 않는다",
-  author: "한강",
-  imageUrl: "https://shopping-phinf.pstatic.net/main_3243636/32436366634.20231124160335.jpg",
-  link: "https://search.shopping.naver.com/book/catalog/32436366634",
-},
-{
-  id: 4,
-  title: "서랍에 저녁을 넣어 두었다",
-  author: "한강",
-  imageUrl: "https://shopping-phinf.pstatic.net/main_3246312/32463129802.20230906071157.jpg",
-  link: "https://search.shopping.naver.com/book/catalog/32463129802",
-},
-{
-  id: 5,
-  title: "흰",
-  author: "한강",
-  imageUrl: "https://shopping-phinf.pstatic.net/main_3247462/32474620790.20230411162531.jpg",
-  link: "https://search.shopping.naver.com/book/catalog/32474620790",
-},
-{
-  id: 6,
-  title: "디 에센셜: 한강(무선 보급판)",
-  author: "한강",
-  imageUrl: "https://shopping-phinf.pstatic.net/main_4033456/40334563624.20230905101215.jpg",
-  link: "https://search.shopping.naver.com/book/catalog/40334563624",
-},
-{
-  id: 7,
-  title: "희랍어 시간",
-  author: "한강",
-  imageUrl: "https://shopping-phinf.pstatic.net/main_3247609/32476098329.20230829085010.jpg",
-  link: "https://search.shopping.naver.com/book/catalog/32476098329",
-},
-{
-  id: 8,
-  title: "바람이 분다 가라",
-  author: "한강",
-  imageUrl: "https://shopping-phinf.pstatic.net/main_3243612/32436121771.20240420071014.jpg",
-  link: "https://search.shopping.naver.com/book/catalog/32436121771",
-},
-{
-  id: 9,
-  title: "여수의 사랑",
-  author: "한강",
-  imageUrl: "https://shopping-phinf.pstatic.net/main_3247665/32476659958.20221019142626.jpg",
-  link: "https://search.shopping.naver.com/book/catalog/32476659958",
-},
-{
-  id: 10,
-  title: "천둥 꼬마 선녀 번개 꼬마 선녀",
-  author: "한강",
-  imageUrl: "https://shopping-phinf.pstatic.net/main_3249260/32492607737.20230502164320.jpg",
-  link: "https://search.shopping.naver.com/book/catalog/32492607737",
-}
-];
+import axios from 'axios'; // axios를 import합니다.
 
 const playlists = Array.from({ length: 20 }, (_, index) => ({
   id: `playlist-${index + 1}`, // 백틱 추가
@@ -168,7 +95,6 @@ const SearchBar = () => {
 function App() {
   const [isPlaylistOpen, setIsPlaylistModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
   const location = useLocation();
 
   const isLoginOrRegisterPage = location.pathname === '/login' || location.pathname === '/register';
@@ -178,6 +104,31 @@ function App() {
     if (user) {
       setIsLoggedIn(true);
     }
+  }, []);
+
+  // API 요청을 위한 useEffect
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await axios.get(
+          "https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books",
+          {
+            params: { query: "한강" },
+          }
+        );
+
+        const itemsWithId = response.data.items.map((item, index) => ({
+          ...item,
+          id: index + 1,
+        }));
+
+        setBooks(itemsWithId);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchBooks();
   }, []);
 
   const openPlaylistModal = () => {
@@ -211,6 +162,13 @@ function App() {
     slidesToShow: 5,
     slidesToScroll: 5,
   };
+
+  const playlists = Array.from({ length: 20 }, (_, index) => ({
+    id: `playlist-${index + 1}`,
+    title: `플레이리스트 ${index + 1}`,
+    author: '저자명',
+    imageUrl: `https://via.placeholder.com/150?text=Item+${index + 1}`,
+  }));
 
   return (
     <div className="App">
