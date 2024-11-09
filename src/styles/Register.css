@@ -28,7 +28,7 @@
 }
 
 /* 폼 컨테이너 스타일 */
-.formContainer {
+.registerForm {
     width: 440px;
     padding: 40px;
     box-sizing: border-box;
@@ -48,18 +48,21 @@
     margin-bottom: 40px;
 }
 
-/* 입력 필드 스타일 */
+/* 입력 필드 컨테이너 스타일 */
 .inputWrap {
-    margin-top: 20px;
     display: flex;
+    align-items: center; /* 버튼과 입력 필드 수직 정렬 */
     border-radius: 8px;
-    padding: 16px;
-    background-color: #ffffff;
+    padding: 0 10px;
+    background-color: white;
     border: 1.5px solid #999999;
+    margin-top: 20px;
 }
 
+/* 입력 필드 스타일 */
 .input {
-    width: 100%;
+    flex: 1; /* 입력 필드가 버튼 외 공간을 채우도록 설정 */
+    height: 40px; /* 버튼과 동일한 높이 */
     outline: none;
     border: none;
     font-size: 16px;
@@ -67,7 +70,34 @@
     color: #242424;
 }
 
-/* 버튼 스타일 */
+/* 중복 확인 버튼 스타일 (크기 줄임) */
+.duplicateButton {
+    width: 70px; /* 버튼 너비: 기존 크기에서 2/3로 줄임 */
+    height: 30px; /* 버튼 높이: 기존 높이에서 2/3로 줄임 */
+    font-size: 12px; /* 텍스트 크기도 조정 */
+    font-weight: 700;
+    background-color: #999999;
+    border-radius: 15px; /* 모서리를 둥글게 */
+    color: white;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s;
+    margin-left: 10px; /* 입력 필드와 버튼 간격 */
+}
+
+/* 중복 확인 버튼 호버 효과 */
+.duplicateButton:hover {
+    background-color: #666666;
+}
+
+/* 에러 메시지 스타일 */
+.errorMessageWrap {
+    font-size: 14px;
+    color: red;
+    margin-top: 5px;
+}
+
+/* 회원가입 버튼 스타일 */
 .bottomButton {
     width: 100%;
     height: 54px;
@@ -79,8 +109,10 @@
     color: #FFFFFF;
     cursor: pointer;
     font-size: 18px;
+    transition: background-color 0.3s;
 }
 
+/* 비활성화 상태 */
 .bottomButton:disabled {
     background-color: #dadada;
     cursor: not-allowed;
@@ -95,21 +127,4 @@
     text-align: center;
     text-decoration: underline;
     margin-top: 20px;
-}
-
-.bottomButton {
-    width: 100%;
-    height: 48px;
-    border: none;
-    font-weight: 700;
-    background-color: #999999;
-    border-radius: 30px; /* border-radius가 30px인 것을 유지 */
-    color: #ffffff;
-    cursor: pointer;
-    transition: background-color 0.3s; /* 클릭 시 색 변화를 부드럽게 */
-}
-
-.bottomButton:disabled {
-    background-color: #dadada;
-    color: #ffffff;
 }
