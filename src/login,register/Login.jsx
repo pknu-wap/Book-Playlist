@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './styles/Login.css';
+import '../styles/Login.css';
 
 export default function Login({ onLogin }) { // onLogin prop을 통해 로그인 상태 업데이트
     const [email, setEmail] = useState('');

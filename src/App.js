@@ -12,8 +12,8 @@ import Icon3 from './logos/아이콘3.png';
 import Icon4 from './logos/아이콘4.png';
 import Icon5 from './logos/아이콘5.png';
 import Logo from './logos/로고.png';
-import Login from './Login.jsx';
-import Register from './Register.jsx';
+import Login from './login,register/Login.jsx';
+import Register from './login,register/Register.jsx';
 import axios from 'axios'; // axios를 import합니다.
 
 const playlists = Array.from({ length: 20 }, (_, index) => ({
