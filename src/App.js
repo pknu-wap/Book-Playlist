@@ -6,8 +6,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import SimpleSlider from './components/SimpleSlider.js';
 import SimpleSlider1 from './components/SimpleSlider1.js';
 import Playlist from './playlist/playlist.js';
-import Icon1 from './logos/아이콘1.png';
-import Icon2 from './logos/아이콘2.png';
 import Icon3 from './logos/아이콘3.png';
 import Icon4 from './logos/아이콘4.png';
 import Icon5 from './logos/아이콘5.png';
@@ -15,13 +13,7 @@ import Logo from './logos/로고.png';
 import Login from './Login.jsx';
 import Register from './Register.jsx';
 import axios from 'axios'; // axios를 import합니다.
-
-const playlists = Array.from({ length: 20 }, (_, index) => ({
-  id: `playlist-${index + 1}`, // 백틱 추가
-  title: `플레이리스트 ${index + 1}`, // 백틱 추가
-  author: '저자명',
-  imageUrl: `https://via.placeholder.com/150?text=Item+${index + 1}`, // 백틱 추가
-}));
+import MyPage from './Mypage/Mypage.js'
 
 const Sidebar = () => {
   return (   
@@ -32,7 +24,7 @@ const Sidebar = () => {
       
             <li>
               <img src={Icon3} alt="Icon3" />
-              <a href="#">마이페이지</a>
+              <Link to="/mypage">마이페이지</Link>
             </li>
             <li>
               <img src={Icon4} alt="Icon4" />
@@ -201,6 +193,7 @@ function App() {
               {isPlaylistOpen && <Playlist onClose={closePlaylistModal} />}
             </>
           } />
+          <Route path="/mypage" element={<MyPage />} />
           <Route path="/login" element={<Login onLogin={handleLogin}/>} />
           <Route path="/register" element={<Register />} />
         </Routes>
