@@ -32,25 +32,8 @@ public class PlaylistService {
     @Autowired
     private BookSearchService bookSearchService;
 
-    // 빈 플레이리스트 생성
-    public Long createEmptyPlaylist() {
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
-        Optional<User> userOpt = userRepository.findById(userId);
-
-        if (!userOpt.isPresent()) {
-            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
-        }
-
-        User user = userOpt.get();
-        Playlist playlist = new Playlist();
-        playlist.setUser(user);
-        playlist.setBooks(List.of());
-
-        Playlist savedPlaylist = playlistRepository.save(playlist);
-        return savedPlaylist.getId(); // 생성된 playlistId만 반환
-    }
-
-    public ResponseEntity<String> savePlaylist(Long playlistId, String title, String description, List<String> isbns) {
+    // 이미지를 포함한 플레이리스트 저장 메서드
+    public ResponseEntity<String> savePlaylist(Long playlistId, String title, String description, List<String> isbns, byte[] imageData) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         if (!playlistOpt.isPresent()) {
             return ResponseEntity.badRequest().body("플레이리스트를 찾을 수 없습니다.");
@@ -59,15 +42,16 @@ public class PlaylistService {
         Playlist playlist = playlistOpt.get();
         playlist.setTitle(title);
         playlist.setDescription(description);
+        playlist.setImageData(imageData); // 이미지 데이터 저장
 
         List<Book> booksToAdd = isbns.stream()
                 .distinct()
                 .map(isbn -> {
-                    Optional<Book> bookOpt = bookRepository.findTopByIsbn(isbn); // ISBN이 중복될 경우 첫 번째 책만 반환
+                    Optional<Book> bookOpt = bookRepository.findTopByIsbn(isbn);
                     if (bookOpt.isPresent()) {
                         return bookOpt.get();
                     } else {
-                        return fetchAndSaveBook(isbn);
+                        return fetchAndSaveBook(isbn); // fetchAndSaveBook 메서드 호출
                     }
                 })
                 .filter(book -> book != null && !playlist.getBooks().contains(book))
@@ -78,7 +62,7 @@ public class PlaylistService {
         return ResponseEntity.ok("플레이리스트가 성공적으로 저장되었습니다.");
     }
 
-    // 책을 외부 API에서 검색하여 저장
+    // 기존 fetchAndSaveBook 메서드 활용
     private Book fetchAndSaveBook(String isbn) {
         ResponseEntity<NaverBookResponse> response = bookSearchService.searchBooks(isbn);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
@@ -98,10 +82,28 @@ public class PlaylistService {
                 book.setIsbn(item.getIsbn());
                 book.setDescription(item.getDescription());
 
-                return bookRepository.save(book);
+                return bookRepository.save(book); // DB에 저장 후 저장된 객체 반환
             }
         }
         return null;
+    }
+
+    // 빈 플레이리스트 생성
+    public Long createEmptyPlaylist() {
+        Long userId = SecurityUtil.getCurrentUserIdFromSession();
+        Optional<User> userOpt = userRepository.findById(userId);
+
+        if (!userOpt.isPresent()) {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+        }
+
+        User user = userOpt.get();
+        Playlist playlist = new Playlist();
+        playlist.setUser(user);
+        playlist.setBooks(List.of());
+
+        Playlist savedPlaylist = playlistRepository.save(playlist);
+        return savedPlaylist.getId();
     }
 
     // 특정 플레이리스트 조회

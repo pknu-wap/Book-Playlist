@@ -14,3 +14,4 @@ public class SecurityUtil {
         throw new RuntimeException("로그인된 유저가 없습니다.");
     }
 }
+    
