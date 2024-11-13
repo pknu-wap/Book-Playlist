@@ -82,31 +82,6 @@ function PlaylistModal({ onClose }) {
     }
   };
 
-  const uploadImage = async () => {
-    if (playlistImage) {
-      const formData = new FormData();
-      formData.append('image', playlistImage);
-  
-      try {
-        const response = await axios.post(
-          'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save',
-          formData,
-          {
-            withCredentials: true,
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
-        );
-        return response.data.imageUrl; // 서버에서 반환하는 이미지 URL 또는 ID
-      } catch (error) {
-        console.error('Error uploading image:', error);
-        return null;
-      }
-    }
-    return null;
-  };
-
   const handleEditTitle = () => {
     setIsEditingTitle(true);
   };
@@ -117,37 +92,42 @@ function PlaylistModal({ onClose }) {
 
   const handleSavePlaylist = async () => {
     try {
-      const createResponse = await axios.post(
-        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/create',
-        null,
-        { withCredentials: true }
-      );
-      const playlistId = Number(createResponse.data.playlistId);
-  
-      const imageUrl = await uploadImage();
+        // 플레이리스트 생성 후 ID 가져오기
+        const createResponse = await axios.post(
+            'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/create',
+            null,
+            { withCredentials: true }
+        );
+        const playlistId = Number(createResponse.data.playlistId);
 
-      const playlistData = {
-        playlistId, 
-        title: playlistTitle,
-        description: playlistDescription,
-        isbns: bookList.map((book) => book.isbn),
-        imageUrl,
-      };
-  
-      await axios.post(
-        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save',
-        playlistData,
-        { withCredentials: true }
-      );
-  
-      alert('플레이리스트가 저장되었습니다.');
+        // FormData 객체 생성 및 데이터 추가
+        const formData = new FormData();
+        formData.append("playlistId", playlistId); // playlist ID
+        formData.append("title", playlistTitle); // 제목
+        formData.append("description", playlistDescription); // 설명
+        bookList.forEach((book) => formData.append("isbns", book.isbn)); // ISBN 목록
+        if (playlistImage) formData.append("image", playlistImage); // 이미지 파일
+
+        // 서버로 전송
+        await axios.post(
+            'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save',
+            formData,
+            {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+
+        alert('플레이리스트가 저장되었습니다.');
     } catch (error) {
-      console.error(
-        'Error saving playlist:',
-        error.response ? error.response.data : error.message
-      );
+        console.error(
+            'Error saving playlist:',
+            error.response ? error.response.data : error.message
+        );
     }
-  };
+};
   return (
     <>
       {/* 첫 번째 모달 */}
