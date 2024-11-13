@@ -158,6 +158,21 @@
   
   .search-results {
     margin-top: 10px;
+    width: 1200px;
+    height: 300px;
+  }
+  .search-results::-webkit-scrollbar {
+    width: 10px;
+    
+  }
+  .search-results::-webkit-scrollbar-track { 
+    background-color: rgb(221, 219, 219);
+  }
+  .search-results::-webkit-scrollbar-thumb { 
+    background-color: rgb(193, 251, 166);
+  }  
+  .search-results::-webkit-scrollbar-button {
+    display: none;
   }
   
   .book-result {
@@ -263,10 +278,27 @@
     margin-left: 30px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* ?���? ?��?�� */
+    align-items: flex-start;
+    flex: 1 1 0; /* 플렉스 크기 조절 */
+    white-space: nowrap; /* 줄바꿈을 없앰 */
+    overflow: hidden; /* 넘친 텍스트 숨김 */
+    text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+    max-width: 700px;
+    min-width: 0; 
   }
   .result-title h3 {
     margin-bottom: 0px;
+    white-space: nowrap; /* 줄바꿈을 없앰 */
+    overflow: hidden; /* 넘친 텍스트 숨김 */
+    text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+    max-width: 100%;
+  }
+
+  .result-title p {
+    white-space: nowrap; /* 줄바꿈을 없앰 */
+    overflow: hidden; /* 넘친 텍스트 숨김 */
+    text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+    max-width: 100%;
   }
   
   .search-results {
@@ -280,6 +312,7 @@
     border-top: 1px solid #333;
     width: 1240px;
     margin-left: -20px;
+    
   }
   
   .add-book-btn {
@@ -330,6 +363,33 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: #f0f0f0;
+    background-image: url('./plimage.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .plimage:hover .change-image-btn {
+    display: block;
+  }
+  
+  .change-image-btn {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 70px;
+    background-color: rgba(88, 88, 88, 0.5);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+  
+  .playlist-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .plsave {

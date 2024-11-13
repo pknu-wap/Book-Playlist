@@ -3,6 +3,7 @@ import './playlist.css';
 import axios from 'axios';
 
 function PlaylistModal({ onClose }) {
+  const [playlistImage, setPlaylistImage] = useState(null);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -14,7 +15,7 @@ function PlaylistModal({ onClose }) {
   });
   const [bookList, setBookList] = useState([]);
 
-  const MAX_EMPTY_ITEMS = 5; 
+  const MAX_EMPTY_ITEMS = 5;
 
   const [playlistTitle, setPlaylistTitle] = useState('');
   const [playlistDescription, setPlaylistDescription] = useState('');
@@ -75,6 +76,37 @@ function PlaylistModal({ onClose }) {
     });
   };
 
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setPlaylistImage(e.target.files[0]);
+    }
+  };
+
+  const uploadImage = async () => {
+    if (playlistImage) {
+      const formData = new FormData();
+      formData.append('image', playlistImage);
+  
+      try {
+        const response = await axios.post(
+          'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save',
+          formData,
+          {
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+        return response.data.imageUrl; // 서버에서 반환하는 이미지 URL 또는 ID
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        return null;
+      }
+    }
+    return null;
+  };
+
   const handleEditTitle = () => {
     setIsEditingTitle(true);
   };
@@ -90,22 +122,25 @@ function PlaylistModal({ onClose }) {
         null,
         { withCredentials: true }
       );
+      const playlistId = Number(createResponse.data.playlistId);
+  
+      const imageUrl = await uploadImage();
 
+      const playlistData = {
+        playlistId, 
+        title: playlistTitle,
+        description: playlistDescription,
+        isbns: bookList.map((book) => book.isbn),
+        imageUrl,
+      };
+  
       await axios.post(
         'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save',
-        {
-          playlistId: Number(createResponse.data.playlistId),
-          title: playlistTitle,
-          description: playlistDescription,
-          isbns: bookList.map((book) => book.isbn),
-        },
-        {
-          withCredentials: true,
-        }
+        playlistData,
+        { withCredentials: true }
       );
-;
-
-      alert("플레이리스트가 저장되었습니다.")
+  
+      alert('플레이리스트가 저장되었습니다.');
     } catch (error) {
       console.error(
         'Error saving playlist:',
@@ -113,7 +148,6 @@ function PlaylistModal({ onClose }) {
       );
     }
   };
-
   return (
     <>
       {/* 첫 번째 모달 */}
@@ -147,8 +181,8 @@ function PlaylistModal({ onClose }) {
             ) : (
               <div className='pledit1'>
                 <div className='edittitle1'>
-                 <h2>{playlistTitle || '플레이리스트 제목'}</h2>
-                 <p>{playlistDescription || '플레이리스트 설명'}</p>
+                  <h2>{playlistTitle || '플레이리스트 제목'}</h2>
+                  <p>{playlistDescription || '플레이리스트 설명'}</p>
                 </div>
                 <button onClick={handleEditTitle}>
                   <span className="material-symbols-outlined">edit</span>
@@ -158,8 +192,30 @@ function PlaylistModal({ onClose }) {
           </div>
 
           <div className="plimage">
-            <p>사진</p>
+            {playlistImage ? (
+              <img
+                src={URL.createObjectURL(playlistImage)}
+                alt="플레이리스트 이미지"
+                className="playlist-image"
+              />
+            ) : (
+              <p></p>
+            )}
+            <button
+              className="change-image-btn"
+              onClick={() => document.getElementById('imageInput').click()}
+            >
+              사진변경
+            </button>
+            <input
+              type="file"
+              id="imageInput"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleImageChange}
+            />
           </div>
+
 
           <button className="pladd" onClick={openSecondModal}>
             +
@@ -251,7 +307,7 @@ function PlaylistModal({ onClose }) {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="책 이름을 검색해주세요!"
+                placeholder="책 이름/저자를 검색해주세요!"
               />
               <button onClick={handleSearch}>
                 <span className="material-symbols-outlined">search</span>
