@@ -3,10 +3,13 @@
     height: 400px;
     border: 1px solid rgb(223, 222, 222);
     box-shadow: 0 4px 8px #dadada1a;
-    position: absolute;
     border-radius: 15px;
-    top: 450px;
-    left: 390px;
+    margin-top: 30px;
+    margin-left: 165px;
+}
+
+.topbox {
+    display: flex;
 }
 
 .Mycomment {
@@ -15,34 +18,30 @@
     border: 1px solid rgb(223, 222, 222);
     border-radius: 15px;
     box-shadow: 0 4px 8px #dadada1a;
-    position: absolute;
-    right: 81px;
-    
+    margin-left: 90px;
 }
 
 .userimage {
-    position: absolute;
     width: 130px;
     height: 130px;
     border-radius: 150px;
     box-shadow: 0 4px 8px #dadada1a;
     border: 1px solid rgb(223, 222, 222);
-    left: 470px;
-    top: 150px;
     background-image: url('./userimage.jpg');
     background-size: cover;
+    margin-left: 200px;
+    margin-top: 50px;
 }
 
 .username {
-    position: absolute;
     width: 150px;
     height: 40px;
     border: 1px solid rgb(223, 222, 222);
     border-radius: 15px;
     box-shadow: 0 4px 8px #dadada1a;
-    left: 460px;
-    top: 320px;
     text-align: center;
+    margin-left: 193px;
+    margin-top: 30px;
 }
 
 .username p {
