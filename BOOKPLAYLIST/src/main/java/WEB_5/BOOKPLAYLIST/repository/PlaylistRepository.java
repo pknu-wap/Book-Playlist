@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     List<Playlist> findTop10ByOrderByIdAsc();
+    // 특정 유저의 플레이리스트 조회
+    List<Playlist> findByUserId(Long userId);
 }

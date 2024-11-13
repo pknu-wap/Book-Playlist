@@ -1,5 +1,6 @@
 package WEB_5.BOOKPLAYLIST.service;
 
+import WEB_5.BOOKPLAYLIST.domain.dto.MyPagePlaylistDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistSummaryDTO;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
 import WEB_5.BOOKPLAYLIST.domain.entity.Book;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import WEB_5.BOOKPLAYLIST.repository.UserRepository;
 import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -130,6 +132,23 @@ public class PlaylistService {
                             playlist.getTitle(),
                             playlist.getUser().getUsername(),
                             firstBookImage
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+    public List<MyPagePlaylistDTO> getUserPlaylists() {
+        Long userId = SecurityUtil.getCurrentUserIdFromSession(); // 현재 로그인한 유저 ID 가져오기
+        List<Playlist> playlists = playlistRepository.findByUserId(userId); // 유저 ID로 플레이리스트 조회
+
+        // 필요한 정보만 포함한 DTO로 변환, 이미지 데이터는 Base64로 인코딩
+        return playlists.stream()
+                .map(playlist -> {
+                    String base64Image = playlist.getImageData() != null ?
+                            Base64.getEncoder().encodeToString(playlist.getImageData()) : null;
+                    return new MyPagePlaylistDTO(
+                            playlist.getId(),
+                            playlist.getTitle(),
+                            base64Image
                     );
                 })
                 .collect(Collectors.toList());
