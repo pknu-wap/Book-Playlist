@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './playlist.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 function PlaylistModal({ onClose }) {
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
@@ -13,6 +15,8 @@ function PlaylistModal({ onClose }) {
     author: '지은이',
   });
   const [bookList, setBookList] = useState([]);
+  const navigate = useNavigate(); // useNavigate 함수 가져오기
+
 
   const MAX_EMPTY_ITEMS = 5; 
 
@@ -44,6 +48,11 @@ function PlaylistModal({ onClose }) {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  };
+
+  // 새로운 함수: 책 클릭 시 상세 페이지로 이동
+  const goToBookDetail = (book) => {
+    navigate(`/book/${book.isbn}`, { state: { book } });
   };
 
   const handleAddBook = (book) => {
@@ -264,7 +273,10 @@ function PlaylistModal({ onClose }) {
               ) : (
                 searchResults.map((book, index) => (
                   <div key={index}>
-                    <div className="book-result">
+                    <div 
+                    className="book-result"
+                    onClick={() => goToBookDetail(book)}
+                    >
                       <img
                         src={book.image}
                         className="result-book-cover"
@@ -277,7 +289,10 @@ function PlaylistModal({ onClose }) {
                         </p>
                       </div>
                       <button
-                        onClick={() => handleAddBook(book)}
+                         onClick={(e) => {
+                          e.stopPropagation(); // 이벤트 전파 중단
+                          handleAddBook(book); // `+` 버튼 클릭 시 목록에 추가
+                        }}
                         className="add-book-btn"
                       >
                         +

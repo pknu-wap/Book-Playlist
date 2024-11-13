@@ -15,6 +15,8 @@ import Logo from './logos/로고.png';
 import Login from './login,register/Login.jsx';
 import Register from './login,register/Register.jsx';
 import axios from 'axios'; // axios를 import합니다.
+import BookDetail from './BookDetail';
+
 
 const playlists = Array.from({ length: 20 }, (_, index) => ({
   id: `playlist-${index + 1}`, // 백틱 추가
@@ -203,6 +205,7 @@ function App() {
           } />
           <Route path="/login" element={<Login onLogin={handleLogin}/>} />
           <Route path="/register" element={<Register />} />
+          <Route path="/book/:id" element={<BookDetail />} /> {/* 상세 페이지 라우트 추가 */}
         </Routes>
       </main>
     </div>
