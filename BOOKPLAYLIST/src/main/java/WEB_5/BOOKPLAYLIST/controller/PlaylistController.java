@@ -1,5 +1,6 @@
 package WEB_5.BOOKPLAYLIST.controller;
 
+import WEB_5.BOOKPLAYLIST.domain.dto.MyPagePlaylistDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistSummaryDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.SavePlaylistRequest;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
@@ -66,7 +67,10 @@ public class PlaylistController {
 
     // 모든 플레이리스트 조회 (GET /api/playlist/playlists)
     @GetMapping("/playlists")
-    public ResponseEntity<List<Playlist>> getAllPlaylists() {
-        return playlistService.getAllPlaylists();
+    public ResponseEntity<List<PlaylistSummaryDTO>> getAllPlaylists() {
+        List<PlaylistSummaryDTO> allPlaylists = playlistService.getAllPlaylists();
+        return ResponseEntity.ok(allPlaylists);
     }
+
+
 }
