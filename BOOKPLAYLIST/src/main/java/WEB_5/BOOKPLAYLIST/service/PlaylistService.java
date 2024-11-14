@@ -34,7 +34,7 @@ public class PlaylistService {
     @Autowired
     private BookSearchService bookSearchService;
 
-    // 이미지를 포함한 플레이리스트 저장 메서드
+    // 플레이리스트를 저장하거나 수정하는 메서드 (이미지와 책 목록 포함)
     public ResponseEntity<String> savePlaylist(Long playlistId, String title, String description, List<String> isbns, byte[] imageData) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         if (!playlistOpt.isPresent()) {
@@ -53,7 +53,7 @@ public class PlaylistService {
                     if (bookOpt.isPresent()) {
                         return bookOpt.get();
                     } else {
-                        return fetchAndSaveBook(isbn); // fetchAndSaveBook 메서드 호출
+                        return fetchAndSaveBook(isbn); // ISBN을 사용하여 책 정보 가져오기
                     }
                 })
                 .filter(book -> book != null && !playlist.getBooks().contains(book))
@@ -64,7 +64,7 @@ public class PlaylistService {
         return ResponseEntity.ok("플레이리스트가 성공적으로 저장되었습니다.");
     }
 
-    // 기존 fetchAndSaveBook 메서드 활용
+    // 외부 API를 통해 책 정보를 가져와 저장하는 메서드
     private Book fetchAndSaveBook(String isbn) {
         ResponseEntity<NaverBookResponse> response = bookSearchService.searchBooks(isbn);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
@@ -84,13 +84,13 @@ public class PlaylistService {
                 book.setIsbn(item.getIsbn());
                 book.setDescription(item.getDescription());
 
-                return bookRepository.save(book); // DB에 저장 후 저장된 객체 반환
+                return bookRepository.save(book); // DB에 저장 후 반환
             }
         }
         return null;
     }
 
-    // 빈 플레이리스트 생성
+    // 현재 사용자에 대한 빈 플레이리스트를 생성하는 메서드
     public Long createEmptyPlaylist() {
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
         Optional<User> userOpt = userRepository.findById(userId);
@@ -108,19 +108,33 @@ public class PlaylistService {
         return savedPlaylist.getId();
     }
 
-    // 특정 플레이리스트 조회
+    // 특정 플레이리스트를 조회하는 메서드
     public ResponseEntity<Playlist> getPlaylist(Long playlistId) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         return playlistOpt.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
-    // 모든 플레이리스트 조회
-    public ResponseEntity<List<Playlist>> getAllPlaylists() {
+    // 모든 플레이리스트를 조회하여 요약 정보로 반환하는 메서드
+    public List<PlaylistSummaryDTO> getAllPlaylists() {
         List<Playlist> playlists = playlistRepository.findAll();
-        return ResponseEntity.ok(playlists);
+
+        // Playlist 엔터티를 PlaylistSummaryDTO로 변환, 이미지 데이터는 Base64로 인코딩
+        return playlists.stream()
+                .map(playlist -> {
+                    String base64Image = playlist.getImageData() != null ?
+                            Base64.getEncoder().encodeToString(playlist.getImageData()) : null;
+                    return new PlaylistSummaryDTO(
+                            playlist.getId(),
+                            playlist.getTitle(),
+                            playlist.getUser().getUsername(),
+                            base64Image
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
+    // 상위 10개의 플레이리스트를 조회하여 요약 정보로 반환하는 메서드
     public List<PlaylistSummaryDTO> getTopPlaylists(int limit) {
         List<Playlist> playlists = playlistRepository.findTop10ByOrderByIdAsc();
 
@@ -136,21 +150,5 @@ public class PlaylistService {
                 })
                 .collect(Collectors.toList());
     }
-    public List<MyPagePlaylistDTO> getUserPlaylists() {
-        Long userId = SecurityUtil.getCurrentUserIdFromSession(); // 현재 로그인한 유저 ID 가져오기
-        List<Playlist> playlists = playlistRepository.findByUserId(userId); // 유저 ID로 플레이리스트 조회
 
-        // 필요한 정보만 포함한 DTO로 변환, 이미지 데이터는 Base64로 인코딩
-        return playlists.stream()
-                .map(playlist -> {
-                    String base64Image = playlist.getImageData() != null ?
-                            Base64.getEncoder().encodeToString(playlist.getImageData()) : null;
-                    return new MyPagePlaylistDTO(
-                            playlist.getId(),
-                            playlist.getTitle(),
-                            base64Image
-                    );
-                })
-                .collect(Collectors.toList());
-    }
 }

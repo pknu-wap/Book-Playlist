@@ -67,14 +67,10 @@ public class PlaylistController {
 
     // 모든 플레이리스트 조회 (GET /api/playlist/playlists)
     @GetMapping("/playlists")
-    public ResponseEntity<List<Playlist>> getAllPlaylists() {
-        return playlistService.getAllPlaylists();
+    public ResponseEntity<List<PlaylistSummaryDTO>> getAllPlaylists() {
+        List<PlaylistSummaryDTO> allPlaylists = playlistService.getAllPlaylists();
+        return ResponseEntity.ok(allPlaylists);
     }
 
-    // 마이페이지에서 유저가 생성한 플레이리스트 목록 반환
-    @GetMapping("/playlists")
-    public ResponseEntity<List<MyPagePlaylistDTO>> getUserPlaylists() {
-        List<MyPagePlaylistDTO> userPlaylists = playlistService.getUserPlaylists();
-        return ResponseEntity.ok(userPlaylists);
-    }
+
 }
