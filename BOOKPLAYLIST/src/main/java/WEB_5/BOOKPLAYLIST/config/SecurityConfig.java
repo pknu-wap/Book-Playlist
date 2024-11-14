@@ -23,10 +23,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/playlist/top").permitAll() // 인증 불필요
                         .requestMatchers("/api/playlist/**").authenticated() // 세션 로그인 필요
                         .anyRequest().permitAll()
-                );
+                )
+                .httpBasic();
 
         return http.build();
     }

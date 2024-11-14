@@ -1,5 +1,6 @@
 package WEB_5.BOOKPLAYLIST.controller;
 
+import WEB_5.BOOKPLAYLIST.domain.dto.MyPagePlaylistDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistSummaryDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.SavePlaylistRequest;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
@@ -7,6 +8,9 @@ import WEB_5.BOOKPLAYLIST.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -27,14 +31,28 @@ public class PlaylistController {
 
     // 책 리스트를 포함하여 플레이리스트 저장 (POST /api/playlist/save)
     @PostMapping("/save")
-    public ResponseEntity<String> savePlaylist(@RequestBody SavePlaylistRequest request) {
-        return playlistService.savePlaylist(
-                request.getPlaylistId(),
-                request.getTitle(),
-                request.getDescription(),
-                request.getIsbns()
-        );
+    public ResponseEntity<String> savePlaylist(
+            @RequestParam Long playlistId,
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam List<String> isbns,
+            @RequestParam("image") MultipartFile imageFile) {
+
+        try {
+            byte[] imageData = imageFile.getBytes(); // 이미지 파일을 바이트 배열로 변환
+            return playlistService.savePlaylist(
+                    playlistId,
+                    title,
+                    description,
+                    isbns,
+                    imageData
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 파일 처리 실패");
+        }
     }
+
     //메인화면 플레이리스트 띄우기 (GET /api/playlist/top)
     @GetMapping("/top")
     public ResponseEntity<List<PlaylistSummaryDTO>> getTopPlaylists() {
@@ -49,7 +67,10 @@ public class PlaylistController {
 
     // 모든 플레이리스트 조회 (GET /api/playlist/playlists)
     @GetMapping("/playlists")
-    public ResponseEntity<List<Playlist>> getAllPlaylists() {
-        return playlistService.getAllPlaylists();
+    public ResponseEntity<List<PlaylistSummaryDTO>> getAllPlaylists() {
+        List<PlaylistSummaryDTO> allPlaylists = playlistService.getAllPlaylists();
+        return ResponseEntity.ok(allPlaylists);
     }
+
+
 }

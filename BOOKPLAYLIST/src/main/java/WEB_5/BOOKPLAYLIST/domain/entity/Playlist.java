@@ -16,6 +16,8 @@ public class Playlist {
 
     private String title;
     private String description;
+    @Lob // 이미지 데이터를 Blob 형식으로 저장
+    private byte[] imageData;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
