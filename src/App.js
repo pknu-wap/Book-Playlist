@@ -6,8 +6,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import SimpleSlider from './components/SimpleSlider.js';
 import SimpleSlider1 from './components/SimpleSlider1.js';
 import Playlist from './playlist/playlist.js';
-import Icon1 from './logos/아이콘1.png';
-import Icon2 from './logos/아이콘2.png';
+import SearchBar from './components/SearchBar.js';
 import Icon3 from './logos/아이콘3.png';
 import Icon4 from './logos/아이콘4.png';
 import Icon5 from './logos/아이콘5.png';
@@ -16,6 +15,7 @@ import Login from './Login.jsx';
 import Register from './Register.jsx';
 import axios from 'axios'; // axios를 import합니다.
 import BookPlaylist from './components/BookPlaylist.js';
+import CaterGory from './components/BookCategory.js';
 
 const playlists = Array.from({ length: 20 }, (_, index) => ({
   id: `playlist-${index + 1}`, // 백틱 추가
@@ -37,7 +37,7 @@ const Sidebar = () => {
             </li>
             <li>
               <img src={Icon4} alt="Icon4" />
-              <a href="#">북 카테고리</a>
+              <NavLink to="/bookcatergory">북 카테고리</NavLink>
             </li>
             <li>
               <img src={Icon5} alt="Icon5" />
@@ -49,6 +49,7 @@ const Sidebar = () => {
     </aside>
   );
 }
+
 
 const PlaylistButton = ({ onClick }) => {
   return (
@@ -74,20 +75,18 @@ const Header = ({ isLoggedIn, onLogout }) => {
   return (
     <header className="header">
       <Outlet />
-      <img src={Logo} alt="책 이미지" className="logo" onClick={onClickLogo}/>
-      <SearchBar />
-      <button className="login" style={{ fontSize: '18px' }} onClick={handleAuthClick}>
-        {isLoggedIn ? '로그아웃' : '로그인 / 회원가입'}
-      </button>
+      <div>
+        <img src={Logo} alt="책 이미지" className="logo" onClick={onClickLogo}/>
+        <SearchBar />
+        <button className="login" style={{ fontSize: '18px' }} onClick={handleAuthClick}>
+          {isLoggedIn ? '로그아웃' : '로그인 / 회원가입'}
+        </button>
+      </div>
     </header>
   );
 };
 
-const SearchBar = () => {
-  return (
-    <input className="search-bar" type="text" placeholder="  검색어를 입력하세요" />
-  );
-};
+
 
 function App() {
   const [isPlaylistOpen, setIsPlaylistModalOpen] = useState(false);
@@ -179,7 +178,7 @@ function App() {
             <>
               <div className="slider-container">
                 <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
-                  <h2 style={{ marginLeft: '120px' }}>🔥 BEST SELLER</h2>
+                  <h2 style={{     backgroundColor:'#C6E898',marginLeft: '120px' }}>🔥 BEST SELLER</h2>
                   <SimpleSlider {...settings}>
                     {books.map((book) => (
                       <div key={book.id} style={{ textAlign: 'center', padding: '10px' }}>
@@ -207,6 +206,7 @@ function App() {
           } />
           <Route path="/login" element={<Login onLogin={handleLogin}/>} />
           <Route path="/register" element={<Register />} />
+          <Route path="/bookcatergory" element={<CaterGory />} />
           <Route path="/bookplaylist" element={<BookPlaylist />} />
         </Routes>
       </main>

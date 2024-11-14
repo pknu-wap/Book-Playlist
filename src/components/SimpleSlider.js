@@ -85,6 +85,7 @@ const SimpleSlider = () => {
   };
 
   const containerStyle = {
+
     width: "100%",
     maxWidth: "1200px",
     minWidth: "1100px",
