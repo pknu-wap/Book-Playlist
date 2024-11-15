@@ -32,9 +32,6 @@ public class UserService {
         return user;
     }
 
-    @Autowired
-    private UserRepository userRepository;
-
     public UserProfileDTO getUserProfile(Long userId) {
         // UserRepository를 사용하여 userId로 User를 조회
         User user = userRepository.findById(userId)
@@ -43,7 +40,7 @@ public class UserService {
         // 닉네임을 포함한 UserProfileDTO 반환
         return new UserProfileDTO(user.getUsername());
     }
-    
+
     public boolean authenticate(String email, String password) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         return userOpt.map(user -> passwordEncoder.matches(password, user.getPassword())).orElse(false);
