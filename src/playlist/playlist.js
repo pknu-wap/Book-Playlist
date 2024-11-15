@@ -161,8 +161,8 @@ function PlaylistModal({ onClose }) {
             ) : (
               <div className='pledit1'>
                 <div className='edittitle1'>
-                  <h2>{playlistTitle || '플레이리스트 제목'}</h2>
-                  <p>{playlistDescription || '플레이리스트 설명'}</p>
+                 <h2>{playlistTitle || '플레이리스트 제목'}</h2>
+                 <p>{playlistDescription || '플레이리스트 설명'}</p>
                 </div>
                 <button onClick={handleEditTitle}>
                   <span className="material-symbols-outlined">edit</span>
