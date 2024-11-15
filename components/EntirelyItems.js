@@ -10,9 +10,11 @@ const Modals =({show,onClose,data}) => {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e)=>e.stopPropagation()}>
         <button onClick={onClose}>닫기</button>
-        <img src={data.image} alt={data.title} style={{width:"100px"}} />
+        <img src={data.image} alt={data.title} />
         <h2>{data.title}</h2>
         <p>{data.author}</p>
+        <button>찜하기</button>
+        <p>찜 수: </p>
       </div>
     </div>
   );
