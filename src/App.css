@@ -2,20 +2,37 @@
   position: absolute;
   margin-left: 1300px;
   width: 200px;
-  height:40px;
+  height: 40px;
   top: 36px;
   border: none;
   background: #C6E898;
+  color: #333; /* 텍스트 색상 */
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 20px; /* 버튼의 둥근 모서리 */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 */
 }
 
-.MakePlaylist { 
+/* 호버 시 효과 */
+.login:hover {
+  background: #a5d96a; /* 더 진한 배경색 */
+  color: #000; /* 텍스트 색상 변경 */
+}
+
+/* 클릭 시 효과 */
+.login:active {
+  background: #87c353; /* 가장 진한 배경색 */
+  transform: scale(0.98); /* 버튼 살짝 줄이기 */
+}
+
+.MakePlaylist {
   position: sticky;
   display: flex;
   justify-content: center;
-  align-items:center;
+  align-items: center;
   bottom: 5px;
   margin-bottom: 5px;
-
 }
 
 .playlistButton {
@@ -25,17 +42,33 @@
   box-shadow: 0px 0px 10px #999999;
   border-radius: 30px;
   margin-bottom: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* 부드러운 전환 */
 }
 
+/* 호버 시 효과 */
+.playlistButton:hover {
+  background: #32e044; /* 더 진한 배경색 */
+}
+
+/* 클릭 시 효과 */
+.playlistButton:active {
+  background: #28c43a; /* 가장 진한 배경색 */
+  transform: scale(0.98); /* 버튼 살짝 줄이기 */
+}
 
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  max-width:100%;
-  width:1500px;    
-  margin-left: auto;    
+  max-width: 100%;
+  width: 1500px;
+  margin-left: auto;
   margin-right: auto;
 }
+
 header {
   /* Rectangle 12 */
   top: 0px;
@@ -54,13 +87,12 @@ header {
 }
 
 .logo {
-  /* Group 7 */
   position: absolute;
   width: 219px;
   height: 70px;
   padding-left: 10px;
   top: 23px;
-  margin-left: 60px;    
+  margin-left: 60px;
   margin-right: auto;
 }
 
@@ -75,10 +107,11 @@ header {
   width: 690px;
   height: 62px;
   background: #FFFFFF;
-  border: 2px solid #42ff51;
+  border: 1px solid #dfdfdf;
   box-shadow: 0px 0px 7px #177728;
   border-radius: 30px;
   padding-left: 50px;
+
 
   display: flex;
   align-items: center;  /* 입력창 내부에서 텍스트 세로 정렬 */
@@ -106,8 +139,13 @@ header {
   color: #333;
 }
 
+=======
+  margin-left: 450px;
+  margin-right: auto;
+}
+
 .sidebar {
-  margin-top:10px;
+  margin-top: 10px;
   width: 250px;
   background-color: #ffffff;
   padding: 20px;
@@ -115,7 +153,6 @@ header {
   list-style: none;
   border-right: 0.1px solid #e7e4e4;
   float: left;
-
 }
 
 .sidebar ul {
@@ -129,12 +166,11 @@ header {
   color: #000000;
 }
 
-
 .sidebar li {
   display: flex;
   align-items: center;
   height: 40px;
-  margin-bottom:20px;
+  margin-bottom: 20px;
 }
 
 .sidebar img {
@@ -157,4 +193,3 @@ header {
 .slider-section {
   margin: 20px;
 }
-

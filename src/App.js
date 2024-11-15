@@ -11,11 +11,12 @@ import Icon3 from './logos/아이콘3.png';
 import Icon4 from './logos/아이콘4.png';
 import Icon5 from './logos/아이콘5.png';
 import Logo from './logos/로고.png';
-import Login from './Login.jsx';
-import Register from './Register.jsx';
+import Login from './login,register/Login.jsx';
+import Register from './login,register/Register.jsx';
 import axios from 'axios'; // axios를 import합니다.
 import BookPlaylist from './components/BookPlaylist.js';
 import CaterGory from './components/BookCategory.js';
+import MyPage from './Mypage/Mypage.js'
 
 const playlists = Array.from({ length: 20 }, (_, index) => ({
   id: `playlist-${index + 1}`, // 백틱 추가
@@ -23,6 +24,7 @@ const playlists = Array.from({ length: 20 }, (_, index) => ({
   author: '저자명',
   imageUrl: `https://via.placeholder.com/150?text=Item+${index + 1}`, // 백틱 추가
 }));
+
 
 const Sidebar = () => {
   return (   
@@ -33,7 +35,7 @@ const Sidebar = () => {
             <Outlet />
             <li>
               <img src={Icon3} alt="Icon3" />
-              <a href="#">마이페이지</a>
+              <Link to="/mypage">마이페이지</Link>
             </li>
             <li>
               <img src={Icon4} alt="Icon4" />
@@ -49,7 +51,6 @@ const Sidebar = () => {
     </aside>
   );
 }
-
 
 const PlaylistButton = ({ onClick }) => {
   return (
@@ -208,6 +209,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/bookcatergory" element={<CaterGory />} />
           <Route path="/bookplaylist" element={<BookPlaylist />} />
+          <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </main>
     </div>

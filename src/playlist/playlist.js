@@ -3,6 +3,7 @@ import './playlist.css';
 import axios from 'axios';
 
 function PlaylistModal({ onClose }) {
+  const [playlistImage, setPlaylistImage] = useState(null);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -14,7 +15,7 @@ function PlaylistModal({ onClose }) {
   });
   const [bookList, setBookList] = useState([]);
 
-  const MAX_EMPTY_ITEMS = 5; 
+  const MAX_EMPTY_ITEMS = 5;
 
   const [playlistTitle, setPlaylistTitle] = useState('');
   const [playlistDescription, setPlaylistDescription] = useState('');
@@ -75,6 +76,12 @@ function PlaylistModal({ onClose }) {
     });
   };
 
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setPlaylistImage(e.target.files[0]);
+    }
+  };
+
   const handleEditTitle = () => {
     setIsEditingTitle(true);
   };
@@ -85,35 +92,42 @@ function PlaylistModal({ onClose }) {
 
   const handleSavePlaylist = async () => {
     try {
-      const createResponse = await axios.post(
-        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/create',
-        null,
-        { withCredentials: true }
-      );
+        // 플레이리스트 생성 후 ID 가져오기
+        const createResponse = await axios.post(
+            'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/create',
+            null,
+            { withCredentials: true }
+        );
+        const playlistId = Number(createResponse.data.playlistId);
 
-      await axios.post(
-        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save',
-        {
-          playlistId: Number(createResponse.data.playlistId),
-          title: playlistTitle,
-          description: playlistDescription,
-          isbns: bookList.map((book) => book.isbn),
-        },
-        {
-          withCredentials: true,
-        }
-      );
-;
+        // FormData 객체 생성 및 데이터 추가
+        const formData = new FormData();
+        formData.append("playlistId", playlistId); // playlist ID
+        formData.append("title", playlistTitle); // 제목
+        formData.append("description", playlistDescription); // 설명
+        bookList.forEach((book) => formData.append("isbns", book.isbn)); // ISBN 목록
+        if (playlistImage) formData.append("image", playlistImage); // 이미지 파일
 
-      alert("플레이리스트가 저장되었습니다.")
+        // 서버로 전송
+        await axios.post(
+            'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save',
+            formData,
+            {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+
+        alert('플레이리스트가 저장되었습니다.');
     } catch (error) {
-      console.error(
-        'Error saving playlist:',
-        error.response ? error.response.data : error.message
-      );
+        console.error(
+            'Error saving playlist:',
+            error.response ? error.response.data : error.message
+        );
     }
-  };
-
+};
   return (
     <>
       {/* 첫 번째 모달 */}
@@ -158,8 +172,30 @@ function PlaylistModal({ onClose }) {
           </div>
 
           <div className="plimage">
-            <p>사진</p>
+            {playlistImage ? (
+              <img
+                src={URL.createObjectURL(playlistImage)}
+                alt="플레이리스트 이미지"
+                className="playlist-image"
+              />
+            ) : (
+              <p></p>
+            )}
+            <button
+              className="change-image-btn"
+              onClick={() => document.getElementById('imageInput').click()}
+            >
+              사진변경
+            </button>
+            <input
+              type="file"
+              id="imageInput"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleImageChange}
+            />
           </div>
+
 
           <button className="pladd" onClick={openSecondModal}>
             +
@@ -251,7 +287,7 @@ function PlaylistModal({ onClose }) {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="책 이름을 검색해주세요!"
+                placeholder="책 이름/저자를 검색해주세요!"
               />
               <button onClick={handleSearch}>
                 <span className="material-symbols-outlined">search</span>

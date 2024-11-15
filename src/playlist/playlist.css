@@ -44,13 +44,11 @@
     bottom: 280px;
   }
   .book-choosetitle {
-    width: 230px;
-    height: 75px;
     margin-top:280px;
-    margin-left: 120px;
+    margin-left: 87px;
     text-align: center;
+    max-width: 300px;
   }
-  
   
   
   .close-btn {
@@ -160,6 +158,21 @@
   
   .search-results {
     margin-top: 10px;
+    width: 1200px;
+    height: 300px;
+  }
+  .search-results::-webkit-scrollbar {
+    width: 10px;
+    
+  }
+  .search-results::-webkit-scrollbar-track { 
+    background-color: rgb(221, 219, 219);
+  }
+  .search-results::-webkit-scrollbar-thumb { 
+    background-color: rgb(193, 251, 166);
+  }  
+  .search-results::-webkit-scrollbar-button {
+    display: none;
   }
   
   .book-result {
@@ -265,10 +278,27 @@
     margin-left: 30px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* ?���? ?��?�� */
+    align-items: flex-start;
+    flex: 1 1 0; /* 플렉스 크기 조절 */
+    white-space: nowrap; /* 줄바꿈을 없앰 */
+    overflow: hidden; /* 넘친 텍스트 숨김 */
+    text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+    max-width: 700px;
+    min-width: 0; 
   }
   .result-title h3 {
     margin-bottom: 0px;
+    white-space: nowrap; /* 줄바꿈을 없앰 */
+    overflow: hidden; /* 넘친 텍스트 숨김 */
+    text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+    max-width: 100%;
+  }
+
+  .result-title p {
+    white-space: nowrap; /* 줄바꿈을 없앰 */
+    overflow: hidden; /* 넘친 텍스트 숨김 */
+    text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+    max-width: 100%;
   }
   
   .search-results {
@@ -282,6 +312,7 @@
     border-top: 1px solid #333;
     width: 1240px;
     margin-left: -20px;
+    
   }
   
   .add-book-btn {
@@ -332,6 +363,33 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: #f0f0f0;
+    background-image: url('./plimage.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .plimage:hover .change-image-btn {
+    display: block;
+  }
+  
+  .change-image-btn {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 70px;
+    background-color: rgba(88, 88, 88, 0.5);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+  
+  .playlist-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .plsave {
@@ -395,6 +453,28 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    flex: 1 1 0; /* 플렉스 크기 조절 */
+    white-space: nowrap; /* 줄바꿈을 없앰 */
+    overflow: hidden; /* 넘친 텍스트 숨김 */
+    text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+    max-width: 300px;
+    min-width: 0;
+}
+
+.edittitle1 h2 {
+  font-size: 18px;
+  white-space: nowrap; /* 줄바꿈을 없앰 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+  max-width: 100%;
+}
+
+.edittitle1 p {
+  font-size: 13px;
+  white-space: nowrap; /* 줄바꿈을 없앰 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+  max-width: 100%;
 }
 
 .pledit2 {
@@ -415,7 +495,24 @@
 }
 
 .booktitle {
+  margin-left: 20px;
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0; /* 플렉스 크기 조절 */
+  white-space: nowrap; /* 줄바꿈 없앰 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+  max-width: 400px;
+  min-width: 0; /* 플렉스 환경에서 ellipsis 작동을 위해 최소 너비를 0으로 설정 */
+}
+
+.booktitle h3,
+.booktitle p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%; /* 부모 요소의 너비를 초과하지 않도록 설정 */
 }
 
 .remove-book-btn {
