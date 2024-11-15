@@ -11,7 +11,7 @@ const MyPage = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/playlists',
+          'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists',
           { withCredentials: true }
         );
 
@@ -57,9 +57,9 @@ const MyPage = () => {
           <div className='playlist-container'>
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className='playlist-box'>
-                {playlist.base64Image ? (
+                {playlist.imageData ? (
                   <img
-                    src={`data:image/jpeg;base64,${playlist.base64Image}`}
+                    src={`data:image/jpeg;base64,${playlist.imageData}`}
                     
                     className='playlist-image'
                   />
