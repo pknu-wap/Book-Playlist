@@ -1,9 +1,12 @@
 package WEB_5.BOOKPLAYLIST.service;
 
 import WEB_5.BOOKPLAYLIST.domain.dto.MyPagePlaylistDTO;
+import WEB_5.BOOKPLAYLIST.domain.dto.UserProfileDTO;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
+import WEB_5.BOOKPLAYLIST.domain.entity.User;
 import WEB_5.BOOKPLAYLIST.repository.PlaylistRepository;
 import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
+import WEB_5.BOOKPLAYLIST.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,9 @@ import java.util.stream.Collectors;
 public class MypageService {
     @Autowired
     private PlaylistRepository playlistRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<MyPagePlaylistDTO> getUserPlaylists() {
 
@@ -39,4 +45,11 @@ public class MypageService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public UserProfileDTO getUserProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return new UserProfileDTO(user.getUsername());
+    }
+
 }
