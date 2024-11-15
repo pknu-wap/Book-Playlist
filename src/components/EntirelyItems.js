@@ -3,7 +3,38 @@ import './EntireItem.css';
 import Filter from "./Filter";
 import Pagination from "./Pagination";
 
+const Modals =({show,onClose,data}) => {
+  if (!show) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e)=>e.stopPropagation()}>
+        <button onClick={onClose}>닫기</button>
+        <img src={data.image} alt={data.title} />
+        <h2>{data.title}</h2>
+        <p>{data.author}</p>
+        <button>찜하기</button>
+        <p>찜 수: </p>
+      </div>
+    </div>
+  );
+};
+
+
 const EntireItems = () => {
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+  const [isModalOpen,setIsModalOpen] = useState(false);
+
+  const handleItemClick=(playlist)=>{
+    setSelectedPlaylist(playlist);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal=()=>{
+    setIsModalOpen(false);
+    setSelectedPlaylist(null);
+  };
+
   const [playlists, setPlaylists] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState("latest");
@@ -55,13 +86,16 @@ const EntireItems = () => {
       <Filter onSortChange={handleSortOrderChange} />
       <div className="grid-container">
         {currentItems.map((playlist) => (
-          <div key={playlist.id} className="grid-item">
+          <div key={playlist.id}  onClick={()=>handleItemClick(playlist)} className="grid-item">
             <img src={playlist.image} alt={playlist.title} style={imageStyle} />
             <p>{playlist.title}</p>
             <p style={{marginBottom:'10px'}}>{playlist.author}</p>
           </div>
         ))}
       </div>
+
+      <Modals show={isModalOpen} onClose={handleCloseModal} data={selectedPlaylist} />
+
       <Pagination 
         currentPage={currentPage}
         totalPages={totalPages}
