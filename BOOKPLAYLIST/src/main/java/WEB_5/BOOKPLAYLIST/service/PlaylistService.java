@@ -1,6 +1,7 @@
 package WEB_5.BOOKPLAYLIST.service;
 
 import WEB_5.BOOKPLAYLIST.domain.dto.MyPagePlaylistDTO;
+import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistDetailsDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistSummaryDTO;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
 import WEB_5.BOOKPLAYLIST.domain.entity.Book;
@@ -109,10 +110,36 @@ public class PlaylistService {
     }
 
     // 특정 플레이리스트를 조회하는 메서드
-    public ResponseEntity<Playlist> getPlaylist(Long playlistId) {
+    public ResponseEntity<PlaylistDetailsDTO> getPlaylistDetails(Long playlistId) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
-        return playlistOpt.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+
+        return playlistOpt.map(playlist -> {
+            // 책 정보를 BookDTO로 변환
+            var bookDTOs = playlist.getBooks().stream()
+                    .map(book -> new PlaylistDetailsDTO.BookDTO(
+                            book.getTitle(),
+                            book.getAuthor(),
+                            book.getIsbn(),
+                            book.getImage()
+                    ))
+                    .collect(Collectors.toList());
+
+            // Base64 이미지 인코딩
+            String base64Image = playlist.getImageData() != null ?
+                    Base64.getEncoder().encodeToString(playlist.getImageData()) : null;
+
+            // PlaylistDetailsDTO 생성
+            PlaylistDetailsDTO detailsDTO = new PlaylistDetailsDTO(
+                    playlist.getId(),
+                    playlist.getTitle(),
+                    playlist.getDescription(),
+                    playlist.getUser().getUsername(),
+                    base64Image,
+                    bookDTOs
+            );
+
+            return ResponseEntity.ok(detailsDTO);
+        }).orElseGet(() -> ResponseEntity.status(404).body(null));
     }
 
     // 모든 플레이리스트를 조회하여 요약 정보로 반환하는 메서드
