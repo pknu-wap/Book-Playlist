@@ -374,6 +374,7 @@
   background-image: url('./plimage.png');
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: -8px;
 }
 
 .plimage:hover .change-image-btn {
