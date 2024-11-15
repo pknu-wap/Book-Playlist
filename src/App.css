@@ -139,9 +139,11 @@ header {
   color: #333;
 }
 
-=======
-  margin-left: 450px;
-  margin-right: auto;
+.sidebar img {
+  width: 30px;
+  height: 30px;
+  margin-left: 15px;
+  margin-right: 10px;
 }
 
 .sidebar {
