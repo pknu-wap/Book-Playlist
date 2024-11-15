@@ -8,6 +8,10 @@
     margin-left: 165px;
 }
 
+.Mycollection p {
+  font-weight: bold;
+  margin-left: 30px;
+}
 .topbox {
     display: flex;
 }
@@ -46,5 +50,41 @@
 
 .username p {
    text-align: center;
-   margin-top: 12px; 
+   margin-top: 10px; 
 }
+
+.playlist-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 20px;
+    margin-left: 40px;
+    overflow-y: auto;
+    width: 1000px;
+    height: 300px;
+  }
+  
+  .playlist-box {
+    width: 150px;
+    height: 200px;
+    text-align: center;
+    border: 1px solid rgb(223, 222, 222);
+    box-shadow: 0 4px 8px #0000001a;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .playlist-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  .playlist-title {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    align-self: start;
+    margin-top: 15px;
+  }
