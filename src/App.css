@@ -76,11 +76,14 @@ header {
   padding-top: 0;
   height: 114px;
   max-width: 100%;
-  width: 1500px;
-  margin-left: auto;
+  width: 100%;  /* 화면 전체 너비 */
+  margin-left: auto;    
   margin-right: auto;
   background: #C6E898;
   box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo {
@@ -93,19 +96,54 @@ header {
   margin-right: auto;
 }
 
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* 버튼과 검색 바 사이의 간격 */
+}
 .search-bar {
+  margin-left:400px;
   box-sizing: border-box;
-  position: absolute;
   width: 690px;
   height: 62px;
-  top: 24px;
   background: #FFFFFF;
   border: 1px solid #dfdfdf;
   box-shadow: 0px 0px 7px #177728;
   border-radius: 30px;
   padding-left: 50px;
-  margin-left: 450px;
-  margin-right: auto;
+
+
+  display: flex;
+  align-items: center;  /* 입력창 내부에서 텍스트 세로 정렬 */
+  justify-content: space-between;  /* 버튼과 입력창을 양옆에 배치 */
+}
+
+.search-button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  background-color: white;
+  color: gray;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #f0f0f0;
+}
+
+
+.user-menu a {
+  margin-left: 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+.sidebar img {
+  width: 30px;
+  height: 30px;
+  margin-left: 15px;
+  margin-right: 10px;
 }
 
 .sidebar {
@@ -113,7 +151,7 @@ header {
   width: 250px;
   background-color: #ffffff;
   padding: 20px;
-  height: 100vh;
+  height: 100vh; /* ?���? ?���? ?��?�� */
   list-style: none;
   border-right: 0.1px solid #e7e4e4;
   float: left;
