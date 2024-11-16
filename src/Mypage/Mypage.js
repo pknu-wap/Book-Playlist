@@ -8,21 +8,25 @@ const MyPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists',
-          { withCredentials: true }
-        );
+        const [profileResponse, playlistsResponse] = await axios.all([
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile', { withCredentials: true }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists', { withCredentials: true }),
+        ]);
 
-        console.log('API 응답 데이터:', response.data);
-
-        // 응답 데이터 구조에 따라 수정
-        if (response.data && response.data.length > 0) {
-          setUsername(response.data[0].username);
-          setPlaylists(response.data);
+        // username API 응답 처리
+        if (profileResponse.data && profileResponse.data.username) {
+          setUsername(profileResponse.data.username);
         } else {
-          console.log('API로부터 데이터를 받지 못했습니다.');
+          console.log('프로필 API에서 데이터를 받지 못했습니다.');
+        }
+
+        // 플레이리스트 API 응답 처리
+        if (playlistsResponse.data && playlistsResponse.data.length > 0) {
+          setPlaylists(playlistsResponse.data);
+        } else {
+          console.log('플레이리스트 API에서 데이터를 받지 못했습니다.');
         }
       } catch (error) {
         console.error('데이터를 가져오는 중 에러 발생:', error);
@@ -31,42 +35,42 @@ const MyPage = () => {
       }
     };
 
-    fetchData();
+    fetchUserData();
   }, []);
 
   return (
     <div>
-      <div className='topbox'>
-        <div className='userbox'>
-          <div className='userimage'>
+      <div className='mypage-topbox'>
+        <div className='mypage-userbox'>
+          <div className='mypage-userimage'>
             {/* 사용자 이미지 표시 (선택 사항) */}
           </div>
-          <div className='username'>
+          <div className='mypage-username'>
             <p>{username}님</p>
           </div>
         </div>
-        <div className='Mycomment'>
+        <div className='mypage-Mycomment'>
           <p>내가 쓴 댓글</p>
         </div>
       </div>
-      <div className='Mycollection'>
+      <div className='mypage-Mycollection'>
         <p>나의 플레이리스트</p>
         {isLoading ? (
           <p>로딩 중...</p>
         ) : (
-          <div className='playlist-container'>
+          <div className='mypage-playlist-container'>
             {playlists.map((playlist) => (
-              <div key={playlist.playlistId} className='playlist-box'>
+              <div key={playlist.playlistId} className='mypage-playlist-box'>
                 {playlist.imageData ? (
                   <img
                     src={`data:image/jpeg;base64,${playlist.imageData}`}
-                    
-                    className='playlist-image'
+                    alt={playlist.title}
+                    className='mypage-playlist-image'
                   />
                 ) : (
-                  <div className='placeholder-image'>이미지 없음</div>
+                  <div className='mypage-placeholder-image'>이미지 없음</div>
                 )}
-                <p className='playlist-title'>{playlist.title}</p>
+                <p className='mypage-playlist-title'>{playlist.title}</p>
               </div>
             ))}
           </div>

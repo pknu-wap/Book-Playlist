@@ -17,7 +17,7 @@
   transition: 0.3s;
 }
 
-.modal-overlay {
+.playlist-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -30,28 +30,27 @@
   z-index: 1000; 
 }
 
-
-.book-cover-box {
+.playlist-book-cover-box {
   width: 200px;
   height: 300px;
   border: 1px solid #ddd;
   border-radius: 15px;
   margin: 0 auto;
-  background-color: #f0f0f0;
+  background-color: rgb(250, 255, 227);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: absolute;
   left: 150px;
   bottom: 280px;
 }
-.book-choosetitle {
-  margin-top:280px;
+
+.playlist-book-choosetitle {
+  margin-top: 280px;
   margin-left: 87px;
   text-align: center;
   max-width: 300px;
 }
 
-
-.close-btn {
+.playlist-close-btn {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -62,23 +61,22 @@
   cursor: pointer;
 }
 
-.close-btn:hover {
+.playlist-close-btn:hover {
   background-color: #dddddd;
 }
 
-.book-title {
+.playlist-book-title {
   font-size: 20px;
   margin-top: 20px;
   margin-right: 700px;
   margin-bottom: 200px;
-  
 }
 
-.bookbox{
+.playlist-bookbox {
   margin-top: 100px;
 }
 
-.modal-content {
+.playlist-modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 30px;
@@ -86,10 +84,10 @@
   height: 650px;
   text-align: center;
   position: relative;
-  animation: modal-down 0.3s linear; 
+  animation: playlist-modal-down 0.3s linear; 
 }
 
-@keyframes modal-down {
+@keyframes playlist-modal-down {
   from {
     transform: translateY(-5%); 
   }
@@ -98,24 +96,24 @@
   }
 }
 
-.pladd {
+.playlist-pladd {
   background-color: white;
-  border-radius: 20px ;
+  border-radius: 20px;
   border: 1px solid rgb(236, 235, 235);
   width: 40px;
   height: 40px;
   font-size: 30px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: absolute;
   left: 800px;
   bottom: 70px;
 }
 
-.pladd:hover {
+.playlist-pladd:hover {
   background-color: #f0f0f0;
 }
 
-.second-modal-content {
+.playlist-second-modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 30px;
@@ -127,7 +125,7 @@
   margin-right: auto;
 }
 
-.search-box {
+.playlist-search-box {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -142,7 +140,7 @@
   width: 700px;
 }
 
-.search-box input {
+.playlist-search-box input {
   border: none;
   background: none;
   outline: none;
@@ -153,33 +151,35 @@
   border-radius: 50px;
 }
 
-.search-box button {
+.playlist-search-box button {
   background: none;
   border: none;
   cursor: pointer;
   padding: 0 10px;
 }
 
-.search-results {
+.playlist-search-results {
   margin-top: 10px;
   width: 1200px;
   height: 300px;
 }
-.search-results::-webkit-scrollbar {
+
+.playlist-search-results::-webkit-scrollbar {
   width: 10px;
-  
 }
-.search-results::-webkit-scrollbar-track { 
+
+.playlist-search-results::-webkit-scrollbar-track { 
   background-color: rgb(221, 219, 219);
 }
-.search-results::-webkit-scrollbar-thumb { 
+
+.playlist-search-results::-webkit-scrollbar-thumb { 
   background-color: rgb(193, 251, 166);
 }  
-.search-results::-webkit-scrollbar-button {
+.playlist-search-results::-webkit-scrollbar-button {
   display: none;
 }
 
-.book-result {
+.playlist-book-result {
   display: flex;
   align-items: center;
   margin-left: auto;
@@ -190,7 +190,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.result-book-cover {
+.playlist-result-book-cover {
   width: 70px;
   height: 80px;
   margin-left: 40px;
@@ -198,7 +198,7 @@
   box-shadow: 0 4px 8px rgba(126, 125, 125, 0.808);
 }
 
-.book-list {
+.playlist-book-list {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -207,48 +207,48 @@
   width: 665px;
   height: 390px;
   overflow-y: auto;
-  max-height: 420px;
   max-height: 650px;
 }
 
-.book-list::-webkit-scrollbar {
+.playlist-book-list::-webkit-scrollbar {
   width: 10px;
-  
 }
-.book-list::-webkit-scrollbar-track { 
+
+.playlist-book-list::-webkit-scrollbar-track { 
   background-color: rgb(221, 219, 219);
 }
-.book-list::-webkit-scrollbar-thumb { 
+
+.playlist-book-list::-webkit-scrollbar-thumb { 
   background-color: rgb(193, 251, 166);
 }  
-.book-list::-webkit-scrollbar-button {
+.playlist-book-list::-webkit-scrollbar-button {
   display: none;
 }
 
 /* hover 효과 */
-.book-list::-webkit-scrollbar-thumb:hover {
+.playlist-book-list::-webkit-scrollbar-thumb:hover {
   background-color: rgb(231, 255, 214);
   transition: all 0.2s; /* 애니메이션 속도 */
 }
 
 /* 모서리 둥글게 */
-.book-list::-webkit-scrollbar-track,
-.book-list::-webkit-scrollbar-thumb {
+.playlist-book-list::-webkit-scrollbar-track,
+.playlist-book-list::-webkit-scrollbar-thumb {
   border-radius: 5px;
 }
 
-.book-item {
+.playlist-book-item {
   display: flex;
   align-items: center;
   width: 640px;
   height: 100px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
   background-color: rgb(250, 255, 227);
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.book-info {
+.playlist-book-info {
   display: flex;
   margin-left: 23px;
   margin-top: 20px;
@@ -256,29 +256,30 @@
   height: 100px;
 }
 
-.booktitle {
+.playlist-booktitle {
   margin-left: 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-.booktitle h3{
+.playlist-booktitle h3{
   margin-bottom: 0;
 }
 
-.booktitle p{
+.playlist-booktitle p{
   margin-top: 0;
 }
-.book-mcover {
+
+.playlist-book-mcover {
   width: 60px;
   height: 80px;
   object-fit: cover;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.result-title {
+.playlist-result-title {
   margin-left: 30px;
   display: flex;
   flex-direction: column;
@@ -290,7 +291,8 @@
   max-width: 700px;
   min-width: 0; 
 }
-.result-title h3 {
+
+.playlist-result-title h3 {
   margin-bottom: 0px;
   white-space: nowrap; /* 줄바꿈을 없앰 */
   overflow: hidden; /* 넘친 텍스트 숨김 */
@@ -298,30 +300,27 @@
   max-width: 100%;
 }
 
-.result-title p {
+.playlist-result-title p {
   white-space: nowrap; /* 줄바꿈을 없앰 */
   overflow: hidden; /* 넘친 텍스트 숨김 */
   text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
   max-width: 100%;
 }
 
-.search-results {
+.playlist-search-results {
   overflow-y: auto;
   max-height: 460px;
 }
 
-
-
-.mystudy {
+.playlist-mystudy {
   border-top: 1px solid #333;
   width: 1240px;
   margin-left: -20px;
-  
 }
 
-.add-book-btn {
+.playlist-add-book-btn {
   background-color: rgb(188, 255, 186);
-  border-radius: 20px ;
+  border-radius: 20px;
   border: 1px solid rgb(236, 235, 235);
   width: 40px;
   height: 40px;
@@ -330,12 +329,11 @@
   margin-right: 40px;
 }
 
-.add-book-btn:hover {
+.playlist-add-book-btn:hover {
   background-color: #e2fcdc;
-
 }
 
-.selected-book-cover {
+.playlist-selected-book-cover {
   width: 200px;
   height: 300px;
   border: 1px solid #ddd;
@@ -345,27 +343,27 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.playlist-header {
+.playlist-playlist-header {
   display: flex;
   align-items: center;
   margin-top: 40px;
   margin-left: 460px;
 }
 
-
-.plname {
+.playlist-plname {
   width: 300px;
   margin-left: 20px;
 }
 
-.plname h2{
+.playlist-plname h2{
   margin-bottom: 8px;
 }
-.plname p{
+
+.playlist-plname p{
   margin-top: 0;
 }
 
-.plimage {
+.playlist-plimage {
   width: 70px;
   height: 93px;
   border: 1px solid #ddd;
@@ -378,13 +376,13 @@
   position: relative;
 }
 
-.plimage:hover .change-image-btn {
+.playlist-plimage:hover .playlist-change-image-btn {
   display: block;
 }
 
-.change-image-btn {
-  display: none; /* 항상 보이도록 설정 */
-  position: absolute; /* 부모를 기준으로 위치 설정 */
+.playlist-change-image-btn {
+  display: none; /* 기본적으로 숨김 */
+  position: absolute; /* 부모 컨테이너를 기준으로 위치 설정 */
   top: 0; /* 이미지의 상단에 위치 */
   left: 0;
   width: 100%;
@@ -396,14 +394,14 @@
   border-radius: 10px;
 }
 
-.playlist-image {
+.playlist-playlist-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border: 1px solid #ddd;
 }
 
-.plsave {
+.playlist-plsave {
   background-color: #ffffff;
   border-radius: 15px;
   border: 1px solid #ddd;
@@ -414,7 +412,7 @@
   margin-top: 30px;
 }
 
-.plsave .loader {
+.playlist-plsave .playlist-loader {
   margin: auto;
   width: 30px;
   height: 30px;
@@ -422,10 +420,10 @@
   border-right-color: rgb(2, 255, 107);
   border-top-color: rgb(2, 255, 107);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: playlist-spin 0.8s linear infinite;
 }
 
-@keyframes spin {
+@keyframes playlist-spin {
   from {
     transform: rotate(0deg);
   }
@@ -434,17 +432,17 @@
   }
 }
 
-.plsave span {
+.playlist-plsave span {
   color: rgb(2, 255, 107);
   font-size: 35px;
   margin-top: 5px;
 }
 
-.plsave:hover {
+.playlist-plsave:hover {
    background-color: #f5f3f3;
 }
 
-.plname input {
+.playlist-plname input {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -453,7 +451,7 @@
   border-radius: 5px;
 }
 
-.plname button {
+.playlist-plname button {
   padding: 10px 15px;
   font-size: 16px;
   background-color: #ffffff;
@@ -464,23 +462,22 @@
   margin-left: auto;
 }
 
-.plname button:hover {
+.playlist-plname button:hover {
   background-color: #f0f0f0;
 }
 
-.pledit1 {
+.playlist-pledit1 {
   display: flex;
   align-items: center;
   margin-top: 5px;
 }
 
-.pledit1 button {
+.playlist-pledit1 button {
   margin-right: 70px;
   margin-top: 10px;
-  
 }
 
-.edittitle1 {
+.playlist-edittitle1 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -492,132 +489,133 @@
   min-width: 0;
 }
 
-.edittitle1 h2 {
-font-size: 18px;
-white-space: nowrap; /* 줄바꿈을 없앰 */
-overflow: hidden; /* 넘친 텍스트 숨김 */
-text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
-max-width: 100%;
+.playlist-edittitle1 h2 {
+  font-size: 18px;
+  white-space: nowrap; /* 줄바꿈을 없앰 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+  max-width: 100%;
 }
 
-.edittitle1 p {
-font-size: 13px;
-white-space: nowrap; /* 줄바꿈을 없앰 */
-overflow: hidden; /* 넘친 텍스트 숨김 */
-text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
-max-width: 100%;
+.playlist-edittitle1 p {
+  font-size: 13px;
+  white-space: nowrap; /* 줄바꿈을 없앰 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+  max-width: 100%;
 }
 
-.pledit2 {
+.playlist-pledit2 {
   display: flex;
   align-items: center;
 }
 
-.edittitle2 {
+.playlist-edittitle2 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-.pledit2 button {
+.playlist-pledit2 button {
   margin-left: 50px;
   margin-bottom: 10px;
-  
 }
 
-.booktitle {
-margin-left: 20px;
-margin-bottom: 15px;
-display: flex;
-flex-direction: column;
-flex: 1 1 0; /* 플렉스 크기 조절 */
-white-space: nowrap; /* 줄바꿈 없앰 */
-overflow: hidden; /* 넘친 텍스트 숨김 */
-text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
-max-width: 400px;
-min-width: 0; /* 플렉스 환경에서 ellipsis 작동을 위해 최소 너비를 0으로 설정 */
+.playlist-booktitle {
+  margin-left: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0; /* 플렉스 크기 조절 */
+  white-space: nowrap; /* 줄바꿈 없앰 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+  max-width: 400px;
+  min-width: 0; /* 플렉스 환경에서 ellipsis 작동을 위해 최소 너비를 0으로 설정 */
 }
 
-.booktitle h3,
-.booktitle p {
-overflow: hidden;
-text-overflow: ellipsis;
-white-space: nowrap;
-max-width: 100%; /* 부모 요소의 너비를 초과하지 않도록 설정 */
+.playlist-booktitle h3,
+.playlist-booktitle p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%; /* 부모 요소의 너비를 초과하지 않도록 설정 */
 }
 
-.remove-book-btn {
-margin-left: auto;
-background-color: white;
-border: 1px solid rgb(236, 235, 235);
-border-radius: 30px;
-width: 50px;
-height: 50px;
-margin-top: 15px;
-margin-right: 10px;
+.playlist-remove-book-btn {
+  margin-left: auto;
+  background-color: white;
+  border: 1px solid rgb(236, 235, 235);
+  border-radius: 30px;
+  width: 50px;
+  height: 50px;
+  margin-top: 15px;
+  margin-right: 10px;
 }
 
-.remove-book-btn:hover {
-background-color: #ffe8e8;
+.playlist-remove-book-btn:hover {
+  background-color: #ffe8e8;
 }
 
-.image-modal-content {
-background-color: white;
-padding: 20px;
-border-radius: 30px;
-width: 600px;
-height: 550px;
-text-align: center;
-position: relative;
-animation: modal-down 0.3s linear;
+.playlist-image-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 30px;
+  width: 600px;
+  height: 550px;
+  text-align: center;
+  position: relative;
+  animation: playlist-modal-down 0.3s linear;
 }
 
-.crop-container {
-position: relative;
-width: 500px%;
-height: 400px;
-background: #ffffff;
-margin-top: 20px;
+.playlist-crop-container {
+  position: relative;
+  width: 500px;
+  height: 400px;
+  background: #ffffff;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.controls {
-display: flex;
-justify-content: center;
-margin-top: 10px;
+.playlist-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
 }
 
-.zoom-range {
-width: 200px;
+.playlist-zoom-range {
+  width: 200px;
 }
 
-.plimage-save {
+.playlist-plimage-save {
   width: 100px;
   height: 30px;
   background-color: white;
-  border:  1px solid rgb(216, 215, 215);
+  border: 1px solid rgb(216, 215, 215);
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-top: 10px;
 }
 
-.plimage-save:hover {
+.playlist-plimage-save:hover {
   background-color: #e4e4e4;
 }
 
-.plimage-cropbox {
+.playlist-plimage-cropbox {
   width: 600px;
   height: 400px;
-  border:  1px solid rgb(216, 215, 215);
+  border: 1px solid rgb(216, 215, 215);
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-#file-input {
+#playlist-file-input {
   display: none;
 }
 
 /* 커스텀 파일 업로드 버튼 */
-.custom-file-upload label {
+.playlist-custom-file-upload label {
   display: inline-block;
   background-color: #007bff;
   padding: 10px 20px;
@@ -630,12 +628,12 @@ width: 200px;
   transition: background-color 0.3s ease;
 }
 
-.custom-file-upload label:hover {
+.playlist-custom-file-upload label:hover {
   background-color: #0056b3;
 }
 
 /* 파일 업로드 컨테이너 추가 스타일 */
-.custom-file-upload {
+.playlist-custom-file-upload {
   display: inline-block;
   position: relative;
 }

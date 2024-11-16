@@ -1,90 +1,91 @@
-.Mycollection {
-    width: 1050px;
-    height: 400px;
-    border: 1px solid rgb(223, 222, 222);
-    box-shadow: 0 4px 8px #dadada1a;
-    border-radius: 15px;
-    margin-top: 30px;
-    margin-left: 165px;
+.mypage-Mycollection {
+  width: 1050px;
+  height: 400px;
+  border: 1px solid rgb(223, 222, 222);
+  box-shadow: 0 4px 8px #dadada1a;
+  border-radius: 15px;
+  margin-top: 30px;
+  margin-left: 165px;
 }
 
-.Mycollection p {
+.mypage-Mycollection p {
+font-weight: bold;
+margin-left: 30px;
+}
+.mypage-topbox {
+  display: flex;
+}
+
+.mypage-Mycomment {
+  width: 700px;
+  height: 300px;
+  border: 1px solid rgb(223, 222, 222);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px #dadada1a;
+  margin-left: 90px;
+}
+
+.mypage-userimage {
+  width: 130px;
+  height: 130px;
+  border-radius: 150px;
+  box-shadow: 0 4px 8px #dadada1a;
+  border: 1px solid rgb(223, 222, 222);
+  background-image: url('./userimage.jpg');
+  background-size: cover;
+  margin-left: 200px;
+  margin-top: 50px;
+}
+
+.mypage-username {
+  width: 150px;
+  height: 40px;
+  border: 1px solid rgb(223, 222, 222);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px #dadada1a;
+  text-align: center;
+  margin-left: 193px;
+  margin-top: 30px;
+}
+
+.mypage-username p {
+ text-align: center;
+ margin-top: 10px; 
+}
+
+.mypage-playlist-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+  margin-left: 40px;
+  overflow-y: auto;
+  width: 1000px;
+  height: 300px;
+}
+
+.mypage-playlist-box {
+  width: 150px;
+  height: 200px;
+  text-align: center;
+  border: 1px solid rgb(223, 222, 222);
+  box-shadow: 0 4px 8px #0000001a;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mypage-playlist-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgb(223, 222, 222);
+}
+
+.mypage-playlist-title {
+  margin-top: 10px;
+  font-size: 16px;
   font-weight: bold;
-  margin-left: 30px;
+  align-self: start;
+  margin-top: 15px;
 }
-.topbox {
-    display: flex;
-}
-
-.Mycomment {
-    width: 700px;
-    height: 300px;
-    border: 1px solid rgb(223, 222, 222);
-    border-radius: 15px;
-    box-shadow: 0 4px 8px #dadada1a;
-    margin-left: 90px;
-}
-
-.userimage {
-    width: 130px;
-    height: 130px;
-    border-radius: 150px;
-    box-shadow: 0 4px 8px #dadada1a;
-    border: 1px solid rgb(223, 222, 222);
-    background-image: url('./userimage.jpg');
-    background-size: cover;
-    margin-left: 200px;
-    margin-top: 50px;
-}
-
-.username {
-    width: 150px;
-    height: 40px;
-    border: 1px solid rgb(223, 222, 222);
-    border-radius: 15px;
-    box-shadow: 0 4px 8px #dadada1a;
-    text-align: center;
-    margin-left: 193px;
-    margin-top: 30px;
-}
-
-.username p {
-   text-align: center;
-   margin-top: 10px; 
-}
-
-.playlist-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    margin-top: 20px;
-    margin-left: 40px;
-    overflow-y: auto;
-    width: 1000px;
-    height: 300px;
-  }
-  
-  .playlist-box {
-    width: 150px;
-    height: 200px;
-    text-align: center;
-    border: 1px solid rgb(223, 222, 222);
-    box-shadow: 0 4px 8px #0000001a;
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .playlist-image {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-  }
-  
-  .playlist-title {
-    margin-top: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    align-self: start;
-    margin-top: 15px;
-  }

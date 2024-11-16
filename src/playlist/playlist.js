@@ -1,4 +1,4 @@
-import React, { useState,  useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import './playlist.css';
 import axios from 'axios';
 import Cropper from 'react-easy-crop';
@@ -241,34 +241,34 @@ function PlaylistModal({ onClose }) {
   return (
     <>
       {/* 첫 번째 모달 */}
-      <div className="modal-overlay" onClick={closeModal}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <button className="close-btn" onClick={closeModal}>
+      <div className="playlist-modal-overlay" onClick={closeModal}>
+        <div className="playlist-modal-content" onClick={(e) => e.stopPropagation()}>
+          <button className="playlist-close-btn" onClick={closeModal}>
             닫기
           </button>
-          <div className='playlist-header'>
-            <div className="plimage">
+          <div className='playlist-playlist-header'>
+            <div className="playlist-plimage">
               {previewUrl ? (
                 <img
                   src={previewUrl}
                   alt="플레이리스트 이미지"
-                  className="playlist-image"
+                  className="playlist-playlist-image"
                 />
               ) : (
                 <p></p>
               )}
               <button
-                className="change-image-btn"
+                className="playlist-change-image-btn"
                 onClick={openImageModal}
               >
                 사진변경
               </button>
             </div>
 
-            <div className="plname">
+            <div className="playlist-plname">
               {isEditingTitle ? (
-                <div className='pledit2'>
-                  <div className='edittitle2'>
+                <div className='playlist-pledit2'>
+                  <div className='playlist-edittitle2'>
                     <input
                       type="text"
                       value={playlistTitle}
@@ -282,13 +282,13 @@ function PlaylistModal({ onClose }) {
                       placeholder="플레이리스트 설명"
                     />
                   </div>
-                  <button onClick={handleSaveTitle} className='pltitlesave'>
+                  <button onClick={handleSaveTitle} className='playlist-pltitlesave'>
                     <span className="material-symbols-outlined">check_circle</span>
                   </button>
                 </div>
               ) : (
-                <div className='pledit1'>
-                  <div className='edittitle1'>
+                <div className='playlist-pledit1'>
+                  <div className='playlist-edittitle1'>
                     <h2>{playlistTitle || '플레이리스트 제목'}</h2>
                     <p>{playlistDescription || '플레이리스트 설명'}</p>
                   </div>
@@ -298,9 +298,9 @@ function PlaylistModal({ onClose }) {
                 </div>
               )}
             </div>
-            <button className="plsave" onClick={handleSavePlaylist} disabled={isSaving}>
+            <button className="playlist-plsave" onClick={handleSavePlaylist} disabled={isSaving}>
               {isSaving ? (
-                <div className="loader"></div>
+                <div className="playlist-loader"></div>
               ) : (
                 <>
                   <span className="material-symbols-outlined">check</span>
@@ -309,34 +309,34 @@ function PlaylistModal({ onClose }) {
               )}
             </button>
           </div> 
-          <button className="pladd" onClick={openSecondModal}>
+          <button className="playlist-pladd" onClick={openSecondModal}>
             <span className='material-symbols-outlined'>add</span>
           </button>
-          <div className="book-cover-box">
+          <div className="playlist-book-cover-box">
             {selectedBook.cover ? (
               <img
                 src={selectedBook.cover}
                 alt={selectedBook.title}
-                className="selected-book-cover"
+                className="playlist-selected-book-cover"
               />
             ) : (
               <p>책을 추가해보세요!</p>
             )}
           </div>
 
-          <div className="book-choosetitle">
+          <div className="playlist-book-choosetitle">
             <h2>{selectedBook.title}</h2>
             <p>
               {selectedBook.author}/{selectedBook.publisher}
             </p>
           </div>
 
-          <div className="book-list">
+          <div className="playlist-book-list">
             {bookList.length === 0 ? (
               // 책이 없을 때 빈 아이템 박스 5개 표시
               Array.from({ length: MAX_EMPTY_ITEMS }).map((_, index) => (
-                <div key={index} className="book-item empty">
-                  <div className="booktitle">
+                <div key={index} className="playlist-book-item empty">
+                  <div className="playlist-booktitle">
                     <h3>책이름 | 저자</h3>
                   </div>
                 </div>
@@ -346,23 +346,23 @@ function PlaylistModal({ onClose }) {
               bookList.map((book, index) => (
                 <div
                   key={index}
-                  className="book-item"
+                  className="playlist-book-item"
                   onClick={() => handleBookClick(book)}
                 >
-                  <div className="book-info">
+                  <div className="playlist-book-info">
                     <img
                       src={book.cover}
                       alt={book.title}
-                      className="book-mcover"
+                      className="playlist-book-mcover"
                     />
-                    <div className="booktitle">
+                    <div className="playlist-booktitle">
                       <h3>{book.title}</h3>
                       <p>
                         {book.author}/{book.publisher}
                       </p>
                     </div>
                     <button
-                      className="remove-book-btn"
+                      className="playlist-remove-book-btn"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleRemoveBook(index);
@@ -380,16 +380,16 @@ function PlaylistModal({ onClose }) {
 
       {/* 두 번째 모달 */}
       {isSecondModalOpen && (
-        <div className="modal-overlay" onClick={closeSecondModal}>
+        <div className="playlist-modal-overlay" onClick={closeSecondModal}>
           <div
-            className="second-modal-content"
+            className="playlist-second-modal-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <button className="close-btn" onClick={closeSecondModal}>
+            <button className="playlist-close-btn" onClick={closeSecondModal}>
               닫기
             </button>
 
-            <div className="search-box">
+            <div className="playlist-search-box">
               <input
                 type="text"
                 value={searchQuery}
@@ -401,19 +401,19 @@ function PlaylistModal({ onClose }) {
               </button>
             </div>
 
-            <div className="search-results">
+            <div className="playlist-search-results">
               {searchResults.length === 0 ? (
                 <p>검색 결과가 없습니다.</p>
               ) : (
                 searchResults.map((book, index) => (
                   <div key={index}>
-                    <div className="book-result">
+                    <div className="playlist-book-result">
                       <img
                         src={book.image}
-                        className="result-book-cover"
+                        className="playlist-result-book-cover"
                         alt={book.title}
                       />
-                      <div className="result-title">
+                      <div className="playlist-result-title">
                         <h3>{book.title}</h3>
                         <p>
                           {book.author}/{book.publisher}
@@ -421,7 +421,7 @@ function PlaylistModal({ onClose }) {
                       </div>
                       <button
                         onClick={() => handleAddBook(book)}
-                        className="add-book-btn"
+                        className="playlist-add-book-btn"
                       >
                         <span className='material-symbols-outlined'>add</span>
                       </button>
@@ -431,7 +431,7 @@ function PlaylistModal({ onClose }) {
               )}
             </div>
 
-            <div className="mystudy">
+            <div className="playlist-mystudy">
               <p>내 서재</p>
             </div>
           </div>
@@ -440,15 +440,15 @@ function PlaylistModal({ onClose }) {
 
       {/* 이미지 변경 모달 */}
       {isImageModalOpen && (
-        <div className="modal-overlay" onClick={closeImageModal}>
-          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={closeImageModal}>닫기</button>
+        <div className="playlist-modal-overlay" onClick={closeImageModal}>
+          <div className="playlist-image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="playlist-close-btn" onClick={closeImageModal}>닫기</button>
             <div>
-              <div class="custom-file-upload">
-                <input id="file-input" type="file" accept="image/*" onChange={onSelectFile}/>
-                <label for="file-input">이미지 선택</label>
+              <div className="playlist-custom-file-upload">
+                <input id="playlist-file-input" type="file" accept="image/*" onChange={onSelectFile}/>
+                <label htmlFor="playlist-file-input">이미지 선택</label>
               </div>
-              <div className="crop-container">
+              <div className="playlist-crop-container">
                 <Cropper
                   image={imageSrc}
                   crop={crop}
@@ -459,7 +459,7 @@ function PlaylistModal({ onClose }) {
                   onCropComplete={onCropComplete}
                 />
               </div>
-              <div className="controls">
+              <div className="playlist-controls">
                 <input
                   type="range"
                   min={1}
@@ -467,10 +467,10 @@ function PlaylistModal({ onClose }) {
                   step={0.1}
                   value={zoom}
                   onChange={(e) => setZoom(e.target.value)}
-                  className="zoom-range"
+                  className="playlist-zoom-range"
                 />
               </div>
-              <button className='plimage-save' onClick={showCroppedImage}>저장</button>
+              <button className='playlist-plimage-save' onClick={showCroppedImage}>저장</button>
             </div>
           </div>
         </div>
