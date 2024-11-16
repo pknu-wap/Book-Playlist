@@ -36,37 +36,37 @@ const MyPage = () => {
 
   return (
     <div>
-      <div className='topbox'>
-        <div className='userbox'>
-          <div className='userimage'>
+      <div className='mypage-topbox'>
+        <div className='mypage-userbox'>
+          <div className='mypage-userimage'>
             {/* 사용자 이미지 표시 (선택 사항) */}
           </div>
-          <div className='username'>
+          <div className='mypage-username'>
             <p>{username}님</p>
           </div>
         </div>
-        <div className='Mycomment'>
+        <div className='mypage-Mycomment'>
           <p>내가 쓴 댓글</p>
         </div>
       </div>
-      <div className='Mycollection'>
+      <div className='mypage-Mycollection'>
         <p>나의 플레이리스트</p>
         {isLoading ? (
           <p>로딩 중...</p>
         ) : (
-          <div className='playlist-container'>
+          <div className='mypage-playlist-container'>
             {playlists.map((playlist) => (
-              <div key={playlist.playlistId} className='playlist-box'>
+              <div key={playlist.playlistId} className='mypage-playlist-box'>
                 {playlist.imageData ? (
                   <img
                     src={`data:image/jpeg;base64,${playlist.imageData}`}
                     
-                    className='playlist-image'
+                    className='mypage-playlist-image'
                   />
                 ) : (
-                  <div className='placeholder-image'>이미지 없음</div>
+                  <div className='mypage-placeholder-image'>이미지 없음</div>
                 )}
-                <p className='playlist-title'>{playlist.title}</p>
+                <p className='mypage-playlist-title'>{playlist.title}</p>
               </div>
             ))}
           </div>
