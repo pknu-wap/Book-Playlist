@@ -246,74 +246,72 @@ function PlaylistModal({ onClose }) {
           <button className="close-btn" onClick={closeModal}>
             닫기
           </button>
+          <div className='playlist-header'>
+            <div className="plimage">
+              {previewUrl ? (
+                <img
+                  src={previewUrl}
+                  alt="플레이리스트 이미지"
+                  className="playlist-image"
+                />
+              ) : (
+                <p></p>
+              )}
+              <button
+                className="change-image-btn"
+                onClick={openImageModal}
+              >
+                사진변경
+              </button>
+            </div>
 
-          <div className="plname">
-            {isEditingTitle ? (
-              <div className='pledit2'>
-                <div className='edittitle2'>
-                  <input
-                    type="text"
-                    value={playlistTitle}
-                    onChange={(e) => setPlaylistTitle(e.target.value)}
-                    placeholder="플레이리스트 제목"
-                  />
-                  <input
-                    type="text"
-                    value={playlistDescription}
-                    onChange={(e) => setPlaylistDescription(e.target.value)}
-                    placeholder="플레이리스트 설명"
-                  />
+            <div className="plname">
+              {isEditingTitle ? (
+                <div className='pledit2'>
+                  <div className='edittitle2'>
+                    <input
+                      type="text"
+                      value={playlistTitle}
+                      onChange={(e) => setPlaylistTitle(e.target.value)}
+                      placeholder="플레이리스트 제목"
+                    />
+                    <input
+                      type="text"
+                      value={playlistDescription}
+                      onChange={(e) => setPlaylistDescription(e.target.value)}
+                      placeholder="플레이리스트 설명"
+                    />
+                  </div>
+                  <button onClick={handleSaveTitle} className='pltitlesave'>
+                    <span className="material-symbols-outlined">check_circle</span>
+                  </button>
                 </div>
-                <button onClick={handleSaveTitle} className='pltitlesave'>
-                  <span className="material-symbols-outlined">check_circle</span>
-                </button>
-              </div>
-            ) : (
-              <div className='pledit1'>
-                <div className='edittitle1'>
-                  <h2>{playlistTitle || '플레이리스트 제목'}</h2>
-                  <p>{playlistDescription || '플레이리스트 설명'}</p>
+              ) : (
+                <div className='pledit1'>
+                  <div className='edittitle1'>
+                    <h2>{playlistTitle || '플레이리스트 제목'}</h2>
+                    <p>{playlistDescription || '플레이리스트 설명'}</p>
+                  </div>
+                  <button onClick={handleEditTitle}>
+                    <span className="material-symbols-outlined">edit</span>
+                  </button>
                 </div>
-                <button onClick={handleEditTitle}>
-                  <span className="material-symbols-outlined">edit</span>
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="plimage">
-            {previewUrl ? (
-              <img
-                src={previewUrl}
-                alt="플레이리스트 이미지"
-                className="playlist-image"
-              />
-            ) : (
-              <p></p>
-            )}
-            <button
-              className="change-image-btn"
-              onClick={openImageModal}
-            >
-              사진변경
+              )}
+            </div>
+            <button className="plsave" onClick={handleSavePlaylist} disabled={isSaving}>
+              {isSaving ? (
+                <div className="loader"></div>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined">check</span>
+                  <p>저장</p>
+                </>
+              )}
             </button>
-          </div>
-
+          </div> 
           <button className="pladd" onClick={openSecondModal}>
             <span className='material-symbols-outlined'>add</span>
           </button>
-
-          <button className="plsave" onClick={handleSavePlaylist} disabled={isSaving}>
-            {isSaving ? (
-              <div className="loader"></div>
-            ) : (
-              <>
-                <span className="material-symbols-outlined">check</span>
-                <p>저장</p>
-              </>
-            )}
-          </button>
-
           <div className="book-cover-box">
             {selectedBook.cover ? (
               <img
