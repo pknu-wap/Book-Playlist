@@ -85,6 +85,7 @@ const MyPage = () => {
       <div className='mypage-topbox'>
         <div className='mypage-userbox'>
           <div className='mypage-userimage'>{/* 사용자 이미지 표시 (선택 사항) */}</div>
+
           <div className='mypage-username'>
             <p>{username}님</p>
           </div>
@@ -101,6 +102,7 @@ const MyPage = () => {
           <div className='mypage-playlist-container'>
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className='mypage-playlist-box'>
+
                 <div className='mypage-playlist-hover-container'>
                   {playlist.imageData ? (
                     <img
