@@ -30,6 +30,7 @@
   z-index: 1000; 
 }
 
+
 .mypage-playlist-selected-book-cover-before {
   width: 200px;
   height: 300px;
@@ -42,7 +43,6 @@
   left: 150px;
   bottom: 280px;
 }
-
 .playlist-book-cover-box {
   width: 200px;
   height: 300px;
@@ -59,7 +59,9 @@
 .playlist-book-choosetitle {
   margin-top: 280px;
   margin-left: 82px;
-
+  text-align: center;
+  max-width: 300px;
+}
 
 .playlist-close-btn {
   position: absolute;
@@ -363,6 +365,7 @@
 }
 
 
+
 .playlist-plname {
   width: 300px;
   margin-left: 20px;
@@ -587,10 +590,8 @@
   height: 400px;
   background: #ffffff;
   margin-top: 20px;
-
   margin-left: auto;
   margin-right: auto;
-
 }
 
 .playlist-controls {
