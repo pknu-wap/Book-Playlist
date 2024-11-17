@@ -25,8 +25,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/playlist/**", "/api/mypage/**").authenticated() // 세션 로그인 필요
                         .anyRequest().permitAll()
-                )
-                .httpBasic();
+                );
+
 
         return http.build();
     }
@@ -34,7 +34,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://book-playlist.netlify.app/"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://book-playlist.netlify.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
