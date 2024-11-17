@@ -34,8 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/playlist/**", "/api/mypage/**").authenticated()
                         .anyRequest().permitAll()
                 )
-                .formLogin().disable() // REST API에서는 일반적으로 폼 로그인을 사용하지 않습니다.
-                .httpBasic(); // HTTP Basic 인증 유지
+                .formLogin().disable(); // HTTP Basic 인증 제거
 
         return http.build();
     }

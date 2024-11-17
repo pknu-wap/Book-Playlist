@@ -10,14 +10,11 @@ import WEB_5.BOOKPLAYLIST.repository.BookRepository;
 import WEB_5.BOOKPLAYLIST.repository.PlaylistRepository;
 import WEB_5.BOOKPLAYLIST.domain.dto.NaverBookResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import WEB_5.BOOKPLAYLIST.repository.UserRepository;
 import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -46,40 +43,10 @@ public class PlaylistService {
         }
 
         Playlist playlist = playlistOpt.get();
-
-        // 기본 값 적용 조건
-        if (title == null || title.isBlank()) {
-            Long userId = SecurityUtil.getCurrentUserIdFromSession();
-            Optional<User> userOpt = userRepository.findById(userId);
-
-            if (!userOpt.isPresent()) {
-                return ResponseEntity.badRequest().body("로그인된 사용자 정보를 찾을 수 없습니다.");
-            }
-
-            User user = userOpt.get();
-            title = user.getUsername() + "님의 북플레이리스트";
-        }
-
-        if (description == null || description.isBlank()) {
-            description = "이 플레이리스트는 사용자가 즐겨 읽는 책들을 모아둔 공간입니다.";
-        }
-
-        if (imageData == null || imageData.length == 0) {
-            try {
-                // 기본 이미지 로드 (resources/static/default_playlist_image.jpg)
-                ClassPathResource defaultImageResource = new ClassPathResource("static/default_playlist_image.jpg");
-                imageData = Files.readAllBytes(defaultImageResource.getFile().toPath()); // 바이트 배열로 변환
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("기본 이미지를 로드할 수 없습니다.");
-            }
-        }
-
-        // 값 설정
         playlist.setTitle(title);
         playlist.setDescription(description);
-        playlist.setImageData(imageData);
+        playlist.setImageData(imageData); // 이미지 데이터 저장
 
-        // 책 추가 로직
         List<Book> booksToAdd = isbns.stream()
                 .distinct()
                 .map(isbn -> {
@@ -87,7 +54,7 @@ public class PlaylistService {
                     if (bookOpt.isPresent()) {
                         return bookOpt.get();
                     } else {
-                        return fetchAndSaveBook(isbn); // ISBN으로 책 정보 가져오기
+                        return fetchAndSaveBook(isbn); // ISBN을 사용하여 책 정보 가져오기
                     }
                 })
                 .filter(book -> book != null && !playlist.getBooks().contains(book))

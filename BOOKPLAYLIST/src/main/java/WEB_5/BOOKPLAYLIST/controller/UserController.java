@@ -3,7 +3,6 @@ package WEB_5.BOOKPLAYLIST.controller;
 import WEB_5.BOOKPLAYLIST.domain.dto.UserCreateForm;
 import WEB_5.BOOKPLAYLIST.domain.entity.User;
 import WEB_5.BOOKPLAYLIST.service.UserService;
-import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -79,7 +79,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginData) {
+    public ResponseEntity<Map<String, Object>> login(
+            @RequestBody Map<String, String> loginData,
+            HttpServletRequest request) { // HttpServletRequest 추가
         Map<String, Object> response = new HashMap<>();
         String email = loginData.get("email");
         String password = loginData.get("password");
@@ -90,6 +92,10 @@ public class UserController {
             );
             // 인증 성공 시 SecurityContextHolder에 인증 객체 설정
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // 세션 생성 및 SecurityContextHolder에 설정
+            HttpSession session = request.getSession(true);
+            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
             User user = userService.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
             response.put("success", true);
@@ -108,9 +114,13 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, Object>> logout(HttpSession session){
+    public ResponseEntity<Map<String, Object>> logout(HttpServletRequest request){
         SecurityContextHolder.clearContext();
-        session.invalidate();
+        // 세션 무효화
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", "로그아웃 성공");
