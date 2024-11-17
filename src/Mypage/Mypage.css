@@ -1,90 +1,312 @@
 .mypage-Mycollection {
-    width: 1050px;
-    height: 400px;
-    border: 1px solid rgb(223, 222, 222);
-    box-shadow: 0 4px 8px #dadada1a;
-    border-radius: 15px;
-    margin-top: 30px;
-    margin-left: 165px;
+  width: 1050px;
+  height: 400px;
+  border: 1px solid rgb(223, 222, 222);
+  box-shadow: 0 4px 8px #dadada1a;
+  border-radius: 15px;
+  margin-top: 30px;
+  margin-left: 165px;
 }
 
 .mypage-Mycollection p {
-  font-weight: bold;
-  margin-left: 30px;
+font-weight: bold;
+margin-left: 30px;
 }
 .mypage-topbox {
-    display: flex;
+  display: flex;
 }
 
 .mypage-Mycomment {
-    width: 700px;
-    height: 300px;
-    border: 1px solid rgb(223, 222, 222);
-    border-radius: 15px;
-    box-shadow: 0 4px 8px #dadada1a;
-    margin-left: 90px;
+  width: 700px;
+  height: 300px;
+  border: 1px solid rgb(223, 222, 222);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px #dadada1a;
+  margin-left: 90px;
 }
 
 .mypage-userimage {
-    width: 130px;
-    height: 130px;
-    border-radius: 150px;
-    box-shadow: 0 4px 8px #dadada1a;
-    border: 1px solid rgb(223, 222, 222);
-    background-image: url('./userimage.jpg');
-    background-size: cover;
-    margin-left: 200px;
-    margin-top: 50px;
+  width: 130px;
+  height: 130px;
+  border-radius: 150px;
+  box-shadow: 0 4px 8px #dadada1a;
+  border: 1px solid rgb(223, 222, 222);
+  background-image: url('./userimage.jpg');
+  background-size: cover;
+  margin-left: 200px;
+  margin-top: 50px;
 }
 
 .mypage-username {
-    width: 150px;
-    height: 40px;
-    border: 1px solid rgb(223, 222, 222);
-    border-radius: 15px;
-    box-shadow: 0 4px 8px #dadada1a;
-    text-align: center;
-    margin-left: 193px;
-    margin-top: 30px;
+  width: 150px;
+  height: 40px;
+  border: 1px solid rgb(223, 222, 222);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px #dadada1a;
+  text-align: center;
+  margin-left: 193px;
+  margin-top: 30px;
 }
 
 .mypage-username p {
-   text-align: center;
-   margin-top: 10px; 
+ text-align: center;
+ margin-top: 10px; 
 }
 
 .mypage-playlist-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    margin-top: 20px;
-    margin-left: 40px;
-    overflow-y: auto;
-    width: 1000px;
-    height: 300px;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+  margin-left: 40px;
+  overflow-y: auto;
+  width: 1000px;
+  height: 300px;
+}
+
+.mypage-playlist-box {
+  width: 150px;
+  height: 200px;
+  text-align: center;
+  border: 1px solid rgb(223, 222, 222);
+  box-shadow: 0 4px 8px #0000001a;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mypage-playlist-image {
+  width: 150px;
+  height: 200px;
+  border-radius: 10px;
+  border: 1px solid rgb(223, 222, 222);
+}
+
+.mypage-playlist-title {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  align-self: start;
+  margin-top: 15px;
+}
+
+.mypage-playlist-hover-container {
+  position: relative;
+}
+
+.mypage-playlist-modal-button {
+  display: none; /* 기본적으로 숨김 */
+  position: absolute; /* 부모 컨테이너를 기준으로 위치 설정 */
+  top: 0; /* 이미지의 상단에 위치 */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(238, 238, 238, 0.5);
+  color: black;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.mypage-playlist-box:hover .mypage-playlist-modal-button {
+  display: block;
+}
+
+.mypage-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mypage-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 30px;
+  width: 1200px;
+  height: 650px;
+  position: relative;
+  animation: playlist-modal-down 0.3s linear;
+}
+
+.mypage-modal-close-button {
+  background-color: white;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  float: right;
+  border-radius: 15px;
+}
+
+.mypage-modal-close-button:hover {
+  background-color: #dddddd;
+}
+
+
+
+
+
+
+.mypage-modal-books{
+  position: absolute;
+  left: 470px;
+  top: 170px;
+  width: 665px;
+  height: 390px;
+  overflow-y: auto;
+  max-height: 650px;
+}
+.mypage-modal-book{
+  display: flex;
+  align-items: center;
+  width: 640px;
+  height: 100px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  background-color: rgb(250, 255, 227);
+  border: 1px solid rgba(0, 0, 0, 0.1); 
+}
+.mypage-modal-book img {
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-left: 23px
+}
+
+.mypage-modal-booktitle {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0; /* 플렉스 크기 조절 */
+  white-space: nowrap; /* 줄바꿈 없앰 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+  max-width: 400px;
+  min-width: 0; /* 플렉스 환경에서 ellipsis 작동을 위해 최소 너비를 0으로 설정 */
+  margin-left: 20px;
+}
+
+.mypage-modal-booktitle h3,
+.mypage-modal-booktitle p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%; /* 부모 요소의 너비를 초과하지 않도록 설정 */
+}
+
+.mypage-modal-booktitle h3{
+  margin-bottom: 0;
+}
+
+.mypage-modal-booktitle p{
+  margin-top: 0;
+}
+
+.mypage-modal-books::-webkit-scrollbar {
+  width: 10px;
+}
+
+.mypage-modal-books::-webkit-scrollbar-track { 
+  background-color: rgb(221, 219, 219);
+}
+
+.mypage-modal-books::-webkit-scrollbar-thumb { 
+  background-color: rgb(193, 251, 166);
+}  
+.mypage-modal-books::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* hover 효과 */
+.mypage-modal-books::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(231, 255, 214);
+  transition: all 0.2s; /* 애니메이션 속도 */
+}
+
+/* 모서리 둥글게 */
+.mypage-modal-books::-webkit-scrollbar-track,
+.mypage-modal-books::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+}
+
+
+
+
+
+
+
+.mypage-modal-plheader {
+  margin-left: 460px;
+  margin-top: 40px;
+  display: flex;
+}
+
+.mypage-modal-image {
+  border: 1px solid black;
+  width: 70px;
+  height: 93px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.mypage-modal-plname  {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 1 0; /* 플렉스 크기 조절 */
+  white-space: nowrap; /* 줄바꿈을 없앰 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+  max-width: 300px;
+  min-width: 0;
+  margin-left: 23px;
+  margin-top: 10px;
+}
+
+.mypage-modal-plname h2 {
+  font-size: 18px;
+  white-space: nowrap; /* 줄바꿈을 없앰 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+  max-width: 100%;
+  margin-bottom: 10px;
+}
+
+.mypage-modal-plname p {
+  font-size: 13px;
+  white-space: nowrap; /* 줄바꿈을 없앰 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+  max-width: 100%;
+  margin-top: 0px;
+}
+
+
+
+
+
+.mypage-playlist-selected-book-cover {
+  width: 200px;
+  height: 300px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  margin: 0 auto;
+  background-color: rgb(250, 255, 227);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
   
-  .mypage-playlist-box {
-    width: 150px;
-    height: 200px;
-    text-align: center;
-    border: 1px solid rgb(223, 222, 222);
-    box-shadow: 0 4px 8px #0000001a;
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .mypage-playlist-image {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-  }
-  
-  .mypage-playlist-title {
-    margin-top: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    align-self: start;
-    margin-top: 15px;
-  }
+}
+.mypage-playlist-book-choosetitle {
+  margin-top: 280px;
+  margin-left: 82px;
+  text-align: center;
+  max-width: 300px;
+}
+

@@ -30,6 +30,19 @@
   z-index: 1000; 
 }
 
+.mypage-playlist-selected-book-cover-before {
+  width: 200px;
+  height: 300px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  margin: 0 auto;
+  background-color: rgb(250, 255, 227);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  left: 150px;
+  bottom: 280px;
+}
+
 .playlist-book-cover-box {
   width: 200px;
   height: 300px;
@@ -45,10 +58,8 @@
 
 .playlist-book-choosetitle {
   margin-top: 280px;
-  margin-left: 87px;
-  text-align: center;
-  max-width: 300px;
-}
+  margin-left: 82px;
+
 
 .playlist-close-btn {
   position: absolute;
@@ -59,6 +70,7 @@
   padding: 10px 20px;
   border: none;
   cursor: pointer;
+  border-radius: 15px;
 }
 
 .playlist-close-btn:hover {
@@ -350,6 +362,7 @@
   margin-left: 460px;
 }
 
+
 .playlist-plname {
   width: 300px;
   margin-left: 20px;
@@ -574,6 +587,10 @@
   height: 400px;
   background: #ffffff;
   margin-top: 20px;
+
+  margin-left: auto;
+  margin-right: auto;
+
 }
 
 .playlist-controls {
