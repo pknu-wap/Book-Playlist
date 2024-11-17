@@ -120,7 +120,8 @@ public class PlaylistService {
                             book.getTitle(),
                             book.getAuthor(),
                             book.getIsbn(),
-                            book.getImage()
+                            book.getImage(),
+                            book.getPublisher() // 출판사 정보 추가
                     ))
                     .collect(Collectors.toList());
 

@@ -22,5 +22,7 @@ public class PlaylistDetailsDTO {
         private String author;        // 저자
         private String isbn;          // ISBN
         private String image;         // 책 이미지
+        private String publisher;     // 책 출판사
+
     }
 }
