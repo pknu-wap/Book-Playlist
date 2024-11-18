@@ -15,6 +15,8 @@ const MyPage = () => {
     author: '지은이',
   });
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [playlistTitle, setPlaylistTitle] = useState('');
+  const [playlistDescription, setPlaylistDescription] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -89,6 +91,13 @@ const MyPage = () => {
     setIsEditingTitle(false);
   };
 
+  useEffect(() => {
+    if (modalData) {
+      setPlaylistTitle(modalData.title || '');
+      setPlaylistDescription(modalData.description || '');
+    }
+  }, [modalData]);
+
   return (
     <div>
       <div className='mypage-topbox'>
@@ -153,28 +162,30 @@ const MyPage = () => {
               />
              )}
              {isEditingTitle ? (
-                <div className='playlist-pledit2'>
-                  <div className='playlist-edittitle2'>
+                <div className='mypage-modal-plname-edit-save'>
+                  <div className='mypage-modal-plname-save'>
                     <input
                       type="text"
-                      
+                      value={playlistTitle}
+                      onChange={(e) => setPlaylistTitle(e.target.value)}
                       placeholder="플레이리스트 제목"
                     />
                     <input
                       type="text"
-                      
+                      value={playlistDescription}
+                      onChange={(e) => setPlaylistDescription(e.target.value)}
                       placeholder="플레이리스트 설명"
                     />
                   </div>
-                  <button onClick={handleSaveTitle} className='playlist-pltitlesave'>
+                  <button onClick={handleSaveTitle}>
                     <span className="material-symbols-outlined">check_circle</span>
                   </button>
                 </div>
               ) : (
-              <div>
+              <div className='mypage-modal-plname-edit'>
                  <div className='mypage-modal-plname'>
-                  <h2>{modalData.title}</h2>
-                  <p>{modalData.description}</p>
+                  <h2>{playlistTitle||modalData.title}</h2>
+                  <p>{playlistDescription||modalData.description}</p>
                 </div>
                 <button onClick={handleEditTitle}>
                  <span className="material-symbols-outlined">edit</span>
