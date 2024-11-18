@@ -7,12 +7,14 @@ import WEB_5.BOOKPLAYLIST.domain.dto.SavePlaylistRequest;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
 import WEB_5.BOOKPLAYLIST.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import org.springframework.http.HttpStatus;
 
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
@@ -30,24 +32,31 @@ public class PlaylistController {
         return ResponseEntity.ok(Map.of("playlistId", playlistId));
     }
 
-    // 책 리스트를 포함하여 플레이리스트 저장 (POST /api/playlist/save)
     @PostMapping("/save")
     public ResponseEntity<String> savePlaylist(
             @RequestParam Long playlistId,
             @RequestParam String title,
             @RequestParam String description,
             @RequestParam List<String> isbns,
-            @RequestParam("image") MultipartFile imageFile) {
+            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
 
         try {
-            byte[] imageData = imageFile.getBytes(); // 이미지 파일을 바이트 배열로 변환
-            return playlistService.savePlaylist(
-                    playlistId,
-                    title,
-                    description,
-                    isbns,
-                    imageData
-            );
+            // 이미지 파일이 없으면 기본 이미지 설정
+            byte[] imageData;
+            if (imageFile == null || imageFile.isEmpty()) {
+                try {
+                    ClassPathResource defaultImageResource = new ClassPathResource("static/default_playlist_image.jpg");
+                    imageData = Files.readAllBytes(defaultImageResource.getFile().toPath());
+                } catch (IOException e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("기본 이미지를 로드할 수 없습니다.");
+                }
+            } else {
+                imageData = imageFile.getBytes(); // 이미지 파일을 바이트 배열로 변환
+            }
+
+            // 서비스 메서드 호출
+            return playlistService.savePlaylist(playlistId, title, description, isbns, imageData);
+
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 파일 처리 실패");

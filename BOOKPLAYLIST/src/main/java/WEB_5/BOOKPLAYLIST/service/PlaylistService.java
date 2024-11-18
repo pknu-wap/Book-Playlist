@@ -53,6 +53,7 @@ public class PlaylistService {
             Long userId = SecurityUtil.getCurrentUserIdFromSession();
             Optional<User> userOpt = userRepository.findById(userId);
 
+            // 사용자가 존재하면 이름 기반 기본 제목 생성, 그렇지 않으면 고정된 기본 제목
             title = userOpt.map(user -> user.getUsername() + "님의 북플레이리스트").orElse("기본 플레이리스트 제목");
         }
 
@@ -108,6 +109,7 @@ public class PlaylistService {
 
         return ResponseEntity.ok("플레이리스트가 성공적으로 저장되었습니다.");
     }
+
 
 
     // 외부 API를 통해 책 정보를 가져와 저장하는 메서드
