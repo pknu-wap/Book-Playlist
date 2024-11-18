@@ -40,6 +40,7 @@ public class PlaylistService {
 
     // 플레이리스트를 저장하거나 수정하는 메서드 (이미지와 책 목록 포함)
     public ResponseEntity<String> savePlaylist(Long playlistId, String title, String description, List<String> isbns, byte[] imageData) {
+        // 플레이리스트 조회
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         if (!playlistOpt.isPresent()) {
             return ResponseEntity.badRequest().body("플레이리스트를 찾을 수 없습니다.");
@@ -47,53 +48,46 @@ public class PlaylistService {
 
         Playlist playlist = playlistOpt.get();
 
-        // 제목과 설명 기본값 설정
+        // 디폴트 값 설정
         if (title == null || title.isBlank()) {
             Long userId = SecurityUtil.getCurrentUserIdFromSession();
             Optional<User> userOpt = userRepository.findById(userId);
 
-            if (!userOpt.isPresent()) {
-                return ResponseEntity.badRequest().body("로그인된 사용자 정보를 찾을 수 없습니다.");
-            }
-
-            User user = userOpt.get();
-            title = user.getUsername() + "님의 북플레이리스트";
+            title = userOpt.map(user -> user.getUsername() + "님의 북플레이리스트").orElse("기본 플레이리스트 제목");
         }
 
         if (description == null || description.isBlank()) {
-            description = "이 플레이리스트는 사용자가 즐겨 읽는 책들을 모아둔 공간입니다.";
+            description = "기본 플레이리스트 설명";
         }
 
-        // 이미지 처리
         if (imageData == null || imageData.length == 0) {
             try {
                 ClassPathResource defaultImageResource = new ClassPathResource("static/default_playlist_image.jpg");
                 imageData = Files.readAllBytes(defaultImageResource.getFile().toPath());
             } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("기본 이미지를 로드할 수 없습니다.");
+                imageData = new byte[0]; // 빈 배열로 초기화
             }
         }
 
-        // 제목, 설명, 이미지 데이터 업데이트
+        // 필드 업데이트
         playlist.setTitle(title);
         playlist.setDescription(description);
         playlist.setImageData(imageData);
 
-        // 현재 플레이리스트에 있는 책들의 ISBN 목록
+        // 현재 플레이리스트의 책 목록
         List<Book> currentBooks = playlist.getBooks();
         List<String> currentIsbns = currentBooks.stream()
                 .map(Book::getIsbn)
                 .collect(Collectors.toList());
 
-        // 삭제할 책들: 현재 플레이리스트에 있지만, 새로운 `isbns` 목록에 없는 책
+        // 삭제할 책들: 현재 책 목록 중 새로운 `isbns` 목록에 없는 책
         List<Book> booksToRemove = currentBooks.stream()
                 .filter(book -> !isbns.contains(book.getIsbn()))
                 .collect(Collectors.toList());
 
-        // 삭제할 책 제거
         playlist.getBooks().removeAll(booksToRemove);
 
-        // 추가할 책들: 새로운 `isbns` 목록에 있지만, 현재 플레이리스트에 없는 책
+        // 추가할 책들: 새로운 `isbns` 목록 중 현재 책 목록에 없는 책
         List<Book> booksToAdd = isbns.stream()
                 .distinct()
                 .map(isbn -> {
@@ -107,11 +101,11 @@ public class PlaylistService {
                 .filter(book -> book != null && !currentIsbns.contains(book.getIsbn()))
                 .collect(Collectors.toList());
 
-        // 새로 추가된 책들을 플레이리스트에 추가
         playlist.getBooks().addAll(booksToAdd);
 
-        // 업데이트된 플레이리스트 저장
+        // 플레이리스트 저장
         playlistRepository.save(playlist);
+
         return ResponseEntity.ok("플레이리스트가 성공적으로 저장되었습니다.");
     }
 
