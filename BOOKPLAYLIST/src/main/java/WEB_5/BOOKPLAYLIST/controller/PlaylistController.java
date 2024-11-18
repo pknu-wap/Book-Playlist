@@ -87,5 +87,15 @@ public class PlaylistController {
         return ResponseEntity.ok(allPlaylists);
     }
 
+    // 해당 플레이리스트 삭제 (DELETE /api/playlist/{playlistId})
+    @DeleteMapping("/{playlistId}")
+    public ResponseEntity<String> deletePlaylist(@PathVariable Long playlistId) {
+        boolean isDeleted = playlistService.deletePlaylistById(playlistId);
+        if (isDeleted) {
+            return ResponseEntity.ok("플레이리스트가 성공적으로 삭제되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("플레이리스트를 찾을 수 없습니다.");
+        }
+    }
 
 }

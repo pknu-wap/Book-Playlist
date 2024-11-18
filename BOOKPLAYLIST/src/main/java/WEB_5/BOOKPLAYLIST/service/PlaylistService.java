@@ -110,6 +110,24 @@ public class PlaylistService {
         return ResponseEntity.ok("플레이리스트가 성공적으로 저장되었습니다.");
     }
 
+    // 해당 플레이리스트를 삭제하는 메서드
+    public boolean deletePlaylistById(Long playlistId) {
+        Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
+        if (playlistOpt.isPresent()) {
+            Playlist playlist = playlistOpt.get();
+
+            // 연결된 책 데이터 삭제 (Many-to-Many 연결 제거)
+            playlist.getBooks().clear();
+            playlistRepository.save(playlist);
+
+            // 플레이리스트 삭제
+            playlistRepository.deleteById(playlistId);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 
     // 외부 API를 통해 책 정보를 가져와 저장하는 메서드
