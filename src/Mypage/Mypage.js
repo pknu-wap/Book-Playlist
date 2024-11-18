@@ -14,6 +14,7 @@ const MyPage = () => {
     publisher: '출판사',
     author: '지은이',
   });
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -80,6 +81,14 @@ const MyPage = () => {
     });
   };
 
+  const handleEditTitle = () => {
+    setIsEditingTitle(true);
+  };
+
+  const handleSaveTitle = () => {
+    setIsEditingTitle(false);
+  };
+
   return (
     <div>
       <div className='mypage-topbox'>
@@ -143,10 +152,35 @@ const MyPage = () => {
                 className='mypage-modal-image'
               />
              )}
-             <div className='mypage-modal-plname'>
-              <h2>{modalData.title}</h2>
-              <p>{modalData.description}</p>
-             </div>
+             {isEditingTitle ? (
+                <div className='playlist-pledit2'>
+                  <div className='playlist-edittitle2'>
+                    <input
+                      type="text"
+                      
+                      placeholder="플레이리스트 제목"
+                    />
+                    <input
+                      type="text"
+                      
+                      placeholder="플레이리스트 설명"
+                    />
+                  </div>
+                  <button onClick={handleSaveTitle} className='playlist-pltitlesave'>
+                    <span className="material-symbols-outlined">check_circle</span>
+                  </button>
+                </div>
+              ) : (
+              <div>
+                 <div className='mypage-modal-plname'>
+                  <h2>{modalData.title}</h2>
+                  <p>{modalData.description}</p>
+                </div>
+                <button onClick={handleEditTitle}>
+                 <span className="material-symbols-outlined">edit</span>
+                </button>
+              </div>
+              )}
             </div>
             <div className='mypage-modal-books'>
               {modalData.books.map((book, index) => (
