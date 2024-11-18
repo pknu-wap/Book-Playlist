@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import org.springframework.http.HttpStatus;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
@@ -44,12 +45,7 @@ public class PlaylistController {
             // 이미지 파일이 없으면 기본 이미지 설정
             byte[] imageData;
             if (imageFile == null || imageFile.isEmpty()) {
-                try {
-                    ClassPathResource defaultImageResource = new ClassPathResource("static/default_playlist_image.jpg");
-                    imageData = Files.readAllBytes(defaultImageResource.getFile().toPath());
-                } catch (IOException e) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("기본 이미지를 로드할 수 없습니다.");
-                }
+                imageData = getDefaultImageData();
             } else {
                 imageData = imageFile.getBytes(); // 이미지 파일을 바이트 배열로 변환
             }
@@ -60,6 +56,14 @@ public class PlaylistController {
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 파일 처리 실패");
+        }
+    }
+
+    // 기본 이미지를 읽는 유틸리티 메서드
+    private byte[] getDefaultImageData() throws IOException {
+        ClassPathResource defaultImageResource = new ClassPathResource("static/default_playlist_image.jpg");
+        try (InputStream inputStream = defaultImageResource.getInputStream()) {
+            return inputStream.readAllBytes();
         }
     }
 
