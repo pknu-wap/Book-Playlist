@@ -47,7 +47,7 @@ public class PlaylistService {
 
         Playlist playlist = playlistOpt.get();
 
-        // 기본 값 적용 조건
+        // 제목과 설명 기본값 설정
         if (title == null || title.isBlank()) {
             Long userId = SecurityUtil.getCurrentUserIdFromSession();
             Optional<User> userOpt = userRepository.findById(userId);
@@ -64,22 +64,36 @@ public class PlaylistService {
             description = "이 플레이리스트는 사용자가 즐겨 읽는 책들을 모아둔 공간입니다.";
         }
 
+        // 이미지 처리
         if (imageData == null || imageData.length == 0) {
             try {
-                // 기본 이미지 로드 (resources/static/default_playlist_image.jpg)
                 ClassPathResource defaultImageResource = new ClassPathResource("static/default_playlist_image.jpg");
-                imageData = Files.readAllBytes(defaultImageResource.getFile().toPath()); // 바이트 배열로 변환
+                imageData = Files.readAllBytes(defaultImageResource.getFile().toPath());
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("기본 이미지를 로드할 수 없습니다.");
             }
         }
 
-        // 값 설정
+        // 제목, 설명, 이미지 데이터 업데이트
         playlist.setTitle(title);
         playlist.setDescription(description);
         playlist.setImageData(imageData);
 
-        // 책 추가 로직
+        // 현재 플레이리스트에 있는 책들의 ISBN 목록
+        List<Book> currentBooks = playlist.getBooks();
+        List<String> currentIsbns = currentBooks.stream()
+                .map(Book::getIsbn)
+                .collect(Collectors.toList());
+
+        // 삭제할 책들: 현재 플레이리스트에 있지만, 새로운 `isbns` 목록에 없는 책
+        List<Book> booksToRemove = currentBooks.stream()
+                .filter(book -> !isbns.contains(book.getIsbn()))
+                .collect(Collectors.toList());
+
+        // 삭제할 책 제거
+        playlist.getBooks().removeAll(booksToRemove);
+
+        // 추가할 책들: 새로운 `isbns` 목록에 있지만, 현재 플레이리스트에 없는 책
         List<Book> booksToAdd = isbns.stream()
                 .distinct()
                 .map(isbn -> {
@@ -90,13 +104,17 @@ public class PlaylistService {
                         return fetchAndSaveBook(isbn); // ISBN으로 책 정보 가져오기
                     }
                 })
-                .filter(book -> book != null && !playlist.getBooks().contains(book))
+                .filter(book -> book != null && !currentIsbns.contains(book.getIsbn()))
                 .collect(Collectors.toList());
 
+        // 새로 추가된 책들을 플레이리스트에 추가
         playlist.getBooks().addAll(booksToAdd);
+
+        // 업데이트된 플레이리스트 저장
         playlistRepository.save(playlist);
         return ResponseEntity.ok("플레이리스트가 성공적으로 저장되었습니다.");
     }
+
 
     // 외부 API를 통해 책 정보를 가져와 저장하는 메서드
     private Book fetchAndSaveBook(String isbn) {
