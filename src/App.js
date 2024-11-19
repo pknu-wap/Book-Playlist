@@ -6,7 +6,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import SimpleSlider from './components/SimpleSlider.js';
 import SimpleSlider1 from './components/SimpleSlider1.js';
 import Playlist from './playlist/playlist.js';
-import SearchBar from './components/SearchBar.js';
+import SearchBar from './SearchBar/SearchBar.js';
 import Icon3 from './logos/아이콘3.png';
 import Icon4 from './logos/아이콘4.png';
 import Icon5 from './logos/아이콘5.png';
@@ -14,16 +14,9 @@ import Logo from './logos/로고.png';
 import Login from './login,register/Login.jsx';
 import Register from './login,register/Register.jsx';
 import axios from 'axios'; // axios를 import합니다.
-import BookPlaylist from './components/BookPlaylist.js';
-import CaterGory from './components/BookCategory.js';
+import BookPlaylist from './BookPlaylist/BookPlaylist.js';
+import CaterGory from './BookCategory/BookCategory.js';
 import MyPage from './Mypage/Mypage.js'
-
-const playlists = Array.from({ length: 20 }, (_, index) => ({
-  id: `playlist-${index + 1}`, // 백틱 추가
-  title: `플레이리스트 ${index + 1}`, // 백틱 추가
-  author: '저자명',
-  imageUrl: `https://via.placeholder.com/150?text=Item+${index + 1}`, // 백틱 추가
-}));
 
 
 const Sidebar = () => {
@@ -179,7 +172,7 @@ function App() {
             <>
               <div className="slider-container">
                 <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
-                  <h2 style={{     backgroundColor:'#C6E898',marginLeft: '120px' }}>🔥 BEST SELLER</h2>
+                  <h2 style={{marginLeft: '120px' }}>🔥 BEST SELLER</h2>
                   <SimpleSlider {...settings}>
                     {books.map((book) => (
                       <div key={book.id} style={{ textAlign: 'center', padding: '10px' }}>

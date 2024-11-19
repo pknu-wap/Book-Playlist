@@ -1,0 +1,13 @@
+.filter button{
+    border: none;       /* 경계선 없애기 */
+    background: none;   /* 배경색 없애기 */
+    color: gray;        /* 글자색을 회색으로 설정 */
+    font: inherit;      /* 부모 요소의 폰트 스타일을 상속 */
+    padding: 0;         /* 기본 패딩 제거 (필요에 따라 조정) */
+    cursor: pointer;    /* 버튼처럼 보이게 하기 위해 커서 포인터 설정 */
+}
+.filter{
+    display: flex;         /* 자식 요소들을 가로로 배치 */
+    align-items: center;   /* 세로로 가운데 정렬 */
+    gap: 30px;  
+}
