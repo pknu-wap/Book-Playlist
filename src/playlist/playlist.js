@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 
-
 function PlaylistModal({ onClose }) {
   const placeholderImage = 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg';
   const [imageSrc, setImageSrc] = useState(placeholderImage);
@@ -26,8 +25,7 @@ function PlaylistModal({ onClose }) {
     author: '지은이',
   });
   const [bookList, setBookList] = useState([]);
-  const navigate = useNavigate(); // useNavigate 함수 가져오기
-
+  const navigate = useNavigate();
 
   const MAX_EMPTY_ITEMS = 5;
 
@@ -157,7 +155,7 @@ function PlaylistModal({ onClose }) {
     }
   };
 
-  // 새로운 함수: 책 클릭 시 상세 페이지로 이동
+  // 책 클릭 시 상세 페이지로 이동
   const goToBookDetail = (book) => {
     navigate(`/book/${book.isbn}`, { state: { book } });
   };
@@ -416,34 +414,32 @@ function PlaylistModal({ onClose }) {
               ) : (
                 searchResults.map((book, index) => (
                   <div key={index}>
-
-                    <div 
-                    className="book-result"
-                    onClick={() => goToBookDetail(book)}
+                    <div
+                      className="book-result"
+                      onClick={() => goToBookDetail(book)}
                     >
-                    <div className="playlist-book-result">
-                      <img
-                        src={book.image}
-                        className="playlist-result-book-cover"
-                        alt={book.title}
-                      />
-                      <div className="playlist-result-title">
-                        <h3>{book.title}</h3>
-                        <p>
-                          {book.author}/{book.publisher}
-                        </p>
+                      <div className="playlist-book-result">
+                        <img
+                          src={book.image}
+                          className="playlist-result-book-cover"
+                          alt={book.title}
+                        />
+                        <div className="playlist-result-title">
+                          <h3>{book.title}</h3>
+                          <p>
+                            {book.author}/{book.publisher}
+                          </p>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddBook(book);
+                          }}
+                          className="playlist-add-book-btn"
+                        >
+                          <span className="material-symbols-outlined">add</span>
+                        </button>
                       </div>
-                      <button
-                         onClick={(e) => {
-                          e.stopPropagation(); // 이벤트 전파 중단
-                          handleAddBook(book); // `+` 버튼 클릭 시 목록에 추가
-                        }}
-                        className="add-book-btn"
-                        onClick={() => handleAddBook(book)}
-                        className="playlist-add-book-btn"
-                      >
-                        <span className='material-symbols-outlined'>add</span>
-                      </button>
                     </div>
                   </div>
                 ))
