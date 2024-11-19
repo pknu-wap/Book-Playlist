@@ -1,24 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/SimpleSlider.css";
-import { SiCalendly } from "react-icons/si";
-import ImageExam from '../logos/playlistexam.png';
+import axios from "axios";
 
-const playlists = Array.from({ length: 20 }, (_, index) => ({
-  id: `playlist-${index + 1}`,
-  title: `플레이리스트 ${index + 1}`,
-  author: '저자명',
-  imageUrl: `https://via.placeholder.com/150?text=Item+${index + 1}`,
-}));
+// API request to fetch playlists
+const PlaylistAPI = async () => {
+  try {
+    const response = await axios.get(
+      "https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/playlists",
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+};
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
   return (
     <div
       className={className}
-      style={{ ...style, display: "block", background: "gray", width:'18px', height:'16px', borderRadius:'50%' }}
+      style={{ ...style, display: "block", background: "gray", width: '18px', height: '16px', borderRadius: '50%' }}
       onClick={onClick}
     />
   );
@@ -29,14 +35,19 @@ function SamplePrevArrow(props) {
   return (
     <div
       className={className}
-      style={{ ...style, display: "block", background: "gray", width:'18px', height:'16px', borderRadius:'50%'}}
+      style={{ ...style, display: "block", background: "gray", width: '18px', height: '16px', borderRadius: '50%' }}
       onClick={onClick}
     />
   );
 }
 
 function SimpleSlider() {
+  const [playlists, setPlaylists] = useState([]);
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const [hoveredPlaylist, setHoveredPlaylist] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const settings = {
     arrows: true,
     lazyLoad: true,
@@ -51,8 +62,8 @@ function SimpleSlider() {
 
   const containerStyle = {
     width: '100%',
-    maxWidth: '1200px', // 최대 너비
-    minWidth: '1100px',  // 최소 너비
+    maxWidth: '1200px',
+    minWidth: '1100px',
     padding: '0 20px',
     boxSizing: 'border-box',
     marginLeft: '100px',
@@ -60,34 +71,62 @@ function SimpleSlider() {
     marginBottom: '100px',
   };
 
-  
-    return (
-      <main  className="slider-container" style={containerStyle}>
-        <div>
-          <h3> 지금 가장 핫한 플레이리스트를 만나보세요 !</h3>
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      setLoading(true);
+      const data = await PlaylistAPI();
+      if (data) {
+        setPlaylists(data);
+      } else {
+        setError("플레이리스트를 불러오는 데 실패했습니다.");
+      }
+      setLoading(false);
+    };
+
+    fetchPlaylists();
+  }, []);
+
+  return (
+    <main className="slider-container" style={containerStyle}>
+      <div>
+        <h3> 지금 가장 핫한 플레이리스트를 만나보세요 !</h3>
+        {loading ? (
+          <div>Loading...</div>
+        ) : error ? (
+          <div style={{ color: 'red' }}>{error}</div>
+        ) : (
           <Slider {...settings}>
             {playlists.map((book) => (
-              <div key={book.id} style={{ textAlign: 'center', margin: '0 5px', padding: '10px'}}>
-                <img src={ImageExam} alt={book.title} style={{
-                  marginTop: '20px',
-                  marginLeft : '20px',  
-                  objectFit: 'cover', // 이미지 비율 유지
-                  width: '180px',
-                  height:'282px',
-                  borderRadius: '10px',
-                  transition: 'transform 0.3s ease',
-                  transform: hoveredPlaylist === book.id ? 'scale(1.1)' :'scale(1)',
-                }}
-                onMouseEnter={() => setHoveredPlaylist(book.id)}
-                onMouseLeave={() => setHoveredPlaylist(null)}/>
-                <h4 className='book-title' style={{marginLeft:'40px', width:'110px', paddingRight:'20px', marginBottom:'0'}}>{book.title}</h4>
-                <p className='playlist-author' style={{color : 'gray', fontSize:'13px', marginLeft:'40px'}}>만든이 : {book.author}</p>
+              <div key={book.playlistId} style={{ textAlign: 'center', margin: '0 5px', padding: '10px' }}>
+                <img
+                  src={`data:image/jpeg;base64,${book.base64Image}`}
+                  alt={book.title}
+                  style={{
+                    marginTop: '20px',
+                    marginLeft: '20px',
+                    objectFit: 'cover',
+                    width: '180px',
+                    height: '282px',
+                    borderRadius: '10px',
+                    transition: 'transform 0.3s ease',
+                    transform: hoveredPlaylist === book.playlistId ? 'scale(1.1)' : 'scale(1)',
+                  }}
+                  onMouseEnter={() => setHoveredPlaylist(book.playlistId)}
+                  onMouseLeave={() => setHoveredPlaylist(null)}
+                />
+                <h4 className="book-title" style={{ marginLeft: '40px', width: '110px', paddingRight: '20px', marginBottom: '0' }}>
+                  {book.title}
+                </h4>
+                <p className="playlist-author" style={{ color: 'gray', fontSize: '13px', marginLeft: '40px' }}>
+                  만든이 : {book.username}
+                </p>
               </div>
             ))}
           </Slider>
-        </div>
-      </main>
-    );
+        )}
+      </div>
+    </main>
+  );
 }
 
 export default SimpleSlider;

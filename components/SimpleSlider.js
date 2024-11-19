@@ -5,8 +5,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/SimpleSlider.css";
-import LoadingGIF from "./loading-gif-png-5.gif"
-
+import { PiX } from "react-icons/pi";
+import LoadingGIF from '../logos/loading-gif-png-5.gif';
 // Arrow components for the slider
 const SampleNextArrow = ({ className, style, onClick }) => (
   <div
@@ -99,7 +99,9 @@ const SimpleSlider = () => {
       <h3>지금 가장 핫한 책을 만나보세요!</h3>
       {loading ? ( // 로딩 상태에 따라 로딩 메시지 표시
         <div style={{ textAlign: "center", margin: "20px 0" }}>
-          <img src ={LoadingGIF} style ={{width: '200px', height:'200px'}}></img>
+          <img src ={LoadingGIF} style ={{
+            width: '200px', height:'200px'
+          }}></img>
         </div>
       ) : (
         <Slider {...settings}>

@@ -1,11 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import './playlist.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 
-
-function PlaylistModal({ onClose }) {
+function PlaylistModal({ onClose, playlistId }) {
   const placeholderImage = 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg';
   const [imageSrc, setImageSrc] = useState(placeholderImage);
   const [isSaving, setIsSaving] = useState(false);
@@ -26,10 +24,6 @@ function PlaylistModal({ onClose }) {
     author: '지은이',
   });
   const [bookList, setBookList] = useState([]);
-  const navigate = useNavigate(); // useNavigate 함수 가져오기
-
-
-  const MAX_EMPTY_ITEMS = 5;
 
   const [playlistTitle, setPlaylistTitle] = useState('');
   const [playlistDescription, setPlaylistDescription] = useState('');
@@ -157,11 +151,6 @@ function PlaylistModal({ onClose }) {
     }
   };
 
-  // 새로운 함수: 책 클릭 시 상세 페이지로 이동
-  const goToBookDetail = (book) => {
-    navigate(`/book/${book.isbn}`, { state: { book } });
-  };
-
   // 책 추가 함수
   const handleAddBook = (book) => {
     const isbn = book.isbn || book.isbn13 || book.isbn10 || '';
@@ -171,7 +160,7 @@ function PlaylistModal({ onClose }) {
         title: book.title,
         author: book.author,
         publisher: book.publisher,
-        cover: book.image,
+        image: book.image,
         isbn: isbn,
       },
     ]);
@@ -188,7 +177,7 @@ function PlaylistModal({ onClose }) {
   const handleBookClick = (book) => {
     setSelectedBook({
       title: book.title,
-      cover: book.cover,
+      cover: book.image,
       author: book.author,
       publisher: book.publisher,
     });
@@ -204,18 +193,47 @@ function PlaylistModal({ onClose }) {
     setIsEditingTitle(false);
   };
 
+  // 플레이리스트 데이터 가져오기
+  useEffect(() => {
+    const fetchPlaylistData = async () => {
+      try {
+        const response = await axios.get(
+          `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlistId}`,
+          { withCredentials: true }
+        );
+        if (response.data) {
+          setPlaylistTitle(response.data.title || '');
+          setPlaylistDescription(response.data.description || '');
+          setBookList(response.data.books || []);
+
+          if (response.data.books && response.data.books.length > 0) {
+            const firstBook = response.data.books[0];
+            setSelectedBook({
+              title: firstBook.title || '책 제목',
+              cover: firstBook.image || null,
+              author: firstBook.author || '지은이',
+              publisher: firstBook.publisher || '출판사',
+            });
+          }
+
+          if (response.data.base64Image) {
+            setPreviewUrl(`data:image/jpeg;base64,${response.data.base64Image}`);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching playlist data:', error);
+      }
+    };
+
+    if (playlistId) {
+      fetchPlaylistData();
+    }
+  }, [playlistId]);
+
   // 플레이리스트 저장 함수
   const handleSavePlaylist = async () => {
     setIsSaving(true);
     try {
-      // 플레이리스트 생성 후 ID 가져오기
-      const createResponse = await axios.post(
-        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/create',
-        null,
-        { withCredentials: true }
-      );
-      const playlistId = Number(createResponse.data.playlistId);
-
       // FormData 객체 생성 및 데이터 추가
       const formData = new FormData();
       formData.append("playlistId", playlistId); // playlist ID
@@ -223,6 +241,11 @@ function PlaylistModal({ onClose }) {
       formData.append("description", playlistDescription); // 설명
       bookList.forEach((book) => formData.append("isbns", book.isbn)); // ISBN 목록
       if (playlistImage) formData.append("image", playlistImage); // 이미지 파일
+
+      for (let pair of formData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]);
+      }
+  
 
       // 서버로 전송
       await axios.post(
@@ -329,7 +352,7 @@ function PlaylistModal({ onClose }) {
                 className="playlist-selected-book-cover"
               />
             ) : (
-              <p>책을 추가해보세요!</p>
+              <p>책을 선택하세요!</p>
             )}
           </div>
 
@@ -342,16 +365,8 @@ function PlaylistModal({ onClose }) {
 
           <div className="playlist-book-list">
             {bookList.length === 0 ? (
-              // 책이 없을 때 빈 아이템 박스 5개 표시
-              Array.from({ length: MAX_EMPTY_ITEMS }).map((_, index) => (
-                <div key={index} className="playlist-book-item empty">
-                  <div className="playlist-booktitle">
-                    <h3>책이름 | 저자</h3>
-                  </div>
-                </div>
-              ))
+              <p>책이 없습니다.</p>
             ) : (
-              // 책이 추가되면 추가된 책들만 표시
               bookList.map((book, index) => (
                 <div
                   key={index}
@@ -360,7 +375,7 @@ function PlaylistModal({ onClose }) {
                 >
                   <div className="playlist-book-info">
                     <img
-                      src={book.cover}
+                      src={book.image}
                       alt={book.title}
                       className="playlist-book-mcover"
                     />
@@ -416,11 +431,6 @@ function PlaylistModal({ onClose }) {
               ) : (
                 searchResults.map((book, index) => (
                   <div key={index}>
-
-                    <div 
-                    className="book-result"
-                    onClick={() => goToBookDetail(book)}
-                    >
                     <div className="playlist-book-result">
                       <img
                         src={book.image}
@@ -434,11 +444,6 @@ function PlaylistModal({ onClose }) {
                         </p>
                       </div>
                       <button
-                         onClick={(e) => {
-                          e.stopPropagation(); // 이벤트 전파 중단
-                          handleAddBook(book); // `+` 버튼 클릭 시 목록에 추가
-                        }}
-                        className="add-book-btn"
                         onClick={() => handleAddBook(book)}
                         className="playlist-add-book-btn"
                       >

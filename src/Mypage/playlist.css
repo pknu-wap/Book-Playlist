@@ -469,7 +469,7 @@
 }
 
 .playlist-plname button {
-  padding: 10px 15px;
+  padding: 5px 10px;
   font-size: 16px;
   background-color: #ffffff;
   border: 1px solid #ddd;
@@ -485,25 +485,24 @@
 
 .playlist-pledit1 {
   display: flex;
-  align-items: center;
-  margin-top: 5px;
+  align-items: center; 
 }
 
 .playlist-pledit1 button {
-  margin-right: 70px;
-  margin-top: 10px;
+  margin-top: 10px !important;
 }
 
 .playlist-edittitle1 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  flex: 1 1 0; /* 플렉스 크기 조절 */
+  flex: 0 1 auto; /* 플렉스 크기 조절 */
   white-space: nowrap; /* 줄바꿈을 없앰 */
   overflow: hidden; /* 넘친 텍스트 숨김 */
   text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
   max-width: 300px;
   min-width: 0;
+  margin-right: 20px !important;
 }
 
 .playlist-edittitle1 h2 {
@@ -514,12 +513,21 @@
   max-width: 100%;
 }
 
+
+
 .playlist-edittitle1 p {
   font-size: 13px;
   white-space: nowrap; /* 줄바꿈을 없앰 */
   overflow: hidden; /* 넘친 텍스트 숨김 */
   text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
   max-width: 100%;
+}
+
+
+.playlist-edittitle1, 
+.playlist-pledit1 button {
+  margin: 0;
+ 
 }
 
 .playlist-pledit2 {

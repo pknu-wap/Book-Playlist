@@ -5,8 +5,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/SimpleSlider.css";
-import LoadingGIF from "./loading-gif-png-5.gif"
-
+import { PiX } from "react-icons/pi";
+import LoadingGIF from '../logos/loading-gif-png-5.gif';
 // Arrow components for the slider
 const SampleNextArrow = ({ className, style, onClick }) => (
   <div
@@ -50,7 +50,7 @@ const SimpleSlider = () => {
       const response = await axios.get(
         `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books`,
         {
-          params: { query: "한강" }, // 검색할 쿼리
+          params: { query: "코딩테스트" }, // 검색할 쿼리
         }
       );
   
@@ -96,36 +96,39 @@ const SimpleSlider = () => {
 
   return (
     <main className="slider-container" style={containerStyle}>
-      <h3>지금 가장 핫한 책을 만나보세요!</h3>
+      <h3>지금 가장 핫한 플레이리스트를 만나보세요 !</h3>
       {loading ? ( // 로딩 상태에 따라 로딩 메시지 표시
         <div style={{ textAlign: "center", margin: "20px 0" }}>
-          <img src ={LoadingGIF} style ={{width: '200px', height:'200px'}}></img>
+          <img src ={LoadingGIF} style ={{
+            width: '200px',
+            height:'200px',
+          }} />
         </div>
       ) : (
         <Slider {...settings}>
-          {searchResults.map((book) => (
+          {searchResults.map((playlist) => (
             <div
-              key={book.id}
+              key={playlist.id}
               style={{
                 textAlign: "center",
                 margin: "0 5px",
                 padding: "10px",
               }}
             >
-              <a href={book.link} target="_blank" rel="noopener noreferrer">
+              <a href={playlist.link} target="_blank" rel="noopener noreferrer">
                 <img
-                  src={book.image}
-                  alt={book.title}
+                  src={playlist.image}
+                  alt={playlist.title}
                   style={{
                     marginTop: "20px",
                     objectFit: "cover",
-                    width: "143.81px",
-                    height: "190.4px",
+                    width: "180.81px",
+                    height: "280.4px",
                     borderRadius: "10px",
                     transition: "transform 0.3s ease",
-                    transform: hoveredBook === book.id ? "scale(1.1)" : "scale(1)",
+                    transform: hoveredBook === playlist.id ? "scale(1.1)" : "scale(1)",
                   }}
-                  onMouseEnter={() => setHoveredBook(book.id)}
+                  onMouseEnter={() => setHoveredBook(playlist.id)}
                   onMouseLeave={() => setHoveredBook(null)}
                 />
               </a>
@@ -138,7 +141,7 @@ const SimpleSlider = () => {
                   width: "100px",
                 }}
               >
-                {book.title.length > 6 ? `${book.title.slice(0, 6)}...` : book.title}
+                {playlist.title.length > 6 ? `${playlist.title.slice(0, 6)}...` : playlist.title}
               </h4>
             </div>
           ))}

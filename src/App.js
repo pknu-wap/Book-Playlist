@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, useLocation, Outlet, NavLink } from 'react-router-dom';
 import './App.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import SimpleSlider from './components/SimpleSlider.js';
 import SimpleSlider1 from './components/SimpleSlider1.js';
 import Playlist from './playlist/playlist.js';
-import Icon1 from './logos/아이콘1.png';
-import Icon2 from './logos/아이콘2.png';
+import SearchBar from './SearchBar/SearchBar.js';
 import Icon3 from './logos/아이콘3.png';
 import Icon4 from './logos/아이콘4.png';
 import Icon5 from './logos/아이콘5.png';
@@ -16,14 +15,11 @@ import Login from './login,register/Login.jsx';
 import Register from './login,register/Register.jsx';
 import axios from 'axios'; // axios를 import합니다.
 import BookDetail from './BookDetail';
+import BookPlaylist from './BookPlaylist/BookPlaylist.js';
+import CaterGory from './BookCategory/BookCategory.js';
+import MyPage from './Mypage/Mypage.js'
 
 
-const playlists = Array.from({ length: 20 }, (_, index) => ({
-  id: `playlist-${index + 1}`, // 백틱 추가
-  title: `플레이리스트 ${index + 1}`, // 백틱 추가
-  author: '저자명',
-  imageUrl: `https://via.placeholder.com/150?text=Item+${index + 1}`, // 백틱 추가
-}));
 
 const Sidebar = () => {
   return (   
@@ -31,18 +27,18 @@ const Sidebar = () => {
       <div className="sidebar">
         <nav>
           <ul>
-      
+            <Outlet />
             <li>
               <img src={Icon3} alt="Icon3" />
-              <a href="#">마이페이지</a>
+              <Link to="/mypage">마이페이지</Link>
             </li>
             <li>
               <img src={Icon4} alt="Icon4" />
-              <a href="#">북 카테고리</a>
+              <NavLink to="/bookcatergory">북 카테고리</NavLink>
             </li>
             <li>
               <img src={Icon5} alt="Icon5" />
-              <a href="#">전체 북 플레이리스트</a>
+              <NavLink to="/bookplaylist">전체 북 플레이리스트</NavLink>
             </li>
           </ul>
         </nav>
@@ -69,23 +65,24 @@ const Header = ({ isLoggedIn, onLogout }) => {
       navigate('/login'); // 로그인 페이지로 이동
     }
   };
-
+  const onClickLogo=()=>{
+    navigate('/');
+  }
   return (
     <header className="header">
-      <img src={Logo} alt="책 이미지" className="logo" />
-      <SearchBar />
-      <button className="login" style={{ fontSize: '18px' }} onClick={handleAuthClick}>
-        {isLoggedIn ? '로그아웃' : '로그인 / 회원가입'}
-      </button>
+      <Outlet />
+      <div>
+        <img src={Logo} alt="책 이미지" className="logo" onClick={onClickLogo}/>
+        <SearchBar />
+        <button className="login" style={{ fontSize: '18px' }} onClick={handleAuthClick}>
+          {isLoggedIn ? '로그아웃' : '로그인 / 회원가입'}
+        </button>
+      </div>
     </header>
   );
 };
 
-const SearchBar = () => {
-  return (
-    <input className="search-bar" type="text" placeholder="  검색어를 입력하세요" />
-  );
-};
+
 
 function App() {
   const [isPlaylistOpen, setIsPlaylistModalOpen] = useState(false);
@@ -177,7 +174,7 @@ function App() {
             <>
               <div className="slider-container">
                 <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
-                  <h2 style={{ marginLeft: '120px' }}>🔥 BEST SELLER</h2>
+                  <h2 style={{marginLeft: '120px' }}>🔥 BEST SELLER</h2>
                   <SimpleSlider {...settings}>
                     {books.map((book) => (
                       <div key={book.id} style={{ textAlign: 'center', padding: '10px' }}>
@@ -205,7 +202,13 @@ function App() {
           } />
           <Route path="/login" element={<Login onLogin={handleLogin}/>} />
           <Route path="/register" element={<Register />} />
+
           <Route path="/book/:id" element={<BookDetail />} /> {/* 상세 페이지 라우트 추가 */}
+
+          <Route path="/bookcatergory" element={<CaterGory />} />
+          <Route path="/bookplaylist" element={<BookPlaylist />} />
+          <Route path="/mypage" element={<MyPage />} />
+
         </Routes>
       </main>
     </div>
