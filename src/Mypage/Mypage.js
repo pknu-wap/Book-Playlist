@@ -77,6 +77,13 @@ const MyPage = () => {
                       이미지 없음
                     </div>
                   )}
+                  <div
+                    className="mypage-playlist-hover-text"
+                    onClick={() => openModal(playlist.playlistId)}
+                  >
+                    열기
+                  </div>
+
                 </div>
                 <p className="mypage-playlist-title">{playlist.title}</p>
               </div>
