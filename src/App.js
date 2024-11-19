@@ -14,9 +14,11 @@ import Logo from './logos/로고.png';
 import Login from './login,register/Login.jsx';
 import Register from './login,register/Register.jsx';
 import axios from 'axios'; // axios를 import합니다.
+import BookDetail from './BookDetail';
 import BookPlaylist from './BookPlaylist/BookPlaylist.js';
 import CaterGory from './BookCategory/BookCategory.js';
 import MyPage from './Mypage/Mypage.js'
+
 
 
 const Sidebar = () => {
@@ -200,9 +202,13 @@ function App() {
           } />
           <Route path="/login" element={<Login onLogin={handleLogin}/>} />
           <Route path="/register" element={<Register />} />
+
+          <Route path="/book/:id" element={<BookDetail />} /> {/* 상세 페이지 라우트 추가 */}
+
           <Route path="/bookcatergory" element={<CaterGory />} />
           <Route path="/bookplaylist" element={<BookPlaylist />} />
           <Route path="/mypage" element={<MyPage />} />
+
         </Routes>
       </main>
     </div>
