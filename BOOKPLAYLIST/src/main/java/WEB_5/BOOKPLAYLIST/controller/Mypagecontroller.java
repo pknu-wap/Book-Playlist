@@ -21,7 +21,7 @@ public class Mypagecontroller {
 
     @Autowired
     private UserService userService;
-
+    /////
     // 유저가 생성한 모든 플레이리스트 조회 (GET /api/mypage/mine/playlists)
     @GetMapping("/mine/playlists")
     public ResponseEntity<List<MyPagePlaylistDTO>> getUserPlaylists() {
