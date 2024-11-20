@@ -16,7 +16,8 @@ const SearchBar = () => {
   const [isThirdModalOpen, setIsThirdModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [addmodalOpen, setAddmodalOpen] = useState(false);
-
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
+  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -318,6 +319,7 @@ const SearchBar = () => {
       )}
       {addmodalOpen && (
         <PlaylistModal
+          playlistId={selectedPlaylistId}
           onClose={closeAddModal}
           style={{
             zIndex: 120000,  // PlaylistModal이 가장 높은 z-index를 가지도록 설정

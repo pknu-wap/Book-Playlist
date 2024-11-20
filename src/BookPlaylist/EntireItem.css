@@ -56,9 +56,9 @@
   color: white;
   
 }.modal-overlay {
-
+  width:1000px;
   position: fixed;
-  top: 100px;
+  top: 200px;
   left: 0;
   width: 100%;
   display: flex;
@@ -69,12 +69,12 @@
 .modal-content-v {
   width:1000px;
   height: 800px;
-  background-color: #e92727;
+  background-color: rgb(209, 209, 209);
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   width: 80%;
-  max-width: 600px;
+  max-width: 1200px;
 }
 
 .modal-grid{
@@ -89,7 +89,7 @@
 .modal-right{
   overflow: scroll;
   float:right;
-  width:270px;
+  width:70%;
   height:100%;
 }
 
