@@ -12,11 +12,13 @@ import WEB_5.BOOKPLAYLIST.repository.BookRepository;
 import WEB_5.BOOKPLAYLIST.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional // 클래스 레벨에서 트랜잭션 적용
 public class BookLikeService {
     private final BookLikeRepository bookLikeRepository;
     private final BookRepository bookRepository;
@@ -24,6 +26,10 @@ public class BookLikeService {
 
     public BookLike likeBook(Long bookId) { // ISBN 대신 bookId 사용
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
+
+        if (userId == null) {
+            throw new UserNotFoundException("User not authenticated");
+        }
 
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + bookId));
@@ -43,6 +49,10 @@ public class BookLikeService {
     public void unlikeBook(Long bookId) { // ISBN 대신 bookId 사용
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
 
+        if (userId == null) {
+            throw new UserNotFoundException("User not authenticated");
+        }
+
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + bookId));
 
@@ -56,6 +66,9 @@ public class BookLikeService {
 
     public boolean isBookLiked(Long bookId) { // ISBN 대신 bookId 사용
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
+        if (userId == null) {
+            return false;
+        }
         return bookLikeRepository.existsByUser_IdAndBook_Id(userId, bookId);
     }
 

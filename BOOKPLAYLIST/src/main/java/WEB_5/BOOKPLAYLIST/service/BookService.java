@@ -4,6 +4,7 @@ package WEB_5.BOOKPLAYLIST.service;
 
 import WEB_5.BOOKPLAYLIST.domain.entity.Book;
 import WEB_5.BOOKPLAYLIST.repository.BookRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
