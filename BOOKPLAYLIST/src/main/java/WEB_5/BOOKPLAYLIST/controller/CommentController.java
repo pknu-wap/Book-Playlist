@@ -85,7 +85,7 @@ public class CommentController {
     }
 
     // 별점 추가/수정
-    @PostMapping("/{bookId}/rating")
+    @PostMapping("/{bookisbn}/rating")
     public ResponseEntity<Map<String, Object>> addOrUpdateRating(
             @PathVariable Long bookId,
             @RequestBody Map<String, Object> request) {
@@ -106,7 +106,7 @@ public class CommentController {
     }
 
     // 평균 별점 조회
-    @GetMapping("/{bookId}/rating/average")
+    @GetMapping("/{bookisbn}/rating/average")
     public ResponseEntity<Map<String, Object>> getAverageRating(@PathVariable Long bookId) {
         double averageRating = commentService.getAverageRating(bookId);
 
