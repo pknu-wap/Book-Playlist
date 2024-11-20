@@ -21,10 +21,7 @@ public class CommentService {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
 
-    public Comment addComment(Long bookId, String content, int rating) {
-        // 현재 로그인된 사용자 ID 가져오기
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
-
+    public Comment addComment(Long bookId, Long userId, String content, int rating) {
         // Book과 User 객체 조회
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
@@ -33,8 +30,8 @@ public class CommentService {
 
         // Comment 생성 및 저장
         Comment comment = new Comment();
-        comment.setBook(book); // Book 객체 설정
-        comment.setUser(user); // User 객체 설정
+        comment.setBook(book);
+        comment.setUser(user);
         comment.setContent(content);
         comment.setRating(rating);
 

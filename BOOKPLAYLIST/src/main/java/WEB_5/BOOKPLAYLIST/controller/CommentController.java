@@ -6,6 +6,7 @@ import WEB_5.BOOKPLAYLIST.domain.entity.Comment;
 import WEB_5.BOOKPLAYLIST.domain.entity.CustomUserDetails;
 import WEB_5.BOOKPLAYLIST.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,26 +27,47 @@ public class CommentController {
     @PostMapping("/{bookId}/comments")
     public ResponseEntity<CommentResponse> addComment(
             @PathVariable Long bookId,
-            @RequestBody Map<String, Object> request,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
+            @RequestBody Map<String, Object> request) {
         String content = (String) request.get("content");
         int rating = (int) request.get("rating");
 
+        // 현재 로그인된 사용자 ID 가져오기
+        Long userId = SecurityUtil.getCurrentUserIdFromSession();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
         // 댓글 추가
-        Comment comment = commentService.addComment(bookId, content, rating);
+        Comment comment = commentService.addComment(bookId, userId, content, rating);
 
         // CommentResponse 생성
         CommentResponse response = new CommentResponse(
                 comment.getId(),
                 comment.getContent(),
                 comment.getRating(),
-                userDetails.getUsername(), // 현재 로그인된 사용자 이름
+                comment.getUser().getUsername(), // 현재 로그인된 사용자 이름
                 comment.getCreatedAt()
         );
 
         return ResponseEntity.ok(response);
     }
 
+    // 댓글 삭제
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable Long commentId) {
+        // 현재 로그인된 사용자 ID 가져오기
+        Long userId = SecurityUtil.getCurrentUserIdFromSession();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        boolean deleted = commentService.deleteComment(commentId, userId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", deleted);
+        response.put("message", deleted ? "댓글이 성공적으로 삭제되었습니다." : "댓글 삭제 실패");
+        return ResponseEntity.ok(response);
+    }
 
     // 댓글 조회
     @GetMapping("/{bookId}/comments")
@@ -55,7 +77,7 @@ public class CommentController {
                         comment.getId(),
                         comment.getContent(),
                         comment.getRating(),
-                        comment.getUser().getUsername(), // User의 username 가져오기
+                        comment.getUser().getUsername(),
                         comment.getCreatedAt()
                 ))
                 .toList();
@@ -63,29 +85,20 @@ public class CommentController {
         return ResponseEntity.ok(responses);
     }
 
-    // 댓글 삭제
-    @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Map<String, Object>> deleteComment(
-            @PathVariable Long commentId,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long userId = userDetails.getId(); // 현재 로그인된 사용자 ID
-        boolean deleted = commentService.deleteComment(commentId, userId);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("success", deleted);
-        response.put("message", deleted ? "댓글이 성공적으로 삭제되었습니다." : "댓글 삭제 실패");
-        return ResponseEntity.ok(response);
-    }
-
     // 별점 추가/수정
     @PostMapping("/{bookId}/rating")
     public ResponseEntity<Map<String, Object>> addOrUpdateRating(
             @PathVariable Long bookId,
-            @RequestBody Map<String, Object> request,
-            @AuthenticationPrincipal CustomUserDetails userDetails) {
+            @RequestBody Map<String, Object> request) {
         int rating = (int) request.get("rating");
 
-        boolean success = commentService.addOrUpdateRating(bookId, userDetails.getId(), rating);
+        // 현재 로그인된 사용자 ID 가져오기
+        Long userId = SecurityUtil.getCurrentUserIdFromSession();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        boolean success = commentService.addOrUpdateRating(bookId, userId, rating);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
