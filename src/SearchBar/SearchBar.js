@@ -189,7 +189,7 @@ const SearchBar = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'flex-start',
-            zIndex: 9999,
+            zIndex: 99,
             paddingTop: '10px',
           }}
           onClick={handleModalClick}
@@ -243,7 +243,7 @@ const SearchBar = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            zIndex: 10000,
+            zIndex: 100,
             width: '200px',
           }}
         >
@@ -289,7 +289,7 @@ const SearchBar = () => {
             borderRadius: '10px',
             padding: '20px',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            zIndex: 11000,
+            zIndex: 110,
 
           }}
         >
@@ -320,8 +320,7 @@ const SearchBar = () => {
         <PlaylistModal
           onClose={closeAddModal}
           style={{
-            zIndex: 12000,  // PlaylistModal이 가장 높은 z-index를 가지도록 설정
-            position: 'absolute',  // 위치를 절대값으로 설정하여 다른 모달 위에 겹칠 수 있게
+            zIndex: 120000,  // PlaylistModal이 가장 높은 z-index를 가지도록 설정
             top: 0,
             left: 0,
             right: 0,
