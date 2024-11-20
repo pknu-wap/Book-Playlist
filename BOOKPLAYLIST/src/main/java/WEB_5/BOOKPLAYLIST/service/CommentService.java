@@ -21,12 +21,12 @@ public class CommentService {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
 
-    public Comment addComment(Long bookId, Long userId, String content, int rating) {
+    public Comment addCommentByIsbn(String isbn, Long userId, String content, int rating) {
         // Book과 User 객체 조회
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+        Book book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new RuntimeException("Book not found for ISBN: " + isbn));
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found for ID: " + userId));
 
         // Comment 생성 및 저장
         Comment comment = new Comment();
@@ -43,6 +43,12 @@ public class CommentService {
         return commentRepository.findByBookId(bookId);
     }
 
+    public List<Comment> getCommentsByBookIsbn(String isbn) {
+        Book book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new RuntimeException("Book not found for ISBN: " + isbn));
+        return commentRepository.findByBookId(book.getId());
+    }
+    
     // 댓글 삭제
     public boolean deleteComment(Long commentId, Long userId) {
         Comment comment = commentRepository.findById(commentId)

@@ -23,10 +23,9 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    // 댓글 생성
-    @PostMapping("/{bookId}/comments")
+    @PostMapping("/{isbn}/comments")
     public ResponseEntity<CommentResponse> addComment(
-            @PathVariable Long bookId,
+            @PathVariable String isbn,
             @RequestBody Map<String, Object> request) {
         String content = (String) request.get("content");
         int rating = (int) request.get("rating");
@@ -38,7 +37,7 @@ public class CommentController {
         }
 
         // 댓글 추가
-        Comment comment = commentService.addComment(bookId, userId, content, rating);
+        Comment comment = commentService.addCommentByIsbn(isbn, userId, content, rating);
 
         // CommentResponse 생성
         CommentResponse response = new CommentResponse(
@@ -70,9 +69,9 @@ public class CommentController {
     }
 
     // 댓글 조회
-    @GetMapping("/{bookId}/comments")
-    public ResponseEntity<List<CommentResponse>> getComments(@PathVariable Long bookId) {
-        List<CommentResponse> responses = commentService.getCommentsByBook(bookId).stream()
+    @GetMapping("/{isbn}/comments")
+    public ResponseEntity<List<CommentResponse>> getComments(@PathVariable String isbn) {
+        List<CommentResponse> responses = commentService.getCommentsByBookIsbn(isbn).stream()
                 .map(comment -> new CommentResponse(
                         comment.getId(),
                         comment.getContent(),
