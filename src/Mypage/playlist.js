@@ -8,6 +8,7 @@ function PlaylistModal({ onClose, playlistId }) {
   const [imageSrc, setImageSrc] = useState(placeholderImage);
   const [isDelete, setIsDelete] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -223,7 +224,10 @@ function PlaylistModal({ onClose, playlistId }) {
         }
       } catch (error) {
         console.error('Error fetching playlist data:', error);
+      } finally {
+        setIsLoading(false);
       }
+
     };
 
     if (playlistId) {
@@ -397,8 +401,8 @@ function PlaylistModal({ onClose, playlistId }) {
           </div>
 
           <div className="playlist-book-list">
-            {bookList.length === 0 ? (
-              <p>책이 없습니다.</p>
+            {isLoading ? (
+              <div className="playlist-loader"></div>
             ) : (
               bookList.map((book, index) => (
                 <div
