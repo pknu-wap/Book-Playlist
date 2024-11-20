@@ -91,12 +91,12 @@ function SimpleSlider() {
       <div>
         <h3> 지금 가장 핫한 플레이리스트를 만나보세요 !</h3>
         {loading ? (
-          <div>Loading...</div>
+          <div className="loader"></div>
         ) : error ? (
           <div style={{ color: 'red' }}>{error}</div>
         ) : (
           <Slider {...settings}>
-            {playlists.map((book) => (
+            {playlists.slice(0, 20).map((book) => (
               <div key={book.playlistId} style={{ textAlign: 'center', margin: '0 5px', padding: '10px' }}>
                 <img
                   src={`data:image/jpeg;base64,${book.base64Image}`}

@@ -1,15 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect,navigate } from "react";
 import axios from "axios";
-import "./SearchBar.css"
+import "./SearchBar.css";
+import Logo from "../logos/로고.png";
 
 const SearchBar = () => {
+  const [username, setUsername] = useState('');
+  const [playlists, setPlaylists] = useState([]);
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0, isOpen: false });
-  const [selectedItem, setSelectedItem] = useState(null); // 클릭된 아이템의 데이터 상태 추가
+  const [selectedItem, setSelectedItem] = useState(null);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
-  
+  const [isThirdModalOpen, setIsThirdModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const onClickLogo = () => {
+    navigate('/');
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const [profileResponse, playlistsResponse] = await axios.all([
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile', { withCredentials: true }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists', { withCredentials: true }),
+        ]);
+
+        if (profileResponse.data?.username) setUsername(profileResponse.data.username);
+        if (playlistsResponse.data) setPlaylists(playlistsResponse.data);
+      } catch (error) {
+        console.error('데이터 가져오기 오류:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleSearch = async () => {
     if (query.trim() === "") {
@@ -51,11 +79,27 @@ const SearchBar = () => {
       left: rect.right,
       isOpen: true,
     });
-    setSelectedItem(item); // 클릭된 아이템의 데이터를 상태에 저장
-    setIsSecondModalOpen(true); // 두 번째 모달을 열기
+    setSelectedItem(item);
+    setIsSecondModalOpen(true);
+  };
+
+  const handleSecondButtonClick = (e, item) => {
+    const rect = e.target.getBoundingClientRect();
+    setModalPosition({
+      top: rect.top,
+      left: rect.right,
+      isOpen: true,
+    });
+    setSelectedItem(item);
+    setIsThirdModalOpen(true);
+  };
+
+  const ThirdModelClose = () => {
+    setIsThirdModalOpen(false);
   };
 
   const resultItemStyle = {
+    width: '500px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -91,6 +135,7 @@ const SearchBar = () => {
   };
 
   const buttonStyle = {
+    position: "relative",
     padding: '8px 15px',
     backgroundColor: '#4CAF50',
     color: 'white',
@@ -107,25 +152,26 @@ const SearchBar = () => {
   };
 
   return (
-    <div>
-        <div className="search-container">
-            <input
-                className="search-bar"
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Search for books..."
-            />
-            <button className="search-button" onClick={handleSearch}>
-                검색
-            </button>
-        </div>
+    <div>   
+      <div className="search-container">
+        <input
+          className="search-bar"
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyPress={handleKeyPress}
+          placeholder="Search for books..."
+        />
+        <button className="search-button" onClick={handleSearch}>
+           검색
+        </button>
+      </div>
 
       {isModalOpen && (
         <div
           style={{
-            position: 'fixed',
+            width: "100%",
+            position: 'absolute',
             top: '75px',
             left: '0px',
             right: '0',
@@ -142,11 +188,10 @@ const SearchBar = () => {
             className="modal-content"
             style={{
               backgroundColor: 'white',
-              padding: '20px',
+              padding: '0px',
               borderRadius: '8px',
-              width: '80%',
               maxWidth: '600px',
-              maxHeight: '70vh',
+              maxHeight: '50vh',
               overflowY: 'auto',
             }}
           >
@@ -161,7 +206,7 @@ const SearchBar = () => {
                     </div>
                     <button
                       style={buttonStyle}
-                      onClick={(e) => handleButtonClick(e, item)} // 클릭한 아이템을 전달
+                      onClick={(e) => handleButtonClick(e, item)}
                     >
                       보기
                     </button>
@@ -175,11 +220,11 @@ const SearchBar = () => {
         </div>
       )}
 
-      {/* 두 번째 모달, 아이템 선택 시 표시됨 */}
       {isSecondModalOpen && (
         <div
           style={{
-            position: 'fixed',
+            marginLeft: '20px',
+            position: 'absolute',
             top: `${modalPosition.top}px`,
             left: `${modalPosition.left}px`,
             backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -187,28 +232,66 @@ const SearchBar = () => {
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 10000,
-            width:'200px'
+            width: '200px',
           }}
         >
-          <div
-            style={{
-              backgroundColor: 'lightgray',
-              padding: '20px',
-              borderRadius: '8px',
-              width: '100%',
-              height: '100%',
-            }}
-          >
+          <div className="searchbar-second-modal">
             {selectedItem ? (
               <>
-                <h3>{selectedItem.title}</h3>
-                <p>{selectedItem.author}</p>
-                <button>찜하기</button>
                 <button onClick={closeSecondModal}>닫기</button>
+                <h3>{selectedItem.title}</h3>
+                <button
+                  className="searchbar-modal-button"
+                  onClick={() => {
+                    setIsSecondModalOpen(false);
+                    setIsThirdModalOpen(true);
+                  }}
+                >
+                  플레이리스트 추가
+                </button>
+                <button className="searchbar-modal-button">찜하기</button>
               </>
             ) : (
               <p>아이템을 선택해주세요.</p>
             )}
+          </div>
+        </div>
+      )}
+
+      {isThirdModalOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: `${modalPosition.top}px`,
+            left: `${modalPosition.left}px`,
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            borderRadius: '10px',
+            padding: '20px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            zIndex: 11000,
+          }}
+        >
+          <button
+            style={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              border: 'none',
+              backgroundColor: 'transparent',
+              fontSize: '16px',
+              cursor: 'pointer',
+            }}
+            onClick={ThirdModelClose}
+          >
+            ✖
+          </button>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {playlists.map((playlist) => (
+              <div key={playlist.playlistId} className="playlist-item">
+                <button className="playlist-list" >{playlist.title}</button>
+              </div>
+            ))}
           </div>
         </div>
       )}
