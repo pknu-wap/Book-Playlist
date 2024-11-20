@@ -1,8 +1,9 @@
+// controller/BookSearchController.java
 package WEB_5.BOOKPLAYLIST.controller;
 
 import WEB_5.BOOKPLAYLIST.domain.entity.Book;
+import WEB_5.BOOKPLAYLIST.repository.BookRepository;
 import WEB_5.BOOKPLAYLIST.service.BookSearchService;
-import WEB_5.BOOKPLAYLIST.repository.BookRepository;  // BookRepository 임포트
 import WEB_5.BOOKPLAYLIST.domain.dto.NaverBookResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,34 +14,33 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")  // 기본 경로 수정
+@RequestMapping("/api/search")
 public class BookSearchController {
 
     @Autowired
     private BookSearchService bookSearchService;
 
     @Autowired
-    private BookRepository bookRepository;  // BookRepository 주입
+    private BookRepository bookRepository;
 
     // 책 검색 (GET /api/search/books)
-    @GetMapping("/search/books")
+    @GetMapping("/books")
     public ResponseEntity<NaverBookResponse> searchBooks(@RequestParam String query) {
         return bookSearchService.searchBooks(query);
     }
 
     // 검색 결과 표시 (GET /api/search/results) - 필요 없다면 제거 가능
-    @GetMapping("/search/results")
+    @GetMapping("/results")
     public ResponseEntity<NaverBookResponse> showResults(@RequestParam String query) {
         return searchBooks(query);
     }
 
     // 책 상세 정보 조회 API (ISBN으로 상세 정보 조회)
-    @GetMapping("/search/books/detail")
+    @GetMapping("/books/detail")
     public ResponseEntity<NaverBookResponse> getBookDetail(@RequestParam String isbn) {
         return bookSearchService.getBookDetailByISBN(isbn);
     }
-
-    // 프론트엔드 요청에 맞춘 경로 변경: /api/books/isbn
+    // 책 정보
     @PostMapping("/books/isbn")
     public ResponseEntity<?> addOrFetchBookByISBN(@RequestBody Map<String, String> request) {
         String isbn = request.get("isbn");
