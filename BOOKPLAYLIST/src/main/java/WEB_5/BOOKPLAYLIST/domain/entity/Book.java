@@ -2,8 +2,8 @@ package WEB_5.BOOKPLAYLIST.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -20,9 +20,12 @@ public class Book {
     private String link;
     private String image;
 
-    @Column(unique = true) // ISBN의 고유 제약 조건 설정
+    @Column(unique = true, nullable = false) // ISBN의 고유 제약 조건 설정
     private String isbn;
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments; // 책에 달린 댓글 리스트
 }
