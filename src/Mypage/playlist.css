@@ -204,6 +204,11 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.playlist-book-result:hover {
+  transform: scale(1.01);
+  transition: all 0.2s linear;
+}
+
 .playlist-result-book-cover {
   width: 70px;
   height: 80px;
@@ -218,6 +223,7 @@
   position: absolute;
   left: 470px;
   top: 170px;
+  padding: 10px;
   width: 665px;
   height: 390px;
   overflow-y: auto;
@@ -271,6 +277,11 @@
   border-radius: 15px;
   background-color: rgb(250, 255, 227);
   border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.playlist-book-item:hover {
+  transform: scale(1.01);
+  transition: all 0.2s linear;
 }
 
 .playlist-book-info {

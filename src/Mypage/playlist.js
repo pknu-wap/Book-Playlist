@@ -288,6 +288,8 @@ function PlaylistModal({ onClose, playlistId }) {
       );
   
       alert('플레이리스트가 삭제되었습니다.');
+      onClose();
+      window.location.reload();
     } catch (error) {
       console.error(
         'Error saving playlist:',

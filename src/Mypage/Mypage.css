@@ -176,13 +176,12 @@ margin-left: 30px;
   text-align: center;
 }
 
-.mypage-playlist-hover-container:hover .mypage-playlist-hover-text {
-  display: block;
+.mypage-playlist-image:hover {
+  transform: scale(1.05);
+  transition: all 0.2s linear;
 }
 
-.mypage-playlist-hover-container:hover .mypage-playlist-image {
-  opacity: 0.6; /* 이미지 희미하게 */
-}
+
 
 
 .mypage-playlist-title {
