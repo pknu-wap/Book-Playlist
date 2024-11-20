@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -12,12 +14,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String password;
 
-    @Column(unique = true)
-    private String username;  // username과 email은 중복 저장 x
+    @Column(unique = true, nullable = false)
+    private String username;  // username과 email은 중복 저장 불가
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments; // 사용자가 작성한 댓글 리스트
 }

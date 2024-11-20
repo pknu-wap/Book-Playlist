@@ -97,8 +97,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -116,20 +116,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.BOOKPLAYLIST [:BookplaylistApplication.main()].executor": "Run",
-    "Gradle.BOOKPLAYLIST [:Main.main()].executor": "Run",
-    "Gradle.BookplaylistApplicationTests.executor": "Run",
-    "Gradle.Gradle 종속성 로드.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/develop/deploy-seminar-BE-master",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "애플리케이션.BookplaylistApplication.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.BOOKPLAYLIST [:BookplaylistApplication.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.BOOKPLAYLIST [:Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.BookplaylistApplicationTests.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Gradle 종속성 로드.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/develop/deploy-seminar-BE-master&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;애플리케이션.BookplaylistApplication.executor&quot;: &quot;Run&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

@@ -25,4 +25,11 @@ public class BookSearchController {
     public ResponseEntity<NaverBookResponse> showResults(@RequestParam String query) {
         return searchBooks(query);
     }
+
+    // 책 상세 정보 조회 API (ISBN으로 상세 정보 조회)
+    @GetMapping("/books/detail")
+    public ResponseEntity<NaverBookResponse> getBookDetail(@RequestParam String isbn) {
+        return bookSearchService.getBookDetailByISBN(isbn);
+    }
+
 }
