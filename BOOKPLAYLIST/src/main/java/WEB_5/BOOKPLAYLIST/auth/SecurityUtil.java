@@ -1,6 +1,7 @@
 package WEB_5.BOOKPLAYLIST.auth;
 
 import WEB_5.BOOKPLAYLIST.domain.entity.CustomUserDetails;
+import WEB_5.BOOKPLAYLIST.exception.UnauthorizedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -11,7 +12,6 @@ public class SecurityUtil {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             return userDetails.getId();
         }
-        throw new RuntimeException("로그인된 유저가 없습니다.");
+        throw new UnauthorizedException("로그인된 유저가 없습니다.");
     }
 }
-    

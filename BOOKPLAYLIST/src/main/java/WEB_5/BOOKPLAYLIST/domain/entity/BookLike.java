@@ -7,6 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "book_like", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "book_id"})
+})
 public class BookLike {
 
     @Id
