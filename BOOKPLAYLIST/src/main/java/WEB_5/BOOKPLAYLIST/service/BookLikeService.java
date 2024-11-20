@@ -13,8 +13,6 @@ import WEB_5.BOOKPLAYLIST.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Service
 public class BookLikeService {
@@ -22,15 +20,15 @@ public class BookLikeService {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
 
-    public BookLike likeBook(String isbn) {
+    public BookLike likeBook(Long bookId) { // ISBN 대신 bookId 사용
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
 
-        Book book = bookRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new BookNotFoundException("Book not found with ISBN: " + isbn));
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + bookId));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
-        if (bookLikeRepository.existsByUser_IdAndBook_Isbn(userId, isbn)) {
+        if (bookLikeRepository.existsByUser_IdAndBook_Id(userId, bookId)) {
             throw new BookAlreadyLikedException("Book already liked");
         }
 
@@ -40,17 +38,22 @@ public class BookLikeService {
         return bookLikeRepository.save(bookLike);
     }
 
-    public void unlikeBook(String isbn) {
+    public void unlikeBook(Long bookId) { // ISBN 대신 bookId 사용
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
 
-        Book book = bookRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new BookNotFoundException("Book not found with ISBN: " + isbn));
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + bookId));
 
-        bookLikeRepository.deleteByUser_IdAndBook_Id(userId, book.getId());
+        boolean exists = bookLikeRepository.existsByUser_IdAndBook_Id(userId, bookId);
+        if (!exists) {
+            throw new BookAlreadyLikedException("Book is not liked by the user");
+        }
+
+        bookLikeRepository.deleteByUser_IdAndBook_Id(userId, bookId);
     }
 
-    public boolean isBookLiked(String isbn) {
+    public boolean isBookLiked(Long bookId) { // ISBN 대신 bookId 사용
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
-        return bookLikeRepository.existsByUser_IdAndBook_Isbn(userId, isbn);
+        return bookLikeRepository.existsByUser_IdAndBook_Id(userId, bookId);
     }
 }

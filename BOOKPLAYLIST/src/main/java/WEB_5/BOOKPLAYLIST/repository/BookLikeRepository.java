@@ -13,7 +13,5 @@ public interface BookLikeRepository extends JpaRepository<BookLike, Long> {
 
     void deleteByUser_IdAndBook_Id(Long userId, Long bookId); // 특정 유저의 좋아요 목록에서 책 삭제
 
-    boolean existsByUser_IdAndBook_Isbn(Long userId, String isbn);
-
-    Optional<BookLike> findFirstByUser_IdAndBook_Isbn(Long userId, String isbn); // 첫 번째 결과만 반환
+    boolean existsByUser_IdAndBook_Id(Long userId, Long bookId);
 }

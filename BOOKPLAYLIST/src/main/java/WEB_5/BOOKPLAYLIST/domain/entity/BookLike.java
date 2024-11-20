@@ -3,6 +3,7 @@ package WEB_5.BOOKPLAYLIST.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,5 +24,4 @@ public class BookLike {
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false) // 책과 연결
     private Book book;
-
 }
