@@ -28,4 +28,8 @@ public class Book {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments; // 책에 달린 댓글 리스트
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookLike> bookLikes; // 이 책을 좋아요한 유저 리스트
+
 }
