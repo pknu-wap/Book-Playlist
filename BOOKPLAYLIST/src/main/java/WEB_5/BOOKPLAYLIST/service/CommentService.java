@@ -48,7 +48,7 @@ public class CommentService {
                 .orElseThrow(() -> new RuntimeException("Book not found for ISBN: " + isbn));
         return commentRepository.findByBookId(book.getId());
     }
-    
+
     // 댓글 삭제
     public boolean deleteComment(Long commentId, Long userId) {
         Comment comment = commentRepository.findById(commentId)

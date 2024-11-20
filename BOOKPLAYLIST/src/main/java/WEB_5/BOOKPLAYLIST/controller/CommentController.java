@@ -44,7 +44,7 @@ public class CommentController {
                 comment.getId(),
                 comment.getContent(),
                 comment.getRating(),
-                comment.getUser().getUsername(), // 현재 로그인된 사용자 이름
+                comment.getUser().getUsername(),
                 comment.getCreatedAt()
         );
 

@@ -24,7 +24,7 @@ public class Comment {
 
     // Book과 다대일 관계 설정 (하나의 Book에 여러 댓글 작성 가능)
     @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false) // 책과 연결
+    @JoinColumn(name = "book_isbn", referencedColumnName = "isbn", nullable = false) // ISBN 기반 연결
     private Book book;
 
     @Column(nullable = false, length = 500)
