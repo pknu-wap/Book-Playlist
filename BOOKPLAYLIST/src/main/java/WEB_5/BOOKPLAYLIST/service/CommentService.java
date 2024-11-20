@@ -97,4 +97,39 @@ public class CommentService {
                 .average()
                 .orElse(0.0);
     }
+    public boolean addOrUpdateRatingByIsbn(String isbn, Long userId, int rating) {
+        // ISBN을 통해 책 조회
+        Book book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new RuntimeException("Book not found for ISBN: " + isbn));
+
+        // User 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found for ID: " + userId));
+
+        // 기존 댓글 조회
+        Optional<Comment> existingComment = commentRepository.findByBookAndUser(book, user);
+        if (existingComment.isPresent()) {
+            Comment comment = existingComment.get();
+            comment.setRating(rating); // 별점 업데이트
+            commentRepository.save(comment);
+        } else {
+            // 새 댓글 생성
+            Comment comment = new Comment();
+            comment.setBook(book);
+            comment.setUser(user);
+            comment.setRating(rating);
+            commentRepository.save(comment);
+        }
+        return true;
+    }
+
+    public double getAverageRatingByIsbn(String isbn) {
+        Book book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new RuntimeException("Book not found for ISBN: " + isbn));
+        List<Comment> comments = commentRepository.findByBookId(book.getId());
+        return comments.stream()
+                .mapToInt(Comment::getRating)
+                .average()
+                .orElse(0.0);
+    }
 }

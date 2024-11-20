@@ -87,7 +87,7 @@ public class CommentController {
     // 별점 추가/수정
     @PostMapping("/{bookisbn}/rating")
     public ResponseEntity<Map<String, Object>> addOrUpdateRating(
-            @PathVariable Long bookId,
+            @PathVariable("bookisbn") String bookIsbn, // 수정: String 타입 및 경로 변수 이름 일치
             @RequestBody Map<String, Object> request) {
         int rating = (int) request.get("rating");
 
@@ -97,7 +97,7 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        boolean success = commentService.addOrUpdateRating(bookId, userId, rating);
+        boolean success = commentService.addOrUpdateRatingByIsbn(bookIsbn, userId, rating); // 서비스 메서드도 수정 필요
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
@@ -107,8 +107,8 @@ public class CommentController {
 
     // 평균 별점 조회
     @GetMapping("/{bookisbn}/rating/average")
-    public ResponseEntity<Map<String, Object>> getAverageRating(@PathVariable Long bookId) {
-        double averageRating = commentService.getAverageRating(bookId);
+    public ResponseEntity<Map<String, Object>> getAverageRating(@PathVariable("bookisbn") String bookIsbn) { // 수정: String 타입 및 경로 변수 이름 일치
+        double averageRating = commentService.getAverageRatingByIsbn(bookIsbn); // 서비스 메서드도 수정 필요
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
