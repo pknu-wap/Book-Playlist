@@ -1,7 +1,7 @@
 import React, { useState, useEffect,navigate } from "react";
 import axios from "axios";
 import "./SearchBar.css";
-import Logo from "../logos/로고.png";
+import PlaylistModal from "../Mypage/playlist";
 
 const SearchBar = () => {
   const [username, setUsername] = useState('');
@@ -10,14 +10,12 @@ const SearchBar = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0, isOpen: false });
+  const [thirdmodalPosition, setThirdModalPosition] = useState({ top: 0, left: 0, isOpen: false });
   const [selectedItem, setSelectedItem] = useState(null);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [isThirdModalOpen, setIsThirdModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  const onClickLogo = () => {
-    navigate('/');
-  };
+  const [addmodalOpen, setAddmodalOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -39,6 +37,13 @@ const SearchBar = () => {
     fetchUserData();
   }, []);
 
+  const AddmodalOpen=()=>{
+    setAddmodalOpen(true);
+  }
+
+  const closeAddModal=()=>{
+    setAddmodalOpen(false);
+  }
   const handleSearch = async () => {
     if (query.trim() === "") {
       setSearchResults([]);
@@ -65,6 +70,7 @@ const SearchBar = () => {
 
   const closeSecondModal = () => {
     setIsSecondModalOpen(false);
+    setIsThirdModalOpen();
   };
 
   const handleModalClick = (e) => {
@@ -79,19 +85,23 @@ const SearchBar = () => {
       left: rect.right,
       isOpen: true,
     });
+    console.log('버튼 클릭된 아이템:', item);
     setSelectedItem(item);
     setIsSecondModalOpen(true);
   };
 
-  const handleSecondButtonClick = (e, item) => {
+  const handleSecondButtonClick = (e) => {
     const rect = e.target.getBoundingClientRect();
-    setModalPosition({
+    setThirdModalPosition({
       top: rect.top,
       left: rect.right,
       isOpen: true,
     });
-    setSelectedItem(item);
     setIsThirdModalOpen(true);
+  };
+
+  const handleClick = (playlist) => {
+    console.log(playlist);
   };
 
   const ThirdModelClose = () => {
@@ -172,9 +182,9 @@ const SearchBar = () => {
           style={{
             width: "100%",
             position: 'absolute',
-            top: '75px',
-            left: '0px',
-            right: '0',
+            top:'70px',
+            left:'0',
+            right:'0',
             backgroundColor: 'rgba(0, 0, 0, 0)',
             display: 'flex',
             justifyContent: 'center',
@@ -208,7 +218,7 @@ const SearchBar = () => {
                       style={buttonStyle}
                       onClick={(e) => handleButtonClick(e, item)}
                     >
-                      보기
+                      ...
                     </button>
                   </div>
                 ))
@@ -223,6 +233,8 @@ const SearchBar = () => {
       {isSecondModalOpen && (
         <div
           style={{
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            height:'150px',
             marginLeft: '20px',
             position: 'absolute',
             top: `${modalPosition.top}px`,
@@ -238,14 +250,18 @@ const SearchBar = () => {
           <div className="searchbar-second-modal">
             {selectedItem ? (
               <>
-                <button onClick={closeSecondModal}>닫기</button>
-                <h3>{selectedItem.title}</h3>
+                <button onClick={closeSecondModal} style={{             
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  padding:'10px'  
+                }}>
+                    ✖
+                </button>
                 <button
                   className="searchbar-modal-button"
-                  onClick={() => {
-                    setIsSecondModalOpen(false);
-                    setIsThirdModalOpen(true);
-                  }}
+                  onClick={(e)=>handleSecondButtonClick(e)}
                 >
                   플레이리스트 추가
                 </button>
@@ -261,22 +277,26 @@ const SearchBar = () => {
       {isThirdModalOpen && (
         <div
           style={{
-            position: 'fixed',
-            top: `${modalPosition.top}px`,
-            left: `${modalPosition.left}px`,
+            overflow:'scroll',
+            width:'300px',
+            height:"200px",
+            position: 'absolute',
+            top: `${modalPosition.top + 100}px`,
+            left: `${modalPosition.left + 413}px`,
             transform: 'translate(-50%, -50%)',
+            display: 'flex',
             backgroundColor: 'white',
             borderRadius: '10px',
             padding: '20px',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             zIndex: 11000,
+
           }}
         >
           <button
             style={{
-              position: 'absolute',
-              top: '10px',
-              right: '10px',
+              position:'absolute',
+              top:'10px',
               border: 'none',
               backgroundColor: 'transparent',
               fontSize: '16px',
@@ -289,11 +309,25 @@ const SearchBar = () => {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className="playlist-item">
-                <button className="playlist-list" >{playlist.title}</button>
+                <button className="playlist-list" onClick={()=>handleClick(playlist)} >{playlist.title}</button>
               </div>
             ))}
+            <button className="adding" onClick={AddmodalOpen}>+</button>
           </div>
         </div>
+      )}
+      {addmodalOpen && (
+        <PlaylistModal
+          onClose={closeAddModal}
+          style={{
+            zIndex: 12000,  // PlaylistModal이 가장 높은 z-index를 가지도록 설정
+            position: 'absolute',  // 위치를 절대값으로 설정하여 다른 모달 위에 겹칠 수 있게
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }}
+        />
       )}
     </div>
   );

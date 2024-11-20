@@ -32,7 +32,8 @@
 }
   
 .searchbar-modal-button {
-    width: 200px; /* 버튼의 너비 */
+    padding: 20px;
+    width: 250px; /* 버튼의 너비 */
     padding: 10px 15px; /* 버튼 내부 여백 */
     font-size: 16px; /* 글자 크기 */
     color: #000000; /* 글자 색상 */
@@ -40,10 +41,11 @@
     border: none; /* 테두리 제거 */
     border-radius: 5px; /* 모서리 둥글게 */
     cursor: pointer; /* 클릭 가능 커서 */
+    transition: background-color 0.3s;
 }
 
 .searchbar-modal-button:hover{
-    background-color: #b1b1b1; /* 호버 시 색상 변화 */
+    background-color: #f0f0f0; /* 호버 시 색상 변화 */
 }
 
 .searchbar-second-modal{
@@ -60,8 +62,32 @@
 }
 
 .playlist-list{
+    border: #b1b1b1 1px solid;
     padding: 20px;
     font-size: 20px;
     border: #000000 1px solid;
-    border-radius: 20px;
+    border:none;
+    background-color: #ffffff;
+    width: 250px;
+    transition: background-color 0.3s;
+}
+
+  
+.playlist-list:hover {
+    background-color: #f0f0f0;
+}
+
+.adding{
+    padding: 20px;
+    font-size: 20px;
+    border: #000000 1px solid;
+    border:none;
+    background-color: #ffffff;
+    width: 250px;
+    transition: background-color 0.3s;
+}
+
+  
+.adding:hover {
+    background-color: #f0f0f0;
 }
