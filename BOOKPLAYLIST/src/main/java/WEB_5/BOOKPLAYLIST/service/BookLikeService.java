@@ -13,6 +13,8 @@ import WEB_5.BOOKPLAYLIST.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class BookLikeService {
@@ -55,5 +57,10 @@ public class BookLikeService {
     public boolean isBookLiked(Long bookId) { // ISBN 대신 bookId 사용
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
         return bookLikeRepository.existsByUser_IdAndBook_Id(userId, bookId);
+    }
+
+    public Long getBookIdByIsbn(String isbn) {
+        Optional<Book> bookOpt = bookRepository.findByIsbn(isbn);
+        return bookOpt.map(Book::getId).orElse(null);
     }
 }

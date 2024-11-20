@@ -2,7 +2,9 @@ package WEB_5.BOOKPLAYLIST.controller;
 
 import WEB_5.BOOKPLAYLIST.domain.entity.BookLike;
 import WEB_5.BOOKPLAYLIST.service.BookLikeService;
+import WEB_5.BOOKPLAYLIST.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,22 +13,36 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BookLikeController {
     private final BookLikeService bookLikeService;
+    private final BookService bookService; // ISBN으로 책을 조회할 수 있는 서비스 추가
 
-    @PostMapping("/{bookId}/like")
-    public ResponseEntity<String> likeBook(@PathVariable Long bookId) {
+    @PostMapping("/{isbn}/like")
+    public ResponseEntity<String> likeBook(@PathVariable String isbn) {
+        Long bookId = bookService.getBookIdByIsbn(isbn);
+        if (bookId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found");
+        }
         bookLikeService.likeBook(bookId);
         return ResponseEntity.ok("Book liked successfully");
     }
 
-    @DeleteMapping("/{bookId}/unlike")
-    public ResponseEntity<String> unlikeBook(@PathVariable Long bookId) {
+    @DeleteMapping("/{isbn}/unlike")
+    public ResponseEntity<String> unlikeBook(@PathVariable String isbn) {
+        Long bookId = bookService.getBookIdByIsbn(isbn);
+        if (bookId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found");
+        }
         bookLikeService.unlikeBook(bookId);
         return ResponseEntity.ok("Book unliked successfully");
     }
 
-    @GetMapping("/{bookId}/isLiked")
-    public ResponseEntity<Boolean> isBookLiked(@PathVariable Long bookId) {
+    @GetMapping("/{isbn}/isLiked")
+    public ResponseEntity<Boolean> isBookLiked(@PathVariable String isbn) {
+        Long bookId = bookService.getBookIdByIsbn(isbn);
+        if (bookId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+        }
         boolean isLiked = bookLikeService.isBookLiked(bookId);
         return ResponseEntity.ok(isLiked);
     }
 }
+
