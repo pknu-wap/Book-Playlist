@@ -48,7 +48,11 @@ const MyPage = () => {
         <div className="mypage-userbox">
           <div className="mypage-userimage">{/* 사용자 이미지 표시 */}</div>
           <div className="mypage-username">
-            <p>{username}님</p>
+            {isLoading ? (
+              <div className="mypage-loader"></div>
+            ) : (
+              <p>{username}님</p>   
+            )}
           </div>
         </div>
         <div className="mypage-Mycomment">
@@ -59,7 +63,10 @@ const MyPage = () => {
       <div className="mypage-Mycollection">
         <p>나의 플레이리스트</p>
         {isLoading ? (
-          <p>로딩 중...</p>
+          <div className='mypage-Mycollection-loadingbox'>
+            <div className="mypage-loader"></div>
+            <p>플레이리스트 불러오는중..</p>
+          </div>
         ) : (
           <div className="mypage-playlist-container">
             {playlists.map((playlist) => (
@@ -77,8 +84,11 @@ const MyPage = () => {
                       이미지 없음
                     </div>
                   )}
+
                 </div>
-                <p className="mypage-playlist-title">{playlist.title}</p>
+                <div className="mypage-playlist-title">
+                  <p>{playlist.title}</p>
+                </div>
               </div>
             ))}
           </div>

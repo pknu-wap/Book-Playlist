@@ -6,7 +6,9 @@ import Cropper from 'react-easy-crop';
 function PlaylistModal({ onClose, playlistId }) {
   const placeholderImage = 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg';
   const [imageSrc, setImageSrc] = useState(placeholderImage);
+  const [isDelete, setIsDelete] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -222,7 +224,10 @@ function PlaylistModal({ onClose, playlistId }) {
         }
       } catch (error) {
         console.error('Error fetching playlist data:', error);
+      } finally {
+        setIsLoading(false);
       }
+
     };
 
     if (playlistId) {
@@ -270,6 +275,30 @@ function PlaylistModal({ onClose, playlistId }) {
     }
   };
 
+
+  const handleDeletePlaylist = async () => {
+    setIsDelete(true);
+    try {
+      // 서버로 전송
+      await axios.delete(
+        `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlistId}`,
+        {
+          withCredentials: true,
+        }
+      );
+  
+      alert('플레이리스트가 삭제되었습니다.');
+      onClose();
+      window.location.reload();
+    } catch (error) {
+      console.error(
+        'Error saving playlist:',
+        error.response ? error.response.data : error.message
+      );
+    } finally {
+      setIsDelete(false); // 로딩 종료
+    }
+  };
   return (
     <>
       {/* 첫 번째 모달 */}
@@ -330,7 +359,17 @@ function PlaylistModal({ onClose, playlistId }) {
                 </div>
               )}
             </div>
-            <button className="playlist-plsave" onClick={handleSavePlaylist} disabled={isSaving}>
+            <button className='playlist-pldelete' onClick={handleDeletePlaylist} disabled={isSaving}>
+              {isDelete ? (
+                <div className='playlist-loader'></div>
+              ) : (
+                <>
+                <span className="material-symbols-outlined">delete_forever</span>
+                <p>플리삭제</p>
+                </>
+              )}
+            </button>
+            <button className="playlist-mpplsave" onClick={handleSavePlaylist} disabled={isSaving}>
               {isSaving ? (
                 <div className="playlist-loader"></div>
               ) : (
@@ -364,8 +403,8 @@ function PlaylistModal({ onClose, playlistId }) {
           </div>
 
           <div className="playlist-book-list">
-            {bookList.length === 0 ? (
-              <p>책이 없습니다.</p>
+            {isLoading ? (
+              <div className="playlist-loader"></div>
             ) : (
               bookList.map((book, index) => (
                 <div
@@ -494,7 +533,7 @@ function PlaylistModal({ onClose, playlistId }) {
                   className="playlist-zoom-range"
                 />
               </div>
-              <button className='playlist-plimage-save' onClick={showCroppedImage}>저장</button>
+              
             </div>
           </div>
         </div>

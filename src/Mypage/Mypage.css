@@ -12,6 +12,32 @@
 font-weight: bold;
 margin-left: 30px;
 }
+
+.mypage-Mycollection-loadingbox p{
+  margin-left: 430px;
+  
+}
+
+.mypage-Mycollection  .mypage-loader {
+  margin: auto;
+  margin-top: 100px !important;
+  width: 50px;
+  height: 50px;
+  border: 4px solid #ddd;
+  border-right-color: rgb(2, 255, 107);
+  border-top-color: rgb(2, 255, 107);
+  border-radius: 50%;
+  animation: mypage-spin 0.8s linear infinite;
+}
+
+@keyframes mypage-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 .mypage-topbox {
   display: flex;
 }
@@ -57,6 +83,18 @@ margin-left: 30px;
  margin-top: 10px; 
 }
 
+.mypage-username  .mypage-loader {
+  margin: auto;
+  margin-top: 6px;
+  width: 20px;
+  height: 20px;
+  border: 4px solid #ddd;
+  border-right-color: rgb(2, 255, 107);
+  border-top-color: rgb(2, 255, 107);
+  border-radius: 50%;
+  animation: mypage-spin 0.8s linear infinite;
+}
+
 .mypage-playlist-container {
   display: flex;
   flex-wrap: wrap;
@@ -68,6 +106,34 @@ margin-left: 30px;
   height: 300px;
 }
 
+.mypage-playlist-container::-webkit-scrollbar {
+  width: 10px; 
+}
+
+.mypage-playlist-container::-webkit-scrollbar-track { 
+  background-color: rgb(221, 219, 219);
+}
+
+.mypage-playlist-container::-webkit-scrollbar-thumb { 
+  background-color: rgb(193, 251, 166);
+}  
+.mypage-playlist-container::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* hover 효과 */
+.mypage-playlist-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(231, 255, 214);
+  transition: all 0.2s; /* 애니메이션 속도 */
+}
+
+/* 모서리 둥글게 */
+.mypage-playlist-container::-webkit-scrollbar-track,
+.mypage-playlist-container::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+}
+
+
 .mypage-playlist-box {
   width: 150px;
   height: 200px;
@@ -77,7 +143,11 @@ margin-left: 30px;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
+  margin-left: 13px;
+  margin-top: 35px;
 }
+
+
 
 .mypage-playlist-image {
   width: 150px;
@@ -90,12 +160,40 @@ margin-left: 30px;
   margin-right: auto;
 }
 
+.mypage-playlist-hover-text {
+  display: none;
+  position: absolute;
+  top: 50%; /* 가운데 정렬 */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(255, 255, 255);
+  font-size: 18px;
+  font-weight: bold;
+  background-color: rgba(32, 32, 32, 0.6); /* 반투명 배경 */
+  padding: 10px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.mypage-playlist-image:hover {
+  transform: scale(1.05);
+  transition: all 0.2s linear;
+}
+
+
+
+
 .mypage-playlist-title {
-  margin-top: 10px;
   font-size: 16px;
   font-weight: bold;
-  align-self: start;
-  margin-top: 15px;
+  text-align: center;
+}
+
+.mypage-playlist-title p {
+  width: 140px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mypage-playlist-hover-container {
