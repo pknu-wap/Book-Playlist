@@ -15,7 +15,7 @@ const SearchBar = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [isThirdModalOpen, setIsThirdModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [addmodalOpen, setAddmodalOpen] = useState(false);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
   const [selectedIsbn, setSelectedIsbn] = useState(null);
@@ -124,6 +124,7 @@ const SearchBar = () => {
   };
 
   const onClickzzimButton = async () => {
+    setIsLoading(true);
     try {
       // selectedIsbn이 null이 아닌지 확인
       if (!selectedIsbn) {
@@ -150,6 +151,7 @@ const SearchBar = () => {
       console.error("찜 오류:", error.response?.data || error);
       alert('찜 오류 발생');
     }
+    setIsLoading(false);
   };
 
   const resultItemStyle = {
@@ -383,7 +385,7 @@ const SearchBar = () => {
                 >
                   플레이리스트 추가
                 </button>
-                <button className="searchbar-modal-button" onClick={onClickzzimButton}>찜하기</button>
+                {isLoading ? (<div className="playlists-loading"><p></p></div>):(<button className="searchbar-modal-button" onClick={onClickzzimButton}>찜하기</button>)}
               </>
             ) : (
               <p>아이템을 선택해주세요.</p>
