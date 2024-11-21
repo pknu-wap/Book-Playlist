@@ -51,8 +51,6 @@ const SearchBar = () => {
     setPlaylists([...playlists, newPlaylist]);
   };
 
-  const navigate = useNavigate(); // useNavigate 훅 추가
-
   const AddmodalOpen=()=>{
     setAddmodalOpen(true);
   }
