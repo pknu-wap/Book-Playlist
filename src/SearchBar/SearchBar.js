@@ -102,13 +102,6 @@ const SearchBar = () => {
     console.log(`클릭한 책 isbn:`,item.isbn);
   };
   
-  const handleZzimClick=()=>{
-    if(selectedIsbn){
-      onClickzzimButton(selectedIsbn);
-    } else {
-      alert("선택된 ISBN이 없습니다:");
-    }
-  };
 
   const handleSecondButtonClick = (e) => {
     const rect = e.target.getBoundingClientRect();
@@ -130,19 +123,35 @@ const SearchBar = () => {
     setIsThirdModalOpen(false);
   };
 
-  const onClickzzimButton = async (isbn) => {
+  const onClickzzimButton = async () => {
     try {
+      // selectedIsbn이 null이 아닌지 확인
+      if (!selectedIsbn) {
+        alert("책 ISBN이 선택되지 않았습니다.");
+        return;
+      }
+  
+      // 전달된 isbn 확인
+      console.log("전달된 isbn:", selectedIsbn);
+  
+      // axios 요청
       const response = await axios.post(
-        `https://your-api-endpoint.com/api/zzim`,  // 찜하기 API 엔드포인트
-        { isbn: isbn },  // Request body: isbn만 넘기기
-        { withCredentials: true }  // 로그인된 상태로 요청
+        `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/mainpage/like-by-isbn?isbn=${selectedIsbn}`, 
+        {},  // 빈 본문 전달
+        { withCredentials: true }
       );
-      alert('책이 찜되었습니다:', response.data);
+      console.log("Sending ISBN:", selectedIsbn);
+      console.log("Request body:", { isbn: selectedIsbn });
+      // 성공적인 응답 처리
+      console.log("응답 데이터:", response.data);
+      alert('책이 찜되었습니다!');
     } catch (error) {
-      alert('찜 오류:', error);
+      // 오류 처리
+      console.error("찜 오류:", error.response?.data || error);
+      alert('찜 오류 발생');
     }
   };
-  
+
   const resultItemStyle = {
     width: '500px',
     display: 'flex',
@@ -212,6 +221,7 @@ const SearchBar = () => {
       );
   
       console.log("Book added successfully:", response.data);
+      alert("성공적으로 저장되었습니다!");
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -225,12 +235,11 @@ const SearchBar = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          position: "fixed",
           top: "20px",
-          left: "50%",
+          marginLeft:'105%',
           transform: "translateX(-50%)",
           zIndex: 1000,
-          width: "80%", // 검색 바 전체 폭
+          width: "700px", // 검색 바 전체 폭
           maxWidth: "800px",
           padding: "10px",
           backgroundColor: "#f5f5f5", // 검색창 배경색
@@ -298,7 +307,7 @@ const SearchBar = () => {
               padding: "20px",
               borderRadius: "8px",
               width: "80%",
-              maxWidth: "600px",
+              maxWidth: "550px",
               maxHeight: "70vh",
               overflowY: "auto",
             }}
@@ -374,7 +383,7 @@ const SearchBar = () => {
                 >
                   플레이리스트 추가
                 </button>
-                <button className="searchbar-modal-button" onClick={handleZzimClick}>찜하기</button>
+                <button className="searchbar-modal-button" onClick={onClickzzimButton}>찜하기</button>
               </>
             ) : (
               <p>아이템을 선택해주세요.</p>
