@@ -269,7 +269,7 @@ const SearchBar = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-start",
-            zIndex: 9999,
+            zIndex: 99,
             paddingTop: "10px",
           }}
           onClick={handleModalClick}
