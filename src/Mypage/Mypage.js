@@ -68,7 +68,10 @@ const MyPage = () => {
           <p>내가 쓴 댓글</p>
           <div className="mypage-Mycomment-list">
             {isLoading ? (
-              <div className="mypage-loader"></div>
+              <div className='mypage-Mycomment-loadingbox'>
+                <div className="mypage-loader"></div>
+                <p>댓글 불러오는중...</p>
+              </div>
             ) : comments.length > 0 ? (
               comments.map((comment) => (
                 <div key={comment.isbn} className='mypage-comment'>
