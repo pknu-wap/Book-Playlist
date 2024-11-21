@@ -98,4 +98,19 @@ public class PlaylistController {
         }
     }
 
+    // 특정 플레이리스트에 책 추가 (POST /api/playlist/{playlistId}/addBook)
+    @PostMapping("/{playlistId}/addBook")
+    public ResponseEntity<String> addBookToPlaylist(@PathVariable Long playlistId, @RequestParam String isbn) {
+        try {
+            boolean success = playlistService.addBookToPlaylist(playlistId, isbn);
+            if (success) {
+                return ResponseEntity.ok("책이 플레이리스트에 성공적으로 추가되었습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("플레이리스트를 찾을 수 없습니다.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("책 추가 중 오류가 발생했습니다.");
+        }
+    }
+
 }
