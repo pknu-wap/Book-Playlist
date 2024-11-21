@@ -12,4 +12,6 @@ public class UserCommentDTO {
     private String title;
     private String content;
     private int rating;
+    private  String image;
+
 }
