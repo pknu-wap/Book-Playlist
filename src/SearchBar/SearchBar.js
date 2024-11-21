@@ -1,7 +1,7 @@
 import React, { useState, useEffect,navigate } from "react";
 import axios from "axios";
 import "./SearchBar.css";
-import PlaylistModal from "../Mypage/playlist";
+import PlaylistModal from "./PlaylistModal.js";
 import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
@@ -19,6 +19,7 @@ const SearchBar = () => {
   const [addmodalOpen, setAddmodalOpen] = useState(false);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
   const [selectedIsbn, setSelectedIsbn] = useState(null);
+  const [isplyLoading,setIsplyLoading] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -39,6 +40,10 @@ const SearchBar = () => {
 
     fetchUserData();
   }, []);
+
+  const addPlaylist = (newPlaylist) => {
+    setPlaylists([...playlists, newPlaylist]);
+  };
 
   const navigate = useNavigate(); // useNavigate 훅 추가
 
@@ -213,6 +218,7 @@ const SearchBar = () => {
   };
   const AddbooktoPlaylist = async (item, playlist) => {
     try {
+      setIsplyLoading(true);
       console.log("클릭한 플레이리스트Id:", playlist.playlistId);  // playlistId 확인
       console.log("isbn:", item.isbn);  // isbn 확인
       
@@ -227,6 +233,7 @@ const SearchBar = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+    setIsplyLoading(false);
   };
 
   return (
@@ -441,12 +448,12 @@ const SearchBar = () => {
           >
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className="playlist-item">
-                <button 
+                {isplyLoading ? (<div className="playlists-loading"><p></p></div>) : (<button 
                   className="playlist-list" 
                   onClick={() => {
                     handleClick(selectedItem, playlist);
                     AddbooktoPlaylist(selectedItem, playlist);
-                  }}>{playlist.title || "제목없음"}</button>
+                  }}>{playlist.title || "제목없음"}</button>)}
               </div>
             ))}
             <button className="adding" onClick={AddmodalOpen}>+</button>
@@ -458,13 +465,11 @@ const SearchBar = () => {
       {addmodalOpen && (
         <PlaylistModal
           playlistId={selectedPlaylistId}
+          addPlaylist={addPlaylist}
           onClose={closeAddModal}
+          bookitem={selectedItem}
           style={{
             zIndex: 120000,  // PlaylistModal이 가장 높은 z-index를 가지도록 설정
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
           }}
         />
       )}
