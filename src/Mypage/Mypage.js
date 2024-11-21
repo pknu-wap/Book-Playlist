@@ -6,6 +6,7 @@ import './Mypage.css';
 const MyPage = () => {
   const [username, setUsername] = useState('');
   const [playlists, setPlaylists] = useState([]);
+  const [comments, setComments] = useState([]); // 댓글 데이터를 저장할 상태 변수 추가
   const [isLoading, setIsLoading] = useState(true);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,13 +14,15 @@ const MyPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const [profileResponse, playlistsResponse] = await axios.all([
+        const [profileResponse, playlistsResponse, commentsResponse] = await axios.all([
           axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile', { withCredentials: true }),
           axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists', { withCredentials: true }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/comments', { withCredentials: true }), // 댓글 데이터 가져오기
         ]);
 
         if (profileResponse.data?.username) setUsername(profileResponse.data.username);
         if (playlistsResponse.data) setPlaylists(playlistsResponse.data);
+        if (commentsResponse.data) setComments(commentsResponse.data); // 댓글 데이터 상태에 저장
       } catch (error) {
         console.error('데이터 가져오기 오류:', error);
       } finally {
@@ -42,24 +45,71 @@ const MyPage = () => {
     setIsModalOpen(false);
   };
 
+  const renderStars = (rating) => {
+    const fullStar = '★';
+    const emptyStar = '☆';
+    return fullStar.repeat(rating) + emptyStar.repeat(5 - rating);
+  };
+
   return (
     <div>
       <div className="mypage-topbox">
         <div className="mypage-userbox">
           <div className="mypage-userimage">{/* 사용자 이미지 표시 */}</div>
           <div className="mypage-username">
-            <p>{username}님</p>
+            {isLoading ? (
+              <div className="mypage-loader"></div>
+            ) : (
+              <p>{username}님</p>   
+            )}
           </div>
         </div>
         <div className="mypage-Mycomment">
           <p>내가 쓴 댓글</p>
+          <div className="mypage-Mycomment-list">
+            {isLoading ? (
+              <div className='mypage-Mycomment-loadingbox'>
+                <div className="mypage-loader"></div>
+                <p>댓글 불러오는중...</p>
+              </div>
+            ) : comments.length > 0 ? (
+              comments.map((comment) => (
+                <div key={comment.isbn} className='mypage-comment'>
+                  {/* 책 이미지 */}
+                  <div className="mypage-comment-book-image">
+                    <img
+                      src={`https://covers.openlibrary.org/b/isbn/${comment.isbn}-M.jpg`}
+                      alt={comment.title}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = '/default-book-cover.jpg'; // 이미지가 없을 경우 대체 이미지
+                      }}
+                    />
+                  </div>
+                  {/* 책 제목과 별점 */}
+                  <div className="mypage-comment-info">
+                    <div className='mypage-comment-info-header'>
+                     <h4>{comment.title}</h4>
+                     <p>{renderStars(comment.rating)}</p>
+                    </div>
+                    <p className='mypage-comment-info-comment'>"{comment.content}"</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>작성한 댓글이 없습니다.</p>
+            )}
+          </div>
         </div>
       </div>
 
       <div className="mypage-Mycollection">
         <p>나의 플레이리스트</p>
         {isLoading ? (
-          <p>로딩 중...</p>
+          <div className='mypage-Mycollection-loadingbox'>
+            <div className="mypage-loader"></div>
+            <p>플레이리스트 불러오는 중...</p>
+          </div>
         ) : (
           <div className="mypage-playlist-container">
             {playlists.map((playlist) => (
@@ -78,7 +128,9 @@ const MyPage = () => {
                     </div>
                   )}
                 </div>
-                <p className="mypage-playlist-title">{playlist.title}</p>
+                <div className="mypage-playlist-title">
+                  <p>{playlist.title}</p>
+                </div>
               </div>
             ))}
           </div>

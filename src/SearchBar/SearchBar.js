@@ -2,6 +2,7 @@ import React, { useState, useEffect,navigate } from "react";
 import axios from "axios";
 import "./SearchBar.css";
 import PlaylistModal from "../Mypage/playlist";
+import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
   const [username, setUsername] = useState('');
@@ -39,6 +40,8 @@ const SearchBar = () => {
     fetchUserData();
   }, []);
 
+  const navigate = useNavigate(); // useNavigate 훅 추가
+
   const AddmodalOpen=()=>{
     setAddmodalOpen(true);
   }
@@ -53,7 +56,7 @@ const SearchBar = () => {
     }
     try {
       const response = await axios.get(
-        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books',
+        "https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books",
         {
           params: { query: query },
         }
@@ -78,11 +81,12 @@ const SearchBar = () => {
   };
 
   const handleModalClick = (e) => {
-    if (e.target.closest('.modal-content')) return;
+    if (e.target.closest(".modal-content")) return;
     closeModal();
   };
 
   const handleButtonClick = (e, item) => {
+    e.stopPropagation(); // 클릭 이벤트 전파 방지
     const rect = e.target.getBoundingClientRect();
     setModalPosition({
       top: rect.top,
@@ -138,7 +142,6 @@ const SearchBar = () => {
     }
   };
   
-
   const resultItemStyle = {
     width: '500px',
     display: 'flex',
@@ -184,6 +187,8 @@ const SearchBar = () => {
     borderRadius: '5px',
     cursor: 'pointer',
     transition: 'background-color 0.3s ease',
+  const handleBookClick = (book) => {
+    navigate(`/book/${book.id}`, { state: { book } }); // 책 상세 페이지로 이동
   };
 
   const handleKeyPress = (e) => {
@@ -193,8 +198,26 @@ const SearchBar = () => {
   };
 
   return (
-    <div>   
-      <div className="search-container">
+    <div>
+      {/* 검색 바 디자인 */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "fixed",
+          top: "20px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 1000,
+          width: "80%", // 검색 바 전체 폭
+          maxWidth: "800px",
+          padding: "10px",
+          backgroundColor: "#f5f5f5", // 검색창 배경색
+          borderRadius: "30px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        }}
+      >
         <input
           className="search-bar"
           type="text"
@@ -202,48 +225,103 @@ const SearchBar = () => {
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Search for books..."
+          style={{
+            flex: 1,
+            height: "40px",
+            border: "none",
+            outline: "none",
+            padding: "0 15px",
+            fontSize: "16px",
+            borderRadius: "30px 0 0 30px",
+            backgroundColor: "#fff",
+          }}
         />
-        <button className="search-button" onClick={handleSearch}>
-           검색
+        <button
+          className="search-button"
+          onClick={handleSearch}
+          style={{
+            padding: "0 20px",
+            height: "40px",
+            fontSize: "16px",
+            border: "none",
+            borderRadius: "0 30px 30px 0",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            cursor: "pointer",
+          }}
+        >
+          검색
         </button>
       </div>
 
+      {/* 검색 결과 모달 */}
       {isModalOpen && (
         <div
           style={{
-            width: "100%",
-            position: 'absolute',
-            top:'70px',
-            left:'0',
-            right:'0',
-            backgroundColor: 'rgba(0, 0, 0, 0)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'flex-start',
-            zIndex: 99,
-            paddingTop: '10px',
+            position: "fixed",
+            top: "75px",
+            left: "0px",
+            right: "0",
+            backgroundColor: "rgba(0, 0, 0, 0)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            zIndex: 9999,
+            paddingTop: "10px",
           }}
           onClick={handleModalClick}
         >
           <div
             className="modal-content"
             style={{
-              backgroundColor: 'white',
-              padding: '0px',
-              borderRadius: '8px',
-              maxWidth: '600px',
-              maxHeight: '50vh',
-              overflowY: 'auto',
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              width: "80%",
+              maxWidth: "600px",
+              maxHeight: "70vh",
+              overflowY: "auto",
             }}
+            onClick={(e) => e.stopPropagation()} // 모달 외부 클릭 시 닫기 방지
           >
             <div>
-            {searchResults.length > 0 ? (
-              searchResults.map((item) => (
-                <div key={item.id || item.isbn} style={resultItemStyle}> {/* item.id 또는 item.isbn을 사용 */}
-                  <img src={item.image} style={imageStyle} alt={item.title} />
-                  <div style={{ flex: 1 }}>
-                    <p style={titleStyle}>{item.title}</p>
-                    <p style={authorStyle}>{item.author}</p>
+              {searchResults.length > 0 ? (
+                searchResults.map((item) => (
+                  <div
+                    key={item.id||item.isbn}
+                    style={resultItemStyle}
+                    onClick={() => handleBookClick(item)}
+                  >
+                    <img
+                      src={item.image}
+                      style={imageStyle}
+                      alt={item.title}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <p
+                        style={titleStyle}
+                      >
+                        {item.title}
+                      </p>
+                      <p
+                        style={authorStyle}
+                      >
+                        {item.author}
+                      </p>
+                    </div>
+                    <button
+                      style={{
+                        padding: "8px 15px",
+                        backgroundColor: "#4CAF50",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                      onClick={(e) => handleButtonClick(e, item)}
+                    >
+                      보기
+                    </button>
                   </div>
                   <button
                     style={buttonStyle}
