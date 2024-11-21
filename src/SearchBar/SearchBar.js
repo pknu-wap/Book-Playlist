@@ -256,7 +256,7 @@ const SearchBar = () => {
           검색
         </button>
       </div>
-
+    
       {/* 검색 결과 모달 */}
       {isModalOpen && (
         <div
@@ -291,7 +291,7 @@ const SearchBar = () => {
               {searchResults.length > 0 ? (
                 searchResults.map((item) => (
                   <div
-                    key={item.id||item.isbn}
+                    key={item.id || item.isbn}
                     style={resultItemStyle}
                     onClick={() => handleBookClick(item)}
                   >
@@ -301,48 +301,41 @@ const SearchBar = () => {
                       alt={item.title}
                     />
                     <div style={{ flex: 1 }}>
-                      <p
-                        style={titleStyle}
-                      >
-                        {item.title}
-                      </p>
-                      <p
-                        style={authorStyle}
-                      >
-                        {item.author}
-                      </p>
+                      <p style={titleStyle}>{item.title}</p>
+                      <p style={authorStyle}>{item.author}</p>
                     </div>
-                    <button
-                      style={{
-                        padding: "8px 15px",
-                        backgroundColor: "#4CAF50",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                      }}
-                      onClick={(e) => handleButtonClick(e, item)}
-                    >
-                      보기
-                    </button>
+                    <div>
+                      <button
+                        style={{
+                          padding: "8px 15px",
+                          backgroundColor: "#4CAF50",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                        }}
+                        onClick={(e) => handleButtonClick(e, item)}
+                      >
+                        보기
+                      </button>
+                      <button
+                        style={buttonStyle}
+                        onClick={(e) => handleButtonClick(e, item)}
+                      >
+                        ...
+                      </button>
+                    </div>
                   </div>
-                  <button
-                    style={buttonStyle}
-                    onClick={(e) => handleButtonClick(e, item)}
-                  >
-                    ...
-                  </button>
-                </div>
-              ))
-            ) : (
-              <p>검색 결과가 없습니다.</p>
-            )}
-
+                ))
+              ) : (
+                <p>검색 결과가 없습니다.</p>
+              )}
             </div>
           </div>
         </div>
       )}
-
+    
+      {/* 두 번째 모달 */}
       {isSecondModalOpen && (
         <div
           style={{
@@ -387,7 +380,8 @@ const SearchBar = () => {
           </div>
         </div>
       )}
-
+    
+      {/* 세 번째 모달 */}
       {isThirdModalOpen && (
         <div
           style={{
@@ -422,7 +416,7 @@ const SearchBar = () => {
           >
             ✖
           </button>
-
+    
           {/* 스크롤 가능한 내용 영역 */}
           <div
             style={{
@@ -441,6 +435,8 @@ const SearchBar = () => {
           </div>
         </div>
       )}
+    
+      {/* Playlist Modal */}
       {addmodalOpen && (
         <PlaylistModal
           playlistId={selectedPlaylistId}
