@@ -179,7 +179,7 @@ function BookDetail() {
       </button>
 
       <div className="book-detail-container">
-        <div className="book-image">
+        <div className="book-detail-book-image">
           <img src={book.image} alt={book.title} />
         </div>
         <div className="book-description">
