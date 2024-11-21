@@ -187,10 +187,13 @@ const SearchBar = () => {
     borderRadius: '5px',
     cursor: 'pointer',
     transition: 'background-color 0.3s ease',
-  const handleBookClick = (book) => {
-    navigate(`/book/${book.id}`, { state: { book } }); // 책 상세 페이지로 이동
+
   };
 
+  const handleBookClick = (item) => {
+    navigate(`/book/${item.id}`, { state: { item } }); // 책 상세 페이지로 이동
+  };
+  
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearch();
