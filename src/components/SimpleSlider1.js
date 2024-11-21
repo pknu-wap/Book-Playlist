@@ -154,6 +154,7 @@ function SimpleSlider() {
                 padding: "10px",
                 cursor: "pointer",
               }}
+
             >
               <img
                 src={`data:image/jpeg;base64,${playlist.base64Image}`}
@@ -164,6 +165,7 @@ function SimpleSlider() {
                   height: "282px",
                   borderRadius: "10px",
                 }}
+                className="book_image"
               />
               <h4>{playlist.title}</h4>
               <p style={{ color: "gray", fontSize: "13px" }}>

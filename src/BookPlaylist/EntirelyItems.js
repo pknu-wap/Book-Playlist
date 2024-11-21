@@ -78,11 +78,19 @@ const EntireItems = () => {
     setSelectedPlaylist(null);
   };
 
-  const sortedPlaylists = [...playlists].sort((a, b) =>
-    sortOrder === "latest"
-      ? b.playlistId - a.playlistId
-      : a.playlistId - b.playlistId
-  );
+  const sortedPlaylists = [...playlists];
+  switch(sortOrder){
+    case "latest":
+      sortedPlaylists.sort((a,b)=>b.playlistId-a.playlistId);
+      break;
+    case "date":
+      sortedPlaylists.sort((a,b)=>a.playlistId-b.playlistId);
+      break;
+    case "best":
+      break;
+    default:
+      break;
+  }
 
   const currentItems = sortedPlaylists.slice(
     (currentPage - 1) * itemsPerPage,
@@ -112,8 +120,8 @@ const EntireItems = () => {
                     alt={playlist.title}
                     style={{ width: "100px", height: "150px", borderRadius: "4px" }}
                   />
-                  <p>{playlist.title}</p>
-                  <p>{playlist.username}</p>
+                  <p style={{margin:'0px',}}>{playlist.title && playlist.title.length > 12 ? `${playlist.title.slice(0, 12)}...`:playlist.title||"제목 없음"}</p>
+                  <p style={{margin:'0px'}}>만든이 : {playlist.username}</p>
                 </div>
               </div>
             ))}
@@ -121,6 +129,7 @@ const EntireItems = () => {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
+            pagesPerGroup={5} // 예시로 5페이지 그룹
             onPageChange={(pageNumber) => setCurrentPage(pageNumber)}
           />
         </>

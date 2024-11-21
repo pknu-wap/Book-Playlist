@@ -17,7 +17,8 @@ const SearchBar = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [addmodalOpen, setAddmodalOpen] = useState(false);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
-  
+  const [selectedIsbn, setSelectedIsbn] = useState(null);
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -67,6 +68,8 @@ const SearchBar = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setModalPosition({ ...modalPosition, isOpen: false });
+    setIsSecondModalOpen(false);  // 두 번째 모달도 닫기
+    setIsThirdModalOpen(false);   // 세 번째 모달도 닫기
   };
 
   const closeSecondModal = () => {
@@ -86,9 +89,21 @@ const SearchBar = () => {
       left: rect.right,
       isOpen: true,
     });
-    console.log('버튼 클릭된 아이템:', item);
     setSelectedItem(item);
     setIsSecondModalOpen(true);
+    
+    // 동위 인덱스 출력
+    setSelectedIsbn(item.isbn);
+    console.log(`클릭한 책 데이터:`, item);
+    console.log(`클릭한 책 isbn:`,item.isbn);
+  };
+  
+  const handleZzimClick=()=>{
+    if(selectedIsbn){
+      onClickzzimButton(selectedIsbn);
+    } else {
+      alert("선택된 ISBN이 없습니다:");
+    }
   };
 
   const handleSecondButtonClick = (e) => {
@@ -101,6 +116,7 @@ const SearchBar = () => {
     setIsThirdModalOpen(true);
   };
 
+  
   const handleClick = (playlist) => {
     console.log(playlist);
   };
@@ -108,6 +124,20 @@ const SearchBar = () => {
   const ThirdModelClose = () => {
     setIsThirdModalOpen(false);
   };
+
+  const onClickzzimButton = async (isbn) => {
+    try {
+      const response = await axios.post(
+        `https://your-api-endpoint.com/api/zzim`,  // 찜하기 API 엔드포인트
+        { isbn: isbn },  // Request body: isbn만 넘기기
+        { withCredentials: true }  // 로그인된 상태로 요청
+      );
+      alert('책이 찜되었습니다:', response.data);
+    } catch (error) {
+      alert('찜 오류:', error);
+    }
+  };
+  
 
   const resultItemStyle = {
     width: '500px',
@@ -207,25 +237,26 @@ const SearchBar = () => {
             }}
           >
             <div>
-              {searchResults.length > 0 ? (
-                searchResults.map((item) => (
-                  <div key={item.id} style={resultItemStyle}>
-                    <img src={item.image} style={imageStyle} alt={item.title} />
-                    <div style={{ flex: 1 }}>
-                      <p style={titleStyle}>{item.title}</p>
-                      <p style={authorStyle}>{item.author}</p>
-                    </div>
-                    <button
-                      style={buttonStyle}
-                      onClick={(e) => handleButtonClick(e, item)}
-                    >
-                      ...
-                    </button>
+            {searchResults.length > 0 ? (
+              searchResults.map((item) => (
+                <div key={item.id || item.isbn} style={resultItemStyle}> {/* item.id 또는 item.isbn을 사용 */}
+                  <img src={item.image} style={imageStyle} alt={item.title} />
+                  <div style={{ flex: 1 }}>
+                    <p style={titleStyle}>{item.title}</p>
+                    <p style={authorStyle}>{item.author}</p>
                   </div>
-                ))
-              ) : (
-                <p>검색 결과가 없습니다.</p>
-              )}
+                  <button
+                    style={buttonStyle}
+                    onClick={(e) => handleButtonClick(e, item)}
+                  >
+                    ...
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p>검색 결과가 없습니다.</p>
+            )}
+
             </div>
           </div>
         </div>
@@ -234,39 +265,40 @@ const SearchBar = () => {
       {isSecondModalOpen && (
         <div
           style={{
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            height:'150px',
+            height: '120px',
             marginLeft: '20px',
             position: 'absolute',
             top: `${modalPosition.top}px`,
-            left: `${modalPosition.left}px`,
+            left: `${modalPosition.left + 20}px`,  // 첫 번째 모달과 일정 간격 두기
             backgroundColor: 'rgba(0, 0, 0, 0)',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 100,
             width: '200px',
+            transform: 'translateY(0)',  // 상대적 위치 조정
           }}
         >
-          <div className="searchbar-second-modal">
+          <div className="searchbar-second-modal" style={{ boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
             {selectedItem ? (
               <>
-                <button onClick={closeSecondModal} style={{             
+                <button onClick={closeSecondModal} style={{
                   border: 'none',
                   backgroundColor: 'transparent',
                   fontSize: '16px',
                   cursor: 'pointer',
-                  padding:'10px'  
+                  padding: '10px'
                 }}>
-                    ✖
+                  ✖
                 </button>
                 <button
                   className="searchbar-modal-button"
-                  onClick={(e)=>handleSecondButtonClick(e)}
+                  onClick={(e) => handleSecondButtonClick(e)}
                 >
                   플레이리스트 추가
                 </button>
-                <button className="searchbar-modal-button">찜하기</button>
+                <button className="searchbar-modal-button" onClick={handleZzimClick}>찜하기</button>
               </>
             ) : (
               <p>아이템을 선택해주세요.</p>
@@ -278,12 +310,9 @@ const SearchBar = () => {
       {isThirdModalOpen && (
         <div
           style={{
-            overflow:'scroll',
-            width:'300px',
-            height:"200px",
-            position: 'absolute',
-            top: `${modalPosition.top + 100}px`,
-            left: `${modalPosition.left + 413}px`,
+            position: 'fixed',  // 변경된 부분
+            top: `${modalPosition.top + 100}px`,  // viewport에 상대적인 위치
+            left: `${modalPosition.left + 413}px`, // 첫 번째 모달과 두 번째 모달의 위치를 고려하여 조정
             transform: 'translate(-50%, -50%)',
             display: 'flex',
             backgroundColor: 'white',
@@ -291,26 +320,40 @@ const SearchBar = () => {
             padding: '20px',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             zIndex: 110,
-
+            flexDirection: 'column',
+            width: '300px',
+            height: '200px',
+            overflow: 'hidden',
           }}
         >
           <button
             style={{
-              position:'absolute',
-              top:'10px',
+              position: 'absolute',
+              top: '10px',
+              left: '10px', // 우측 상단에 고정
               border: 'none',
               backgroundColor: 'transparent',
               fontSize: '16px',
               cursor: 'pointer',
+              zIndex: 120, // 버튼이 다른 요소 위로 오게끔 설정
             }}
             onClick={ThirdModelClose}
           >
             ✖
           </button>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+
+          {/* 스크롤 가능한 내용 영역 */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              overflowY: 'auto',  // 세로 스크롤
+              marginTop: '30px', // 버튼 아래로 여백 추가
+            }}
+          >
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className="playlist-item">
-                <button className="playlist-list" onClick={()=>handleClick(playlist)} >{playlist.title}</button>
+                <button className="playlist-list" onClick={() => handleClick(playlist)}>{playlist.title || "제목없음"}</button>
               </div>
             ))}
             <button className="adding" onClick={AddmodalOpen}>+</button>

@@ -1,5 +1,5 @@
 import React from "react";
-import "./EntireItem.css";
+import "./Modals.css";
 // 모달 컴포넌트
 const Modals = ({ show, onClose, data, loading }) => {
     if (!show) return null;
@@ -15,20 +15,24 @@ const Modals = ({ show, onClose, data, loading }) => {
           ) : data ? (
             <div className="modal-grid">
               <div className="modal-left">
-                <img
-                  src={`data:image/jpeg;base64,${data.base64Image || ""}`}
-                  alt={data.title}
-                  className="modal-image"
-                  style={{width:'250px',height:'100%'}}
-                />
-                <h2 className="modal-title">{data.title}</h2>
+
                 <div className="modal-meta">
-                  <span>작성자: {data.username}</span>
-                  <span>설명: {data.description}</span>
-  
+                  <ul className="modal-description">
+                    <li><img
+                          src={`data:image/jpeg;base64,${data.base64Image || ""}`}
+                          alt={data.title}
+                          className="modal-image"
+                        />
+                    </li>
+                    <li><h2 className="modal-title">{data.title}</h2></li>
+                    <li><span>작성자: {data.username}</span></li>
+                    <li><span>설명: {data.description}</span></li>
+                    <li><button className="liking-button">찜하기</button></li>            
+                    <li><p>찜 수: (추가 데이터 필요)</p></li>
+                  </ul>
+
                 </div>
-                <button className="liking-button">찜하기</button>              
-                <p>찜 수: (추가 데이터 필요)</p>
+
               </div>
   
               <div className="modal-right">
