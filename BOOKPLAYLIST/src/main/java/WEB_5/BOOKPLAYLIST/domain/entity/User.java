@@ -28,4 +28,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookLike> bookLikes; // 유저가 좋아요한 책 리스트
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PlaylistLike> playlistLikes; // 유저가 좋아요한 플레이리스트 리스트
 }
