@@ -304,27 +304,12 @@ const SearchBar = () => {
                       <p style={titleStyle}>{item.title}</p>
                       <p style={authorStyle}>{item.author}</p>
                     </div>
-                    <div>
-                      <button
-                        style={{
-                          padding: "8px 15px",
-                          backgroundColor: "#4CAF50",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "5px",
-                          cursor: "pointer",
-                        }}
-                        onClick={(e) => handleButtonClick(e, item)}
-                      >
-                        보기
-                      </button>
-                      <button
-                        style={buttonStyle}
-                        onClick={(e) => handleButtonClick(e, item)}
-                      >
-                        ...
-                      </button>
-                    </div>
+                    <button
+                      style={buttonStyle}
+                      onClick={(e) => handleButtonClick(e, item)}
+                    >
+                      ...
+                    </button>
                   </div>
                 ))
               ) : (
