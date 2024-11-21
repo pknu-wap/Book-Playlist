@@ -143,7 +143,8 @@ public class CommentService {
                         comment.getBook().getIsbn(),
                         comment.getBook().getTitle(),
                         comment.getContent(),
-                        comment.getRating()
+                        comment.getRating(),
+                        comment.getBook().getImage()
                 ))
                 .collect(Collectors.toList());
     }
