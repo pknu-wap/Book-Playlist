@@ -3,10 +3,12 @@ package WEB_5.BOOKPLAYLIST.service;
 import WEB_5.BOOKPLAYLIST.domain.dto.MyPagePlaylistDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.UserBookLikeDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.UserProfileDTO;
+import WEB_5.BOOKPLAYLIST.domain.entity.Book;
 import WEB_5.BOOKPLAYLIST.domain.entity.BookLike;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
 import WEB_5.BOOKPLAYLIST.domain.entity.User;
 import WEB_5.BOOKPLAYLIST.repository.BookLikeRepository;
+import WEB_5.BOOKPLAYLIST.repository.BookRepository;
 import WEB_5.BOOKPLAYLIST.repository.PlaylistRepository;
 import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 import WEB_5.BOOKPLAYLIST.repository.UserRepository;
@@ -28,18 +30,16 @@ public class MypageService {
     @Autowired
     private BookLikeRepository bookLikeRepository;
 
+    @Autowired
+    private BookRepository bookRepository;  // BookRepository 추가
 
     public List<MyPagePlaylistDTO> getUserPlaylists() {
-
-        // 현재 로그인한 유저의 ID 가져오기
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
         System.out.println("로그인된 사용자 ID: " + userId); // 디버깅용 로그
 
-        // 유저 ID로 플레이리스트 조회
         List<Playlist> playlists = playlistRepository.findByUser_Id(userId);
         System.out.println("조회된 플레이리스트: " + playlists); // 디버깅용 로그
 
-        // 필요한 정보만 포함한 DTO로 변환, 이미지 데이터는 Base64로 인코딩
         return playlists.stream()
                 .map(playlist -> {
                     String base64Image = playlist.getImageData() != null ?
@@ -60,15 +60,12 @@ public class MypageService {
     }
 
     public List<MyPagePlaylistDTO> getLikedPlaylists() {
-        // 현재 로그인한 유저의 ID 가져오기
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
         System.out.println("로그인된 사용자 ID: " + userId); // 디버깅용 로그
 
-        // 유저 ID로 사용자가 좋아요한 플레이리스트 조회
         List<Playlist> likedPlaylists = playlistRepository.findLikedPlaylistsByUserId(userId);
         System.out.println("사용자가 좋아요한 플레이리스트: " + likedPlaylists); // 디버깅용 로그
 
-        // 필요한 정보만 포함한 DTO로 변환, 이미지 데이터는 Base64로 인코딩
         return likedPlaylists.stream()
                 .map(playlist -> {
                     String base64Image = playlist.getImageData() != null ?
@@ -84,18 +81,20 @@ public class MypageService {
 
     // 특정 사용자가 좋아요한 책 조회
     public List<UserBookLikeDTO> getLikedBooksByUserId(Long userId) {
-        List<BookLike> bookLikes = bookLikeRepository.findByUser_Id(userId);
+        List<Book> likedBooks = bookRepository.findLikedBooksByUserId(userId);
+        System.out.println("사용자가 좋아요한 책 목록: " + likedBooks); // 디버깅용 로그
 
-        // 필요한 정보만 포함한 DTO로 변환
-        return bookLikes.stream()
-                .map(bookLike -> new UserBookLikeDTO(
-                        bookLike.getBook().getIsbn(),
-                        bookLike.getBook().getTitle(),
-                        bookLike.getBook().getAuthor(),
-                        bookLike.getBook().getPublisher(),
-                        bookLike.getBook().getImage()  // 책 이미지
-                ))
+        return likedBooks.stream()
+                .map(book -> {
+                    String base64Image = book.getImage() != null ? Base64.getEncoder().encodeToString(book.getImage().getBytes()) : null;
+                    return new UserBookLikeDTO(
+                            book.getIsbn(),
+                            book.getTitle(),
+                            book.getAuthor(),
+                            base64Image,
+                            book.getPublisher()
+                    );
+                })
                 .collect(Collectors.toList());
     }
-
 }
