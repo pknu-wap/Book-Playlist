@@ -56,7 +56,14 @@ margin-left: 30px;
   margin-left: 30px;
 }
 
+.mypage-Mycomment-list {
+  width: 695px;
+  height: 230px;
+  overflow-y: auto;
+}
+
 .mypage-comment {
+  display: flex;
   width: 620px;
   height: 100px;
   border: 1px solid rgb(223, 222, 222);
@@ -64,6 +71,59 @@ margin-left: 30px;
   box-shadow: 0 4px 8px #0000001a;
   margin-left: 40px;
 
+}
+
+.mypage-comment-info-header {
+  display: flex;
+  margin-left: 30px;
+  margin-bottom: -25px;
+  
+}
+
+.mypage-comment-info-header h4 {
+  flex: 1 1 0; /* 플렉스 크기 조절 */
+  white-space: nowrap; /* 줄바꿈 없앰 */
+  overflow: hidden; /* 넘친 텍스트 숨김 */
+  text-overflow: ellipsis; /* 넘친 부분에 '...' 표시 */
+  max-width: 410px;
+  min-width: 0; /* 플렉스 환경에서 ellipsis 작동을 위해 최소 너비를 0으로 설정 */
+}
+
+
+.mypage-comment-info-header p {
+  margin-top: 20px;
+  color: rgb(216, 216, 0);
+}
+
+.mypage-comment-info-comment {
+  font-size: 14px;
+  font-weight: 500 !important;
+}
+
+.mypage-Mycomment-list::-webkit-scrollbar {
+  width: 10px; 
+}
+
+.mypage-Mycomment-list::-webkit-scrollbar-track { 
+  background-color: rgb(221, 219, 219);
+}
+
+.mypage-Mycomment-list::-webkit-scrollbar-thumb { 
+  background-color: rgb(193, 251, 166);
+}  
+.mypage-Mycomment-list::-webkit-scrollbar-button {
+  display: none;
+}
+
+.mypage-Mycomment-list::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(231, 255, 214);
+  transition: all 0.2s; /* 애니메이션 속도 */
+}
+
+/* 모서리 둥글게 */
+.mypage-Mycomment-list::-webkit-scrollbar-track,
+.mypage-Mycomment-list::-webkit-scrollbar-thumb {
+  border-radius: 5px;
 }
 
 .mypage-userimage {
@@ -114,7 +174,7 @@ margin-left: 30px;
   margin-left: 40px;
   overflow-y: auto;
   width: 1000px;
-  height: 300px;
+  height: 317px;
 }
 
 .mypage-playlist-container::-webkit-scrollbar {
