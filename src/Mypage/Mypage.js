@@ -57,6 +57,9 @@ const MyPage = () => {
         </div>
         <div className="mypage-Mycomment">
           <p>내가 쓴 댓글</p>
+          <div className='mypage-comment'>
+           <p>댓글</p>
+          </div>
         </div>
       </div>
 
