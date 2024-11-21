@@ -72,18 +72,6 @@ const MyPage = () => {
             ) : comments.length > 0 ? (
               comments.map((comment) => (
                 <div key={comment.isbn} className='mypage-comment'>
-                  {/* 책 이미지 */}
-                  <div className="mypage-comment-book-image">
-                    <img
-                      src={`https://covers.openlibrary.org/b/isbn/${comment.isbn}-M.jpg`}
-                      alt={comment.title}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '/default-book-cover.jpg'; // 이미지가 없을 경우 대체 이미지
-                      }}
-                    />
-                  </div>
-                  {/* 책 제목과 별점 */}
                   <div className="mypage-comment-info">
                     <div className='mypage-comment-info-header'>
                      <h4>{comment.title}</h4>
