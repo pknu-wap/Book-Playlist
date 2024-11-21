@@ -1,32 +1,30 @@
 
 .search-container {
-    display: flex;
-    align-items: center;
-    gap: 10px; 
-}
-.search-bar {
-    margin-left:400px;
-    box-sizing: border-box;
-    width: 690px;
+    margin-left: 400px;
+    width: 790px;
     height: 62px;
     background: #FFFFFF;
     border: 1px solid #dfdfdf;
     box-shadow: 0px 0px 7px #177728;
-    border-radius: 30px;
-    padding-left: 50px;
-  
-  
     display: flex;
-    align-items: center; 
-    justify-content: space-between; 
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    gap: 10px; 
+}
+.search-bar {
+    outline:none;
+    border:none;
+    width: 600px;
+    height: 62px;  
 }
   
 .search-button {
+    border: none;
     padding: 10px 20px;
     border-radius: 4px;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     color: gray;
-    border: 1px solid #ccc;
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -35,3 +33,63 @@
     background-color: #f0f0f0;
 }
   
+.searchbar-modal-button {
+    padding: 20px;
+    width: 250px; /* 버튼의 너비 */
+    padding: 10px 15px; /* 버튼 내부 여백 */
+    font-size: 16px; /* 글자 크기 */
+    color: #000000; /* 글자 색상 */
+    background-color: #ffffff; /* 버튼 색상 */
+    border: none; /* 테두리 제거 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    cursor: pointer; /* 클릭 가능 커서 */
+    transition: background-color 0.3s;
+}
+
+.searchbar-modal-button:hover{
+    background-color: #f0f0f0; /* 호버 시 색상 변화 */
+}
+
+.searchbar-second-modal{
+    margin-left: 10px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* 세로로 나열 */
+    align-items: center; /* 버튼을 중앙 정렬 */
+
+}
+
+.playlist-list{
+    border: #b1b1b1 1px solid;
+    padding: 20px;
+    font-size: 20px;
+    border: #000000 1px solid;
+    border:none;
+    background-color: #ffffff;
+    width: 250px;
+    transition: background-color 0.3s;
+}
+
+  
+.playlist-list:hover {
+    background-color: #f0f0f0;
+}
+
+.adding{
+    padding: 20px;
+    font-size: 20px;
+    border: #000000 1px solid;
+    border:none;
+    background-color: #ffffff;
+    width: 250px;
+    transition: background-color 0.3s;
+}
+
+  
+.adding:hover {
+    background-color: #f0f0f0;
+}

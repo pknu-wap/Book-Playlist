@@ -2,9 +2,26 @@ import React from 'react';
 import './Pagination.css'; // 버튼 스타일
 
 const Pagination = ({ currentPage, totalPages, pagesPerGroup, onPageChange }) => {
+  if (totalPages <= 1) {
+    return null; // totalPages가 1 이하인 경우 Pagination을 렌더링하지 않음
+  }
+
   const currentGroup = Math.floor((currentPage - 1) / pagesPerGroup);
   const startPage = currentGroup * pagesPerGroup + 1;
   const endPage = Math.min(startPage + pagesPerGroup - 1, totalPages);
+
+  const pageButtons = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageButtons.push(
+      <button
+        key={i}
+        onClick={() => onPageChange(i)}
+        className={currentPage === i ? "active" : ""}
+      >
+        {i}
+      </button>
+    );
+  }
 
   return (
     <div className="pagination">
@@ -18,17 +35,9 @@ const Pagination = ({ currentPage, totalPages, pagesPerGroup, onPageChange }) =>
           &lt;
         </button>
       )}
-      {Array.from({ length: endPage - startPage + 1 }, (_, index) => (
-        <button 
-          key={index} 
-          onClick={() => onPageChange(startPage + index)}
-          className={currentPage === startPage + index ? "active" : ""}
-        >
-          {startPage + index}
-        </button>
-      ))}
+      {pageButtons}
       {endPage < totalPages && (
-        <button onClick={() => onPageChange(startPage + pagesPerGroup)}>
+        <button onClick={() => onPageChange(endPage + 1)}>
           &gt;
         </button>
       )}
