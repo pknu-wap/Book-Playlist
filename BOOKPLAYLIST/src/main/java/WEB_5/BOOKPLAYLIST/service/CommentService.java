@@ -2,6 +2,7 @@ package WEB_5.BOOKPLAYLIST.service;
 
 import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 import WEB_5.BOOKPLAYLIST.domain.entity.Book;
+import WEB_5.BOOKPLAYLIST.domain.dto.UserCommentDTO;
 import WEB_5.BOOKPLAYLIST.domain.entity.Comment;
 import WEB_5.BOOKPLAYLIST.domain.entity.User;
 import WEB_5.BOOKPLAYLIST.repository.BookRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -131,5 +133,18 @@ public class CommentService {
                 .mapToInt(Comment::getRating)
                 .average()
                 .orElse(0.0);
+    }
+    // 사용자 ID를 기준으로 댓글 조회
+    public List<UserCommentDTO> getCommentsByUserId(Long userId) {
+        List<Comment> comments = commentRepository.findByUser_Id(userId);
+
+        return comments.stream()
+                .map(comment -> new UserCommentDTO(
+                        comment.getBook().getIsbn(),
+                        comment.getBook().getTitle(),
+                        comment.getContent(),
+                        comment.getRating()
+                ))
+                .collect(Collectors.toList());
     }
 }
