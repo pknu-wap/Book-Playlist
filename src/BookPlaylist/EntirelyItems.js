@@ -120,7 +120,7 @@ const EntireItems = () => {
                     alt={playlist.title}
                     style={{ width: "100px", height: "150px", borderRadius: "4px" }}
                   />
-                  <p style={{margin:'0px',}}>{playlist.title && playlist.title.length > 12 ? `${playlist.title.slice(0, 12)}...`:playlist.title||"제목 없음"}</p>
+                  <p style={{margin:'0px',}}>{playlist.title && playlist.title.length > 7 ? `${playlist.title.slice(0, 7)}...`:playlist.title||"제목 없음"}</p>
                   <p style={{margin:'0px'}}>만든이 : {playlist.username}</p>
                 </div>
               </div>
