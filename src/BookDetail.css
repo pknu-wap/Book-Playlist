@@ -36,7 +36,7 @@
 }
 
 /* 책 이미지 스타일 */
-.book-image img {
+.book-detail-book-image img {
     width: 250px;
     height: 350px;
     object-fit: cover;
