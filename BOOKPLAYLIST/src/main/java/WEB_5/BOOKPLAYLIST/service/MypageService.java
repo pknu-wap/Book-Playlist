@@ -97,4 +97,20 @@ public class MypageService {
                 })
                 .collect(Collectors.toList());
     }
+
+    // 닉네임 변경 메서드
+    public void updateUsername(Long userId, String newUsername) {
+        // 유저 정보 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // 새로운 닉네임 중복 확인
+        if (userRepository.existsByUsername(newUsername)) {
+            throw new IllegalArgumentException("Username already taken");
+        }
+
+        // 닉네임 변경
+        user.setUsername(newUsername);
+        userRepository.save(user);
+    }
 }

@@ -1,19 +1,14 @@
 package WEB_5.BOOKPLAYLIST.controller;
 
 import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
-import WEB_5.BOOKPLAYLIST.domain.dto.MyPagePlaylistDTO;
-import WEB_5.BOOKPLAYLIST.domain.dto.UserBookLikeDTO;
-import WEB_5.BOOKPLAYLIST.domain.dto.UserProfileDTO;
-import WEB_5.BOOKPLAYLIST.domain.dto.UserCommentDTO;
+import WEB_5.BOOKPLAYLIST.domain.dto.*;
 import WEB_5.BOOKPLAYLIST.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import WEB_5.BOOKPLAYLIST.service.MypageService;
 import WEB_5.BOOKPLAYLIST.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -76,5 +71,23 @@ public class Mypagecontroller {
 
         List<UserCommentDTO> userComments = commentService.getCommentsByUserId(userId);
         return ResponseEntity.ok(userComments);
+    }
+
+    // 로그인한 사용자가 자신의 닉네임 변경 (PUT /api/mypage/profile/username)
+    @PutMapping("/profile/username")
+    public ResponseEntity<String> updateUsername(@RequestBody UpdateUsernameRequest updateUsernameRequest) {
+        Long userId = SecurityUtil.getCurrentUserIdFromSession();
+
+        if (userId == null) {
+            return ResponseEntity.status(401).build(); // 인증 실패
+        }
+
+        try {
+            String newUsername = updateUsernameRequest.getNewUsername(); // DTO에서 새로운 닉네임 가져오기
+            myPageService.updateUsername(userId, newUsername);
+            return ResponseEntity.ok("Username updated successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body(e.getMessage()); // 닉네임 변경 실패 사유 반환
+        }
     }
 }
