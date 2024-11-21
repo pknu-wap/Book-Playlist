@@ -83,6 +83,10 @@ const SearchBar = () => {
     setIsSecondModalOpen(false); // 두 번째 모달 닫기
     setIsThirdModalOpen(false); // 세 번째 모달 닫기
   };
+  const closeSecondModal = () => {
+    setIsSecondModalOpen(false);
+    setIsThirdModalOpen();
+  };
 
   const handleModalClick = (e) => {
     if (e.target.closest(".modal-content")) return;
