@@ -60,7 +60,7 @@ const MyPage = () => {
             {isLoading ? (
               <div className="mypage-loader"></div>
             ) : (
-              <p>{username}님</p>   
+              <p>{username}님</p>
             )}
           </div>
         </div>
@@ -71,13 +71,20 @@ const MyPage = () => {
               <div className="mypage-loader"></div>
             ) : comments.length > 0 ? (
               comments.map((comment) => (
-                <div key={comment.isbn} className='mypage-comment'>
+                <div key={comment.isbn} className="mypage-comment">
                   <div className="mypage-comment-info">
-                    <div className='mypage-comment-info-header'>
-                     <h4>{comment.title}</h4>
-                     <p>{renderStars(comment.rating)}</p>
+                    <div className='mypage-comment-info-img' >
+                      <img src={comment.image} ></img>
                     </div>
-                    <p className='mypage-comment-info-comment'>"{comment.content}"</p>
+                    <div>
+                      <div className="mypage-comment-info-header">
+                        <h4>{comment.title}</h4>
+                        <p>{renderStars(comment.rating)}</p>
+                      </div>
+                      <p className="mypage-comment-info-comment">
+                        "{comment.content}"
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))
@@ -91,7 +98,7 @@ const MyPage = () => {
       <div className="mypage-Mycollection">
         <p>나의 플레이리스트</p>
         {isLoading ? (
-          <div className='mypage-Mycollection-loadingbox'>
+          <div className="mypage-Mycollection-loadingbox">
             <div className="mypage-loader"></div>
             <p>플레이리스트 불러오는 중...</p>
           </div>
@@ -108,7 +115,10 @@ const MyPage = () => {
                       onClick={() => openModal(playlist.playlistId)}
                     />
                   ) : (
-                    <div className="mypage-placeholder-image" onClick={() => openModal(playlist.playlistId)}>
+                    <div
+                      className="mypage-placeholder-image"
+                      onClick={() => openModal(playlist.playlistId)}
+                    >
                       이미지 없음
                     </div>
                   )}
@@ -123,10 +133,7 @@ const MyPage = () => {
       </div>
 
       {isModalOpen && (
-        <PlaylistModal
-          playlistId={selectedPlaylistId}
-          onClose={closeModal}
-        />
+        <PlaylistModal playlistId={selectedPlaylistId} onClose={closeModal} />
       )}
     </div>
   );

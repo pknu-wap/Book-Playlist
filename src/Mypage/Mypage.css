@@ -73,9 +73,28 @@ margin-left: 30px;
 
 }
 
+.mypage-comment-info {
+  display: flex;
+}
+.mypage-comment-info-img {
+  width: 65px;
+  height: 80px;
+  border: 1px solid rgb(223, 222, 222);
+  border-radius: 10px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.mypage-comment-info-img img{
+  width: 65px;
+  height: 80px;
+  border: 1px solid rgb(223, 222, 222);
+  border-radius: 10px;
+}
+
 .mypage-comment-info-header {
   display: flex;
-  margin-left: 30px;
+  margin-left: 20px;
   margin-bottom: -25px;
   
 }
