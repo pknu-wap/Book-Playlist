@@ -244,4 +244,42 @@ public class PlaylistService {
                 .collect(Collectors.toList());
     }
 
+    public boolean addBookToPlaylist(Long playlistId, String isbn) {
+        // 플레이리스트를 먼저 찾는다
+        Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
+        if (!playlistOpt.isPresent()) {
+            return false; // 플레이리스트를 찾을 수 없는 경우
+        }
+
+        Playlist playlist = playlistOpt.get();
+
+        // 플레이리스트에 이미 해당 책이 있는지 확인한다
+        boolean bookAlreadyExists = playlist.getBooks().stream()
+                .anyMatch(book -> book.getIsbn().equals(isbn));
+        if (bookAlreadyExists) {
+            return true; // 이미 존재하는 경우 추가 작업 불필요
+        }
+
+        // 데이터베이스에서 책을 찾는다
+        Optional<Book> bookOpt = bookRepository.findByIsbn(isbn);
+        Book book;
+        if (bookOpt.isPresent()) {
+            // 책이 데이터베이스에 있으면 해당 책을 사용
+            book = bookOpt.get();
+        } else {
+            // 데이터베이스에 없으면, 네이버 API로 책 정보를 가져와 저장한다
+            book = fetchAndSaveBook(isbn);
+            if (book == null) {
+                throw new IllegalArgumentException("네이버 API에서 책 정보를 찾을 수 없습니다.");
+            }
+        }
+
+        // 플레이리스트에 책 추가
+        playlist.getBooks().add(book);
+        playlistRepository.save(playlist); // 변경된 플레이리스트를 저장
+
+        return true;
+    }
+
+
 }
