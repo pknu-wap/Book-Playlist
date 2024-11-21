@@ -85,7 +85,7 @@ public class Mypagecontroller {
         try {
             String newUsername = updateUsernameRequest.getNewUsername(); // DTO에서 새로운 닉네임 가져오기
             myPageService.updateUsername(userId, newUsername);
-            return ResponseEntity.ok("Username updated successfully");
+            return ResponseEntity.ok("업데이트 성공");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(400).body(e.getMessage()); // 닉네임 변경 실패 사유 반환
         }

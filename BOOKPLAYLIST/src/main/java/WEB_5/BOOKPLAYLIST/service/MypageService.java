@@ -55,7 +55,7 @@ public class MypageService {
 
     public UserProfileDTO getUserProfile(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없음"));
         return new UserProfileDTO(user.getUsername());
     }
 
@@ -102,11 +102,11 @@ public class MypageService {
     public void updateUsername(Long userId, String newUsername) {
         // 유저 정보 조회
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없음"));
 
         // 새로운 닉네임 중복 확인
         if (userRepository.existsByUsername(newUsername)) {
-            throw new IllegalArgumentException("Username already taken");
+            throw new IllegalArgumentException("닉네임이 이미 있음");
         }
 
         // 닉네임 변경
