@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,navigate } from "react";
 import axios from "axios";
 import "./SearchBar.css";
 import PlaylistModal from "./PlaylistModal.js";
 import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
   const [playlists, setPlaylists] = useState([]);
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0, isOpen: false });
-  const [thirdModalPosition, setThirdModalPosition] = useState({ top: 0, left: 0, isOpen: false });
+  const [thirdmodalPosition, setThirdModalPosition] = useState({ top: 0, left: 0, isOpen: false });
   const [selectedItem, setSelectedItem] = useState(null);
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [isThirdModalOpen, setIsThirdModalOpen] = useState(false);
@@ -21,24 +21,18 @@ const SearchBar = () => {
   const [selectedIsbn, setSelectedIsbn] = useState(null);
   const [isplyLoading,setIsplyLoading] = useState(false);
 
-  const navigate = useNavigate(); // useNavigate 훅 추가
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const [profileResponse, playlistsResponse] = await axios.all([
-          axios.get("https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile", {
-            withCredentials: true,
-          }),
-          axios.get("https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists", {
-            withCredentials: true,
-          }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile', { withCredentials: true }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists', { withCredentials: true }),
         ]);
 
         if (profileResponse.data?.username) setUsername(profileResponse.data.username);
         if (playlistsResponse.data) setPlaylists(playlistsResponse.data);
       } catch (error) {
-        console.error("데이터 가져오기 오류:", error);
+        console.error('데이터 가져오기 오류:', error);
       } finally {
         setIsLoading(false);
       }
@@ -50,6 +44,8 @@ const SearchBar = () => {
   const addPlaylist = (newPlaylist) => {
     setPlaylists([...playlists, newPlaylist]);
   };
+
+  const navigate = useNavigate(); // useNavigate 훅 추가
 
   const AddmodalOpen=()=>{
     setAddmodalOpen(true);
@@ -80,9 +76,10 @@ const SearchBar = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setModalPosition({ ...modalPosition, isOpen: false });
-    setIsSecondModalOpen(false); // 두 번째 모달 닫기
-    setIsThirdModalOpen(false); // 세 번째 모달 닫기
+    setIsSecondModalOpen(false);  // 두 번째 모달도 닫기
+    setIsThirdModalOpen(false);   // 세 번째 모달도 닫기
   };
+
   const closeSecondModal = () => {
     setIsSecondModalOpen(false);
     setIsThirdModalOpen();
@@ -94,8 +91,17 @@ const SearchBar = () => {
   };
 
   const handleButtonClick = (e, item) => {
-    e.stopPropagation();
+    e.stopPropagation(); // 클릭 이벤트 전파 방지
+    const rect = e.target.getBoundingClientRect();
+    setModalPosition({
+      top: rect.top,
+      left: rect.right,
+      isOpen: true,
+    });
     setSelectedItem(item);
+    setIsSecondModalOpen(true);
+    
+    // 동위 인덱스 출력
     setSelectedIsbn(item.isbn);
     console.log(`클릭한 책 데이터:`, item);
     console.log(`클릭한 책 isbn:`,item.isbn);
@@ -189,10 +195,22 @@ const SearchBar = () => {
     marginBottom: '5px',
   };
 
-  const handleBookClick = (book) => {
-    navigate(`/book/${book.id}`, { state: { book } }); // 책 상세 페이지로 이동
+  const buttonStyle = {
+    position: "relative",
+    padding: '8px 15px',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease',
+
   };
 
+  const handleBookClick = (item) => {
+    navigate(`/book/${item.id}`, { state: { item } }); // 책 상세 페이지로 이동
+  };
+  
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearch();
@@ -220,7 +238,7 @@ const SearchBar = () => {
 
   return (
     <div>
-      {/* 검색 바 */}
+      {/* 검색 바 디자인 */}
       <div
         style={{
           display: "flex",
@@ -233,7 +251,7 @@ const SearchBar = () => {
           width: "700px", // 검색 바 전체 폭
           maxWidth: "800px",
           padding: "10px",
-          backgroundColor: "#f5f5f5",
+          backgroundColor: "#f5f5f5", // 검색창 배경색
           borderRadius: "30px",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         }}
@@ -273,7 +291,7 @@ const SearchBar = () => {
           검색
         </button>
       </div>
-
+    
       {/* 검색 결과 모달 */}
       {isModalOpen && (
         <div
@@ -282,7 +300,7 @@ const SearchBar = () => {
             top: "75px",
             left: "0px",
             right: "0",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: "rgba(0, 0, 0, 0)",
             display: "flex",
             justifyContent: "center",
             alignItems: "flex-start",
@@ -302,70 +320,28 @@ const SearchBar = () => {
               maxHeight: "70vh",
               overflowY: "auto",
             }}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()} // 모달 외부 클릭 시 닫기 방지
           >
             <div>
               {searchResults.length > 0 ? (
-                searchResults.map((book) => (
+                searchResults.map((item) => (
                   <div
-                    key={book.id}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginBottom: "20px",
-                      padding: "10px",
-                      borderBottom: "1px solid #ddd",
-                      borderRadius: "8px",
-                      backgroundColor: "#f9f9f9",
-                    }}
-                    onClick={() => handleBookClick(book)}
+                    key={item.id || item.isbn}
+                    style={resultItemStyle}
+                    onClick={() => handleBookClick(item)}
                   >
                     <img
-                      src={book.image}
-                      alt={book.title}
-                      style={{
-                        width: "100px",
-                        height: "150px",
-                        objectFit: "cover",
-                        borderRadius: "8px",
-                        marginRight: "20px",
-                      }}
+                      src={item.image}
+                      style={imageStyle}
+                      alt={item.title}
                     />
                     <div style={{ flex: 1 }}>
-                      <p
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: "1.1rem",
-                          marginBottom: "5px",
-                          maxWidth: "200px",
-                          textOverflow: "ellipsis",
-                          overflow: "hidden",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {book.title}
-                      </p>
-                      <p
-                        style={{
-                          fontSize: "0.9rem",
-                          color: "#555",
-                          marginBottom: "5px",
-                        }}
-                      >
-                        {book.author}
-                      </p>
+                      <p style={titleStyle}>{item.title}</p>
+                      <p style={authorStyle}>{item.author}</p>
                     </div>
                     <button
-                      style={{
-                        padding: "8px 15px",
-                        backgroundColor: "#4CAF50",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                      }}
-                      onClick={(e) => handleButtonClick(e, book)}
+                      style={buttonStyle}
+                      onClick={(e) => handleButtonClick(e, item)}
                     >
                       ...
                     </button>
@@ -378,6 +354,7 @@ const SearchBar = () => {
           </div>
         </div>
       )}
+    
       {/* 두 번째 모달 */}
       {isSecondModalOpen && (
         <div
