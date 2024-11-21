@@ -12,6 +12,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findByBookId(Long bookId); // 특정 책의 모든 댓글 조회
 
+    List<Comment> findByUser_Id(Long userId);
+
     Optional<Comment> findByBookIdAndUserId(Long bookId, Long userId); // 특정 책에 대한 사용자의 댓글 조회
 
     void deleteByIdAndUserId(Long commentId, Long userId); // 사용자 본인의 댓글만 삭제 가능
