@@ -99,6 +99,7 @@ public class CommentService {
                 .average()
                 .orElse(0.0);
     }
+
     public boolean addOrUpdateRatingByIsbn(String isbn, Long userId, int rating) {
         // ISBN을 통해 책 조회
         Book book = bookRepository.findByIsbn(isbn)

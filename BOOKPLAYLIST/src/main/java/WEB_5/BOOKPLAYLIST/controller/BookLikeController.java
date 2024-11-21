@@ -1,5 +1,6 @@
 package WEB_5.BOOKPLAYLIST.controller;
 
+import WEB_5.BOOKPLAYLIST.domain.entity.BookLike;
 import WEB_5.BOOKPLAYLIST.service.BookLikeService;
 import WEB_5.BOOKPLAYLIST.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -49,4 +50,16 @@ public class BookLikeController {
         boolean isLiked = bookLikeService.isBookLiked(bookId);
         return ResponseEntity.ok(isLiked);
     }
-}
+
+    @PostMapping("mainpage/like-by-isbn")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> likeBookByIsbn(@RequestParam String isbn, @AuthenticationPrincipal UserDetails userDetails) {
+            BookLike bookLike = bookLikeService.likeBookByIsbn(isbn);
+            if (bookLike == null) {
+                return ResponseEntity.ok("책이 이미 찜 되었습니다.");
+            }
+            return ResponseEntity.ok("책이 성공적으로 찜 되었습니다.");
+        }
+    }
+
+

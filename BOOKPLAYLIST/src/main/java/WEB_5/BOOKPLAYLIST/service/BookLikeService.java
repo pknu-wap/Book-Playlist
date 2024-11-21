@@ -76,4 +76,32 @@ public class BookLikeService {
         Optional<Book> bookOpt = bookRepository.findByIsbn(isbn);
         return bookOpt.map(Book::getId).orElse(null);
     }
+
+    // 사용자가 특정 책을 "좋아요" 표시하는 메소드
+    public BookLike likeBookByIsbn(String isbn) {
+        Long userId = SecurityUtil.getCurrentUserIdFromSession();
+
+        if (userId == null) {
+            throw new UserNotFoundException("유저가 인증되지 않음.");
+        }
+
+        // ISBN을 사용해 책을 조회
+        Book book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new BookNotFoundException("책의 ISBN값이 검색되지 않음: " + isbn));
+
+        // 현재 로그인한 사용자 정보 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없음: " + userId));
+
+        // 이미 좋아요한 경우 아무 작업도 하지 않음
+        if (bookLikeRepository.existsByUser_IdAndBook_Id(userId, book.getId())) {
+            return null;
+        }
+
+        // 좋아요 정보 생성 및 저장
+        BookLike bookLike = new BookLike();
+        bookLike.setBook(book);
+        bookLike.setUser(user);
+        return bookLikeRepository.save(bookLike);
+    }
 }
