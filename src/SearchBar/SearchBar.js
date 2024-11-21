@@ -121,8 +121,9 @@ const SearchBar = () => {
   };
 
   
-  const handleClick = (playlist) => {
-    console.log(playlist);
+  const handleClick = (item, playlist) => {
+    console.log("클릭한 isbn:",item.isbn)
+    console.log("클릭한 플레이리스트Id:",playlist.playlistId);
   };
 
   const ThirdModelClose = () => {
@@ -197,6 +198,22 @@ const SearchBar = () => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearch();
+    }
+  };
+  const AddbooktoPlaylist = async (item, playlist) => {
+    try {
+      console.log("클릭한 플레이리스트Id:", playlist.playlistId);  // playlistId 확인
+      console.log("isbn:", item.isbn);  // isbn 확인
+      
+      const response = await axios.post(
+        `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlist.playlistId}/addBook?isbn=${item.isbn}`,  // isbn을 query parameter로 전달
+        {},
+        { withCredentials: true }  // 로그인 상태 유지
+      );
+  
+      console.log("Book added successfully:", response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 
@@ -413,7 +430,12 @@ const SearchBar = () => {
           >
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className="playlist-item">
-                <button className="playlist-list" onClick={() => handleClick(playlist)}>{playlist.title || "제목없음"}</button>
+                <button 
+                  className="playlist-list" 
+                  onClick={() => {
+                    handleClick(selectedItem, playlist);
+                    AddbooktoPlaylist(selectedItem, playlist);
+                  }}>{playlist.title || "제목없음"}</button>
               </div>
             ))}
             <button className="adding" onClick={AddmodalOpen}>+</button>
