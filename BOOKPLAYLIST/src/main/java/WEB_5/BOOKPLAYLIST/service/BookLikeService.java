@@ -1,6 +1,7 @@
 package WEB_5.BOOKPLAYLIST.service;
 
 import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
+import WEB_5.BOOKPLAYLIST.domain.dto.NaverBookResponse;
 import WEB_5.BOOKPLAYLIST.domain.entity.Book;
 import WEB_5.BOOKPLAYLIST.domain.entity.BookLike;
 import WEB_5.BOOKPLAYLIST.domain.entity.User;
@@ -11,9 +12,12 @@ import WEB_5.BOOKPLAYLIST.repository.BookLikeRepository;
 import WEB_5.BOOKPLAYLIST.repository.BookRepository;
 import WEB_5.BOOKPLAYLIST.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -23,6 +27,7 @@ public class BookLikeService {
     private final BookLikeRepository bookLikeRepository;
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
+    private final BookSearchService bookSearchService;
 
     public BookLike likeBook(Long bookId) { // ISBN 대신 bookId 사용
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
@@ -78,30 +83,50 @@ public class BookLikeService {
     }
 
     // 사용자가 특정 책을 "좋아요" 표시하는 메소드
-    public BookLike likeBookByIsbn(String isbn) {
+    public boolean likeBookByIsbn(String isbn) {
         Long userId = SecurityUtil.getCurrentUserIdFromSession();
 
         if (userId == null) {
-            throw new UserNotFoundException("유저가 인증되지 않음.");
+            throw new IllegalArgumentException("User not authenticated");
         }
 
-        // ISBN을 사용해 책을 조회
-        Book book = bookRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new BookNotFoundException("책의 ISBN값이 검색되지 않음: " + isbn));
+        // ISBN으로 책을 찾기
+        Optional<Book> bookOpt = bookRepository.findByIsbn(isbn);
+        Book book;
 
-        // 현재 로그인한 사용자 정보 조회
+        if (bookOpt.isPresent()) {
+            // 책이 데이터베이스에 있는 경우
+            book = bookOpt.get();
+        } else {
+            // 책이 데이터베이스에 없는 경우 네이버 API에서 정보 가져오기
+            ResponseEntity<NaverBookResponse> response = bookSearchService.getBookDetailByISBN(isbn);
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                List<NaverBookResponse.NaverBookItem> items = response.getBody().getItems();
+                if (items.isEmpty()) {
+                    throw new IllegalArgumentException("Book not found with ISBN " + isbn);
+                }
+                book = bookSearchService.mapToBook(items.get(0));
+                bookRepository.save(book);
+            } else {
+                throw new IllegalArgumentException("Could not find book with ISBN " + isbn);
+            }
+        }
+
+        // 유저 정보 조회
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없음: " + userId));
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // 이미 좋아요한 경우 아무 작업도 하지 않음
+        // 책을 이미 찜했는지 확인
         if (bookLikeRepository.existsByUser_IdAndBook_Id(userId, book.getId())) {
-            return null;
+            return false; // 이미 찜한 상태인 경우
         }
 
-        // 좋아요 정보 생성 및 저장
+        // BookLike 엔티티 생성 후 저장
         BookLike bookLike = new BookLike();
         bookLike.setBook(book);
         bookLike.setUser(user);
-        return bookLikeRepository.save(bookLike);
+        bookLikeRepository.save(bookLike);
+
+        return true; // 새로운 찜이 성공한 경우
     }
 }

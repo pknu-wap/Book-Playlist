@@ -54,12 +54,21 @@ public class BookLikeController {
     @PostMapping("mainpage/like-by-isbn")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> likeBookByIsbn(@RequestParam String isbn, @AuthenticationPrincipal UserDetails userDetails) {
-            BookLike bookLike = bookLikeService.likeBookByIsbn(isbn);
-            if (bookLike == null) {
+        try {
+            // 찜 시도
+            boolean isLiked = bookLikeService.likeBookByIsbn(isbn);
+
+            if (isLiked) {
+                return ResponseEntity.ok("책이 성공적으로 찜 되었습니다.");
+            } else {
                 return ResponseEntity.ok("책이 이미 찜 되었습니다.");
             }
-            return ResponseEntity.ok("책이 성공적으로 찜 되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("찜 도중 오류가 발생했습니다.");
         }
     }
+}
 
 
