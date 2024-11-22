@@ -113,4 +113,10 @@ public class PlaylistController {
         }
     }
 
+    // 플레이리스트를 찜 순서대로 반환
+    @GetMapping("/top-by-likes")
+    public ResponseEntity<List<PlaylistSummaryDTO>> getPlaylistsByLikes() {
+        List<PlaylistSummaryDTO> playlists = playlistService.getPlaylistsOrderByLikes();
+        return ResponseEntity.ok(playlists);
+    }
 }

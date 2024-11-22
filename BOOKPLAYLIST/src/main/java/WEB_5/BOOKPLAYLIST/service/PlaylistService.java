@@ -213,16 +213,18 @@ public class PlaylistService {
     public List<PlaylistSummaryDTO> getAllPlaylists() {
         List<Playlist> playlists = playlistRepository.findAll();
 
-        // Playlist 엔터티를 PlaylistSummaryDTO로 변환, 이미지 데이터는 Base64로 인코딩
+        // Playlist 엔터티를 PlaylistSummaryDTO로 변환
         return playlists.stream()
                 .map(playlist -> {
-                    String base64Image = playlist.getImageData() != null ?
-                            Base64.getEncoder().encodeToString(playlist.getImageData()) : null;
+                    String base64Image = playlist.getImageData() != null
+                            ? Base64.getEncoder().encodeToString(playlist.getImageData())
+                            : null;
                     return new PlaylistSummaryDTO(
                             playlist.getId(),
                             playlist.getTitle(),
                             playlist.getUser().getUsername(),
-                            base64Image
+                            base64Image,
+                            playlist.getLikeCount() // 찜 수 추가
                     );
                 })
                 .collect(Collectors.toList());
@@ -230,16 +232,24 @@ public class PlaylistService {
 
     // 상위 10개의 플레이리스트를 조회하여 요약 정보로 반환하는 메서드
     public List<PlaylistSummaryDTO> getTopPlaylists(int limit) {
+        // Repository에서 상위 플레이리스트 조회
         List<Playlist> playlists = playlistRepository.findTop10ByOrderByIdAsc();
 
+        // Playlist를 PlaylistSummaryDTO로 변환
         return playlists.stream()
                 .map(playlist -> {
-                    String firstBookImage = playlist.getBooks().isEmpty() ? null : playlist.getBooks().get(0).getImage();
+                    // 이미지 데이터를 Base64로 변환
+                    String base64Image = playlist.getImageData() != null
+                            ? Base64.getEncoder().encodeToString(playlist.getImageData())
+                            : null;
+
+                    // DTO 생성
                     return new PlaylistSummaryDTO(
                             playlist.getId(),
                             playlist.getTitle(),
                             playlist.getUser().getUsername(),
-                            firstBookImage
+                            base64Image, // Base64 인코딩된 이미지
+                            playlist.getLikeCount() // 찜 수
                     );
                 })
                 .collect(Collectors.toList());
@@ -282,6 +292,24 @@ public class PlaylistService {
         return true;
     }
 
+    public List<PlaylistSummaryDTO> getPlaylistsOrderByLikes() {
+        // Repository에서 데이터를 가져와 DTO로 변환
+        List<Playlist> playlists = playlistRepository.findAllOrderByLikeCountDesc();
+        return playlists.stream()
+                .map(playlist -> {
+                    String base64Image = playlist.getImageData() != null
+                            ? Base64.getEncoder().encodeToString(playlist.getImageData())
+                            : null;
+                    return new PlaylistSummaryDTO(
+                            playlist.getId(),
+                            playlist.getTitle(),
+                            playlist.getUser().getUsername(),
+                            base64Image,
+                            playlist.getLikeCount()
+                    );
+                })
+                .collect(Collectors.toList());
+    }
 
     public int getLikeCount(Long playlistId) {
         Playlist playlist = playlistRepository.findById(playlistId)

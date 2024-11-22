@@ -15,6 +15,10 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     @Query("SELECT p FROM Playlist p JOIN PlaylistLike pl ON p.id = pl.playlist.id WHERE pl.user.id = :userId")
     List<Playlist> findLikedPlaylistsByUserId(@Param("userId") Long userId);
 
+    @Query("SELECT p FROM Playlist p ORDER BY p.likeCount DESC")
+    List<Playlist> findAllOrderByLikeCountDesc();
+
     boolean existsById(Long id);
+
     void deleteById(Long id);
 }
