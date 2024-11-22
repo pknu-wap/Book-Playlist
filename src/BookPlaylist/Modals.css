@@ -12,7 +12,7 @@
 
 .modal-content-v {
   width:1000px;
-  height: 800px;
+  height: 600px;
   background-color: rgb(255, 255, 255);
   padding: 20px;
   border-radius: 5px;
@@ -23,7 +23,7 @@
 
 .modal-grid{
   background-color: #ffffff;
-  height: 650px;
+  height: 500px;
   position: relative;
 }
 .modal-left{
@@ -34,7 +34,7 @@
   overflow: auto;
   float:right;
   width:70%;
-  height:100%;
+  height: 500px;
 }
 .modal-title{
   width: 200px;
@@ -57,6 +57,11 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-bottom: 20px;
+}
+
+.liking-button:hover{
+  background-color: rgb(0, 0, 0);
+  color: #ffffff;
 }
 
 .modal-close-btn {
@@ -113,4 +118,15 @@
 
 .modal-description{
   list-style-type: none;
+}
+
+.favorite-button-loading {
+  margin: auto;
+  width: 30px;
+  height: 30px;
+  border: 4px solid #ddd;
+  border-right-color: rgb(2, 255, 107);
+  border-top-color: rgb(2, 255, 107);
+  border-radius: 50%;
+  animation: playlist-spin 0.8s linear infinite;
 }

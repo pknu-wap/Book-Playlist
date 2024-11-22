@@ -122,6 +122,7 @@ const EntireItems = () => {
                   />
                   <p style={{margin:'0px',}}>{playlist.title && playlist.title.length > 7 ? `${playlist.title.slice(0, 7)}...`:playlist.title||"제목 없음"}</p>
                   <p style={{margin:'0px'}}>만든이 : {playlist.username}</p>
+                  <p style={{paddingBottom:'10px'}}> ❤️ {playlist.likeCount}</p>
                 </div>
               </div>
             ))}
