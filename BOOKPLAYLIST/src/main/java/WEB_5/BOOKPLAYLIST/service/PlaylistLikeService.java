@@ -71,4 +71,11 @@ public class PlaylistLikeService {
         }
         return playlistLikeRepository.existsByUser_IdAndPlaylist_Id(userId, playlistId);
     }
+    public int getLikeCount(Long playlistId) {
+        // 플레이리스트 조회 (없을 경우 예외 발생)
+        Playlist playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new PlaylistNotFoundException("Playlist not found with ID: " + playlistId));
+        // 찜 수 반환
+        return playlist.getLikeCount();
+    }
 }

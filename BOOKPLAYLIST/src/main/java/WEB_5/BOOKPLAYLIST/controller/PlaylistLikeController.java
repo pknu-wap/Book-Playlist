@@ -9,6 +9,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/playlistlikes")
 @RequiredArgsConstructor
@@ -45,5 +47,12 @@ public class PlaylistLikeController {
     public ResponseEntity<Boolean> isPlaylistLiked(@PathVariable Long playlistId, @AuthenticationPrincipal UserDetails userDetails) {
         boolean isLiked = playlistLikeService.isPlaylistLiked(playlistId);
         return ResponseEntity.ok(isLiked);
+    }
+
+    // 플레이리스트 찜 수 확인
+    @GetMapping("/{playlistId}/likeCount")
+    public ResponseEntity<?> getPlaylistLikeCount(@PathVariable Long playlistId) {
+        int likeCount = playlistLikeService.getLikeCount(playlistId);
+        return ResponseEntity.ok().body(Map.of("likeCount", likeCount));
     }
 }

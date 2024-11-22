@@ -6,6 +6,7 @@ import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistSummaryDTO;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
 import WEB_5.BOOKPLAYLIST.domain.entity.Book;
 import WEB_5.BOOKPLAYLIST.domain.entity.User;
+import WEB_5.BOOKPLAYLIST.exception.PlaylistNotFoundException;
 import WEB_5.BOOKPLAYLIST.repository.BookRepository;
 import WEB_5.BOOKPLAYLIST.repository.PlaylistRepository;
 import WEB_5.BOOKPLAYLIST.domain.dto.NaverBookResponse;
@@ -281,5 +282,11 @@ public class PlaylistService {
         return true;
     }
 
+
+    public int getLikeCount(Long playlistId) {
+        Playlist playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new PlaylistNotFoundException("Playlist not found with ID: " + playlistId));
+        return playlist.getLikeCount();
+    }
 
 }
