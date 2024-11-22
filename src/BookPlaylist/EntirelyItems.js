@@ -87,6 +87,7 @@ const EntireItems = () => {
       sortedPlaylists.sort((a,b)=>a.playlistId-b.playlistId);
       break;
     case "best":
+      sortedPlaylists.sort((a,b)=>b.likeCount-a.likeCount);
       break;
     default:
       break;
