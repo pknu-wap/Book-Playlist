@@ -39,7 +39,7 @@ const Modals = ({ show, onClose, data, loading }) => {
   const handleLike = () => {
     setIsLoading(true); // 찜하기 버튼 클릭 시 로딩 시작
     if (!isLiked) {
-      // 찜하기
+      setIsLoading(true);
       axios
         .post(`https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${data.playlistId}/like`, {}, {
           withCredentials: true,
@@ -53,7 +53,7 @@ const Modals = ({ show, onClose, data, loading }) => {
           console.error("찜하기 실패:", error);
         })
         .finally(() => {
-           // 요청 완료 후 로딩 상태 종료
+           setIsLoading(false);
         });
     } else {
       // 찜 취소
@@ -70,7 +70,7 @@ const Modals = ({ show, onClose, data, loading }) => {
           console.error("찜 취소 실패:", error);
         })
         .finally(() => {
-           // 요청 완료 후 로딩 상태 종료
+          setIsLoading(false);
         });
     }
   };
@@ -107,13 +107,19 @@ const Modals = ({ show, onClose, data, loading }) => {
                     <span>설명: {data.description}</span>
                   </li>
                   <li>
+                    {isLoading ? (
+                      <div>
+                        <div className="favorite-button-loading">                        
+                        </div>
+                      </div>
+                    ) : (
                       <button
                         className={`liking-button ${isLiked ? "liked" : ""}`}
                         onClick={handleLike}
                       >
                         {isLiked ? "찜 취소" : "찜 하기"}
                       </button>
-                      {/* {isLoading ? (<div className="favorite-button-loading"><p></p></div>): ()} */}
+                    )}
                   </li>
                   <li>
                     <p>찜 수: {likeCount}</p>
