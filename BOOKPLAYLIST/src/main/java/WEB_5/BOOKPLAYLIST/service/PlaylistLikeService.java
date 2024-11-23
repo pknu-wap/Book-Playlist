@@ -29,19 +29,28 @@ public class PlaylistLikeService {
             throw new UserNotFoundException("User not authenticated");
         }
 
+        // Playlist 조회
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new PlaylistNotFoundException("Playlist not found with ID: " + playlistId));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
         if (playlistLikeRepository.existsByUser_IdAndPlaylist_Id(userId, playlistId)) {
             throw new PlaylistAlreadyLikedException("Playlist already liked");
         }
 
+        // PlaylistLike 엔터티 생성
         PlaylistLike playlistLike = new PlaylistLike();
         playlistLike.setPlaylist(playlist);
-        playlistLike.setUser(user);
+        playlistLike.setUser(userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId)));
+
         playlistLikeRepository.save(playlistLike);
+
+        // 좋아요 수 증가
+        playlist.setLikeCount(playlist.getLikeCount() + 1);
+
+        // 변경 사항 저장
+        playlistRepository.save(playlist);
+
         return true;
     }
 
