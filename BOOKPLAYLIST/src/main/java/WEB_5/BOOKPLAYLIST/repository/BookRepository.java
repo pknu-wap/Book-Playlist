@@ -15,4 +15,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT b FROM Book b JOIN BookLike bl ON b.id = bl.book.id WHERE bl.user.id = :userId")
     List<Book> findLikedBooksByUserId(@Param("userId") Long userId);
 
+    @Query("SELECT b FROM Book b LEFT JOIN b.bookLikes bl GROUP BY b.id ORDER BY COUNT(bl) DESC")
+    List<Book> findBooksOrderByLikeCountDesc();
+
 }

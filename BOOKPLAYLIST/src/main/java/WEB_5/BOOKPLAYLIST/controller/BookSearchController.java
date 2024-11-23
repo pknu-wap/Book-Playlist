@@ -1,15 +1,18 @@
 // controller/BookSearchController.java
 package WEB_5.BOOKPLAYLIST.controller;
 
+import WEB_5.BOOKPLAYLIST.domain.dto.BookSummaryDTO;
 import WEB_5.BOOKPLAYLIST.domain.entity.Book;
 import WEB_5.BOOKPLAYLIST.repository.BookRepository;
 import WEB_5.BOOKPLAYLIST.service.BookSearchService;
 import WEB_5.BOOKPLAYLIST.domain.dto.NaverBookResponse;
+import WEB_5.BOOKPLAYLIST.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,6 +25,10 @@ public class BookSearchController {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private BookService bookService;
+
 
     // 책 검색 (GET /api/search/books)
     @GetMapping("/books")
@@ -60,6 +67,13 @@ public class BookSearchController {
         bookRepository.save(newBook);
 
         return ResponseEntity.ok(newBook); // 새로 추가된 책 반환
+    }
+
+    // 책 정보 찜 순서대로 전달
+    @GetMapping("/top-by-likes")
+    public ResponseEntity<List<BookSummaryDTO>> getBooksByLikes() {
+        List<BookSummaryDTO> books = bookService.getBooksOrderByLikes();
+        return ResponseEntity.ok(books);
     }
 
 }
