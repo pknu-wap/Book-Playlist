@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import './playlist.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 
 function PlaylistModal({ onClose }) {
+  const [isLoading, setIsLoading] = useState(true);
   const placeholderImage = 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg';
   const [imageSrc, setImageSrc] = useState(placeholderImage);
   const [isSaving, setIsSaving] = useState(false);
@@ -25,7 +26,30 @@ function PlaylistModal({ onClose }) {
     author: '지은이',
   });
   const [bookList, setBookList] = useState([]);
+  const [likedBooks, setLikedBooks] = useState([]);
   const navigate = useNavigate();
+
+  const studyContainerRef = useRef(null);
+
+  // 왼쪽으로 스크롤하는 함수
+  const scrollLeft = () => {
+    if (studyContainerRef.current) {
+      studyContainerRef.current.scrollBy({
+        left: -1200, // 원하는 스크롤 거리 조정
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  // 오른쪽으로 스크롤하는 함수
+  const scrollRight = () => {
+    if (studyContainerRef.current) {
+      studyContainerRef.current.scrollBy({
+        left: 1200, // 원하는 스크롤 거리 조정
+        behavior: 'smooth',
+      });
+    }
+  };
 
   const MAX_EMPTY_ITEMS = 5;
 
@@ -245,6 +269,23 @@ function PlaylistModal({ onClose }) {
     }
   };
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const booksResponse = await axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/favorite/books', { withCredentials: true }) 
+
+        if (booksResponse.data) setLikedBooks(booksResponse.data);
+      } catch (error) {
+        console.error('데이터 가져오기 오류:', error);
+        alert('데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   return (
     <>
       {/* 첫 번째 모달 */}
@@ -402,6 +443,11 @@ function PlaylistModal({ onClose }) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="책 이름/저자를 검색해주세요!"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                  }
+                }}
               />
               <button onClick={handleSearch}>
                 <span className="material-symbols-outlined">search</span>
@@ -410,7 +456,7 @@ function PlaylistModal({ onClose }) {
 
             <div className="playlist-search-results">
               {searchResults.length === 0 ? (
-                <p>검색 결과가 없습니다.</p>
+                <p>책을 검색해주세요!</p>
               ) : (
                 searchResults.map((book, index) => (
                   <div key={index}>
@@ -448,7 +494,56 @@ function PlaylistModal({ onClose }) {
 
             <div className="playlist-mystudy">
               <p>내 서재</p>
+              <div className="playlist-mystudy-wrapper">
+              {isLoading ? (
+                <div className='playlist-mystudy-loadingbox'>
+                  <div className="playlist-loader"></div>
+                  <p>불러오는중...</p>
+                </div>
+            ) : (
+              <div className="playlist-mystudy-container" ref={studyContainerRef}>
+                <button className="playlist-arrow playlist-arrow-left" onClick={scrollLeft}>
+                  <span className="material-symbols-outlined">Arrow_Back</span>
+                </button> 
+                {likedBooks.length > 0 ? (
+                    likedBooks.map((book) => {
+                      let imageUrl = '';
+                      try {
+                        imageUrl = atob(book.image);
+                      } catch (e) {
+                        console.error('이미지 URL 디코딩 오류:', e);
+                      }
+                      return (
+                        <div key={book.isbn} className="playlist-mystudy-box">
+                          <div className="mypage-playlist-hover-container">
+                            {imageUrl ? (
+                              <img
+                                src={imageUrl}
+                                alt={book.title}
+                                className="mypage-playlist-image"
+                              />
+                            ) : (
+                              <div className="mypage-placeholder-image">
+                                이미지 없음
+                              </div>
+                            )}
+                          </div>
+                          <div className="mypage-playlist-title">
+                            <p>{book.title}</p>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p>찜한 책이 없습니다.</p>
+                  )}
+                  <button className="playlist-arrow playlist-arrow-right" onClick={scrollRight}>
+                   <span className="material-symbols-outlined">Arrow_forward</span>
+                  </button>
+                </div>
+                )}
             </div>
+           </div>
           </div>
         </div>
       )}
