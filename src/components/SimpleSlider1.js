@@ -144,34 +144,37 @@ function SimpleSlider() {
         <div style={{ color: "red" }}>{error}</div>
       ) : (
         <Slider {...settings}>
-          {playlists.map((playlist) => (
-            <div
-              key={playlist.playlistId}
-              onClick={() => handleItemClick(playlist.playlistId)}
-              style={{
-                textAlign: "center",
-                margin: "0 5px",
-                padding: "10px",
-                cursor: "pointer",
-              }}
-
-            >
-              <img
-                src={`data:image/jpeg;base64,${playlist.base64Image}`}
-                alt={playlist.title}
+          {playlists
+            .sort((a,b) => b.likeCount - a.likeCount)
+            .slice(0, 20)
+            .map((playlist) => (
+              <div
+                key={playlist.playlistId}
+                onClick={() => handleItemClick(playlist.playlistId)}
                 style={{
-                  objectFit: "cover",
-                  width: "180px",
-                  height: "282px",
-                  borderRadius: "10px",
+                  textAlign: "center",
+                  margin: "0 5px",
+                  padding: "10px",
+                  cursor: "pointer",
                 }}
-                className="book_image"
-              />
-              <h4>{playlist.title}</h4>
-              <p style={{ color: "gray", fontSize: "13px" }}>
-                만든이: {playlist.username}
-              </p>
-            </div>
+
+              >
+                <img
+                  src={`data:image/jpeg;base64,${playlist.base64Image}`}
+                  alt={playlist.title}
+                  style={{
+                    objectFit: "cover",
+                    width: "180px",
+                    height: "282px",
+                    borderRadius: "10px",
+                  }}
+                  className="book_image"
+                />
+                <h4>{playlist.title}</h4>
+                <p style={{ color: "gray", fontSize: "13px" }}>
+                  만든이: {playlist.username}
+                </p>
+              </div>
           ))}
         </Slider>
       )}
