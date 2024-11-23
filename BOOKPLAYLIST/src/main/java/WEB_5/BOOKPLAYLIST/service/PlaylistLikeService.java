@@ -61,15 +61,25 @@ public class PlaylistLikeService {
             throw new UserNotFoundException("User not authenticated");
         }
 
+        // Playlist 조회
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new PlaylistNotFoundException("Playlist not found with ID: " + playlistId));
 
+        // 사용자와 플레이리스트 사이의 좋아요 관계 존재 여부 확인
         boolean exists = playlistLikeRepository.existsByUser_IdAndPlaylist_Id(userId, playlistId);
         if (!exists) {
             throw new PlaylistAlreadyLikedException("Playlist is not liked by the user");
         }
 
+        // 좋아요 관계 삭제
         playlistLikeRepository.deleteByUser_IdAndPlaylist_Id(userId, playlistId);
+
+        // 좋아요 수 감소
+        playlist.setLikeCount(Math.max(0, playlist.getLikeCount() - 1)); // 0 이하로 내려가지 않도록 처리
+
+        // 변경 사항 저장
+        playlistRepository.save(playlist);
+
         return true;
     }
 
