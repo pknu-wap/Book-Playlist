@@ -1,10 +1,8 @@
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "../styles/SimpleSlider.css";
 import "../styles/SimpleSlider.css";
 
 // Arrow components for the slider
@@ -39,37 +37,28 @@ const SamplePrevArrow = ({ className, style, onClick }) => (
 );
 
 const SimpleSlider = () => {
-  const [searchResults, setSearchResults] = useState([]); // API로부터 받은 책 목록
   const [hoveredBook, setHoveredBook] = useState(null); // 현재 hover된 책의 ID
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
+  const [books, setBooks] = useState([]);
 
-  // API 요청을 위한 함수
-  const handleSearch = async () => {
-    setLoading(true); // 요청 시작 시 로딩 상태 true로 설정
-    try {
-      const response = await axios.get(
-        `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books`,
-        {
-          params: { query: "한강" }, // 검색할 쿼리
-        }
-      );
-  
-      // JSON 응답에서 items에 순서 부여
-      const itemsWithId = response.data.items.map((item, index) => ({
-        ...item, // 기존 item의 모든 속성을 복사
-        id: index + 1, // index + 1로 id 속성 추가
-      }));
-  
-      setSearchResults(itemsWithId); // API 응답으로부터 책 목록 설정
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false); // 요청 완료 후 로딩 상태 false로 설정
-    }
-  };
-  
   useEffect(() => {
-    handleSearch(); // 컴포넌트가 마운트될 때 API 요청
+    const fetchPlaylists = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          "https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/top-by-likes",
+          { withCredentials: true }
+        );
+        const sortedBooks = response.data.sort((a, b) => b.likeCount - a.likeCount);
+        setBooks(sortedBooks.slice(0, 20));
+      } catch (error) {
+        console.error("찜한 책 목록을 불러오는 데 실패했습니다.", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlaylists();
   }, []);
 
   const settings = {
@@ -98,10 +87,10 @@ const SimpleSlider = () => {
     <main className="slider-container" style={containerStyle}>
       <h3>지금 가장 핫한 책을 만나보세요!</h3>
       {loading ? ( // 로딩 상태에 따라 로딩 메시지 표시
-        <div className="loader"></div>
+        <div className="loader">로딩 중...</div>
       ) : (
         <Slider {...settings}>
-          {searchResults.map((book) => (
+          {books.map((book) => (
             <div
               key={book.id}
               style={{
@@ -110,34 +99,35 @@ const SimpleSlider = () => {
                 padding: "10px",
               }}
             >
-              <a href={book.link} target="_blank" rel="noopener noreferrer">
-                <img
-                  src={book.image}
-                  alt={book.title}
-                  style={{
-                    marginTop: "20px",
-                    objectFit: "cover",
-                    width: "143.81px",
-                    height: "190.4px",
-                    borderRadius: "10px",
-                    transition: "transform 0.3s ease",
-                    transform: hoveredBook === book.id ? "scale(1.1)" : "scale(1)",
-                  }}
-                  onMouseEnter={() => setHoveredBook(book.id)}
-                  onMouseLeave={() => setHoveredBook(null)}
-                />
-              </a>
+              <img
+                src={book.image}
+                alt={book.title}
+                style={{
+                  marginTop: "20px",
+                  objectFit: "cover",
+                  width: "143.81px",
+                  height: "190.4px",
+                  borderRadius: "10px",
+                  transition: "transform 0.3s ease",
+                  transform: hoveredBook === book.id ? "scale(1.1)" : "scale(1)",
+                }}
+                onMouseEnter={() => setHoveredBook(book.id)}
+                onMouseLeave={() => setHoveredBook(null)}
+              />
 
               <h4
                 className="book-title"
                 style={{
                   margin: "10px 0 0",
-                  paddingRight: "20px",
                   width: "100px",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
                 }}
               >
-                {book.title.length > 6 ? `${book.title.slice(0, 6)}...` : book.title}
+                {book.title}
               </h4>
+              <p>{book.author}</p>
             </div>
           ))}
         </Slider>
@@ -147,3 +137,32 @@ const SimpleSlider = () => {
 };
 
 export default SimpleSlider;
+
+  // // API 요청을 위한 함수
+  // const handleSearch = async () => {
+  //   setLoading(true); // 요청 시작 시 로딩 상태 true로 설정
+  //   try {
+  //     const response = await axios.get(
+  //       `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books`,
+  //       {
+  //         params: { query: "한강" }, // 검색할 쿼리
+  //       }
+  //     );
+  
+  //     // JSON 응답에서 items에 순서 부여
+  //     const itemsWithId = response.data.items.map((item, index) => ({
+  //       ...item, // 기존 item의 모든 속성을 복사
+  //       id: index + 1, // index + 1로 id 속성 추가
+  //     }));
+  
+  //     setSearchResults(itemsWithId); // API 응답으로부터 책 목록 설정
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   } finally {
+  //     setLoading(false); // 요청 완료 후 로딩 상태 false로 설정
+  //   }
+  // };
+  
+  // useEffect(() => {
+  //   handleSearch(); // 컴포넌트가 마운트될 때 API 요청
+  // }, []);
