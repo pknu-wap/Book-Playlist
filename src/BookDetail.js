@@ -11,8 +11,9 @@ function BookDetail() {
   const [newComment, setNewComment] = useState("");
   const [rating, setRating] = useState(0);
   const [averageRating, setAverageRating] = useState(null);
-  const [isLiked, setIsLiked] = useState(false); // 찜하기 상태
-  const [isLoadingLike, setIsLoadingLike] = useState(false); // 찜하기 처리 중 상태
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLoadingLike, setIsLoadingLike] = useState(false);
+  const [username, setUsername] = useState(""); // 로그인 시 사용한 닉네임
 
   useEffect(() => {
     if (!book || !book.isbn) {
@@ -27,7 +28,7 @@ function BookDetail() {
         await axios.post(
           `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books/isbn`,
           { isbn: book.isbn },
-          { withCredentials: true } // 인증 정보 포함
+          { withCredentials: true }
         );
       } catch (error) {
         console.error("Error posting book ISBN to backend:", error);
@@ -39,9 +40,14 @@ function BookDetail() {
       try {
         const response = await axios.get(
           `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/books/${book.isbn}/comments`,
-          { withCredentials: true } // 인증 정보 포함
+          { withCredentials: true }
         );
-        setComments(response.data || []); // 수정된 부분
+        setComments(
+          response.data.map((comment) => ({
+            ...comment,
+            isAuthor: comment.username === username, // 댓글 작성자가 현재 사용자와 동일한지 확인
+          }))
+        );
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
@@ -65,7 +71,7 @@ function BookDetail() {
       try {
         const response = await axios.get(
           `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/${book.isbn}/isLiked`,
-          { withCredentials: true } // 인증 정보 포함
+          { withCredentials: true }
         );
         setIsLiked(response.data || false);
       } catch (error) {
@@ -73,13 +79,26 @@ function BookDetail() {
       }
     };
 
+    // 사용자 닉네임 가져오기
+    const fetchUsername = async () => {
+      try {
+        const response = await axios.get(
+          `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/user`,
+          { withCredentials: true }
+        );
+        setUsername(response.data.username || "익명");
+      } catch (error) {
+        console.error("Error fetching username:", error);
+      }
+    };
+
     postBookByISBN();
     fetchComments();
     fetchAverageRating();
     fetchLikeStatus();
-  }, [book]);
+    fetchUsername();
+  }, [book, username]);
 
-  // 찜하기/찜 취소 처리
   const toggleLike = async () => {
     if (!book || !book.isbn) {
       console.error("Book ISBN is undefined. Cannot toggle like status.");
@@ -91,8 +110,6 @@ function BookDetail() {
       const endpoint = isLiked
         ? `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/${book.isbn}/unlike`
         : `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/${book.isbn}/like`;
-
-      console.log("Sending request to:", endpoint);
 
       if (isLiked) {
         await axios.delete(endpoint, { withCredentials: true });
@@ -113,7 +130,6 @@ function BookDetail() {
     }
   };
 
-  // 댓글 추가 처리
   const handleAddComment = async () => {
     if (newComment.trim() === "") return;
 
@@ -124,9 +140,12 @@ function BookDetail() {
           content: newComment,
           rating,
         },
-        { withCredentials: true } // 인증 정보 포함
+        { withCredentials: true }
       );
-      setComments([...comments, response.data]); // 수정된 부분
+      setComments([
+        ...comments,
+        { ...response.data, username, isAuthor: true }, // 새 댓글은 현재 사용자가 작성한 것으로 처리
+      ]);
       setNewComment("");
       setRating(0);
     } catch (error) {
@@ -139,14 +158,13 @@ function BookDetail() {
     }
   };
 
-  // 댓글 삭제 처리
   const handleDeleteComment = async (commentId) => {
     try {
       const response = await axios.delete(
         `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/books/comments/${commentId}`,
         {
-          data: {}, // userId 제거
-          withCredentials: true, // 인증 정보 포함
+          data: {},
+          withCredentials: true,
         }
       );
 
@@ -163,7 +181,6 @@ function BookDetail() {
     }
   };
 
-  // 별점 선택 처리
   const handleStarClick = (starValue) => {
     setRating(starValue);
   };
@@ -234,17 +251,20 @@ function BookDetail() {
           comments.map((comment) => (
             <div key={comment.id} className="comment-item">
               <div className="comment-header">
+                <span className="username">{comment.username || "익명"}</span>
                 <span className="date">
                   {comment.createdAt
                     ? new Date(comment.createdAt).toLocaleDateString()
                     : "날짜 정보 없음"}
                 </span>
-                <button
-                  className="delete-button"
-                  onClick={() => handleDeleteComment(comment.id)}
-                >
-                  삭제
-                </button>
+                {comment.isAuthor && (
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDeleteComment(comment.id)}
+                  >
+                    삭제
+                  </button>
+                )}
               </div>
               <div className="comment-rating">
                 {[1, 2, 3, 4, 5].map((star) => (
