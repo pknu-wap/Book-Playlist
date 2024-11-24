@@ -115,18 +115,27 @@
     box-sizing: border-box; /* 패딩 포함 크기 조정 */
 }
 
-/* 댓글 리스트 스크롤 */
-.comments-section {
-    margin-top: 20px;
+/* 댓글 등록 버튼 스타일 */
+.add-comment-section button {
+    background-color: #007bff; /* 기본 파란색 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* 글씨 크기 */
+    font-weight: bold; /* 글씨 두께 */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 */
 }
 
-.comments-scroll {
-    max-height: 200px; /* 최대 높이 설정 */
-    overflow-y: auto; /* 스크롤 활성화 */
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #fff;
+.add-comment-section button:hover {
+    background-color: #0056b3; /* 호버 시 더 어두운 파란색 */
+    transform: scale(1.05); /* 살짝 확대 */
+}
+
+.add-comment-section button:active {
+    transform: scale(0.95); /* 클릭 시 살짝 축소 */
+    background-color: #004080; /* 더 어두운 색 */
 }
 
 /* 별점 스타일 */
@@ -150,25 +159,59 @@
     color: gold; /* 금색 */
 }
 
-/* 댓글 등록 버튼 스타일 */
-.add-comment-section button {
-    background-color: #007bff; /* 기본 파란색 */
+/* 댓글 섹션 */
+.comments-section {
+    margin-top: 20px;
+}
+
+/* 댓글 아이템 */
+.comment-item {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* 댓글 헤더 */
+.comment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 공간을 균등하게 분배 */
+    margin-bottom: 10px;
+}
+
+/* 닉네임 스타일 */
+.comment-header .username {
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+/* 날짜 스타일 */
+.comment-header .date {
+    font-size: 12px;
+    color: #888; /* 날짜 색상 */
+}
+
+/* 삭제 버튼 스타일 */
+.delete-button {
+    background-color: #ff4d4f;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 5px 10px;
+    border-radius: 5px; /* 부드러운 느낌을 위한 둥근 모서리 */
     cursor: pointer;
-    font-size: 16px; /* 글씨 크기 */
-    font-weight: bold; /* 글씨 두께 */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 */
+    margin-left: 10px;
 }
 
-.add-comment-section button:hover {
-    background-color: #0056b3; /* 호버 시 더 어두운 파란색 */
-    transform: scale(1.05); /* 살짝 확대 */
+.delete-button:hover {
+    background-color: #ff7875; /* 호버 시 약간 밝은 빨간색 */
 }
 
-.add-comment-section button:active {
-    transform: scale(0.95); /* 클릭 시 살짝 축소 */
-    background-color: #004080; /* 더 어두운 색 */
+/* 댓글 내용 */
+.comment-text {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.5;
 }
