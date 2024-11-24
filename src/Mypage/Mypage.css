@@ -442,7 +442,7 @@ margin-left: 30px;
 
 .mypage-playlist-arrow-right {
   right: 12px; /* 오른쪽 화살표 위치 */
-  top: 107px;
+  top: 100px;
 }
 
 .mypage-playlist-arrow-right span {
@@ -460,6 +460,7 @@ margin-left: 30px;
   font-size: 15px;
   color: #333;
 }
+
 
 
 

@@ -253,6 +253,9 @@ const MyPage = () => {
           </div>
         ) : (
           <div className="mypage-Mycollection-content">
+              <button className="mypage-playlist-arrow mypage-playlist-arrow-left" onClick={scrollLeft}>
+                <span className="material-symbols-outlined">Arrow_Back</span>
+              </button> 
             {activeTab === 'myPlaylists' && (
               <div className="mypage-playlist-container">
                 {playlists.length > 0 ? (
@@ -282,10 +285,12 @@ const MyPage = () => {
                   ))
                 ) : (
                   <p>생성한 플레이리스트가 없습니다.</p>
-                )}
-                
+                )}     
               </div>
             )}
+              <button className="mypage-playlist-arrow mypage-playlist-arrow-right" onClick={scrollRight}>
+                <span className="material-symbols-outlined">Arrow_forward</span>
+              </button>
             {activeTab === 'likedBooks' && (
               <div className="mypage-Mycollection-content">
                 <button className="mypage-playlist-arrow mypage-playlist-arrow-left" onClick={scrollLeft}>
