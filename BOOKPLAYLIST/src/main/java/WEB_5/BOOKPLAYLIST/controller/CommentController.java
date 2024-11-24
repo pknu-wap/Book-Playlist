@@ -1,6 +1,5 @@
 package WEB_5.BOOKPLAYLIST.controller;
 
-import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 import WEB_5.BOOKPLAYLIST.domain.dto.CommentResponse;
 import WEB_5.BOOKPLAYLIST.domain.entity.Comment;
 import WEB_5.BOOKPLAYLIST.domain.entity.CustomUserDetails;
@@ -8,13 +7,13 @@ import WEB_5.BOOKPLAYLIST.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @RequiredArgsConstructor
 @RestController
@@ -24,14 +23,16 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{isbn}/comments")
+    @PreAuthorize("isAuthenticated()") // 인증된 사용자만 접근 가능
     public ResponseEntity<CommentResponse> addComment(
             @PathVariable String isbn,
-            @RequestBody Map<String, Object> request) {
+            @RequestBody Map<String, Object> request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) { // CustomUserDetails 주입
         String content = (String) request.get("content");
         int rating = (int) request.get("rating");
 
         // 현재 로그인된 사용자 ID 가져오기
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
+        Long userId = userDetails.getId();
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
@@ -53,9 +54,12 @@ public class CommentController {
 
     // 댓글 삭제
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable Long commentId) {
+    @PreAuthorize("isAuthenticated()") // 인증된 사용자만 접근 가능
+    public ResponseEntity<Map<String, Object>> deleteComment(
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) { // CustomUserDetails 주입
         // 현재 로그인된 사용자 ID 가져오기
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
+        Long userId = userDetails.getId();
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
@@ -86,13 +90,15 @@ public class CommentController {
 
     // 별점 추가/수정
     @PostMapping("/{bookisbn}/rating")
+    @PreAuthorize("isAuthenticated()") // 인증된 사용자만 접근 가능
     public ResponseEntity<Map<String, Object>> addOrUpdateRating(
-            @PathVariable("bookisbn") String bookIsbn, // 수정: String 타입 및 경로 변수 이름 일치
-            @RequestBody Map<String, Object> request) {
+            @PathVariable("bookisbn") String bookIsbn,
+            @RequestBody Map<String, Object> request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) { // CustomUserDetails 주입
         int rating = (int) request.get("rating");
 
         // 현재 로그인된 사용자 ID 가져오기
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
+        Long userId = userDetails.getId();
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
@@ -107,7 +113,7 @@ public class CommentController {
 
     // 평균 별점 조회
     @GetMapping("/{bookisbn}/rating/average")
-    public ResponseEntity<Map<String, Object>> getAverageRating(@PathVariable("bookisbn") String bookIsbn) { // 수정: String 타입 및 경로 변수 이름 일치
+    public ResponseEntity<Map<String, Object>> getAverageRating(@PathVariable("bookisbn") String bookIsbn) {
         double averageRating = commentService.getAverageRatingByIsbn(bookIsbn); // 서비스 메서드도 수정 필요
 
         Map<String, Object> response = new HashMap<>();

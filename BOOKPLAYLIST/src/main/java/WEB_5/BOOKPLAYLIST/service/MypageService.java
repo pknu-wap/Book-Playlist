@@ -4,41 +4,35 @@ import WEB_5.BOOKPLAYLIST.domain.dto.MyPagePlaylistDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.UserBookLikeDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.UserProfileDTO;
 import WEB_5.BOOKPLAYLIST.domain.entity.Book;
-import WEB_5.BOOKPLAYLIST.domain.entity.BookLike;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
 import WEB_5.BOOKPLAYLIST.domain.entity.User;
 import WEB_5.BOOKPLAYLIST.repository.BookLikeRepository;
 import WEB_5.BOOKPLAYLIST.repository.BookRepository;
 import WEB_5.BOOKPLAYLIST.repository.PlaylistRepository;
-import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 import WEB_5.BOOKPLAYLIST.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class MypageService {
-    @Autowired
-    private PlaylistRepository playlistRepository;
+    private final PlaylistRepository playlistRepository;
+    private final UserRepository userRepository;
+    private final BookLikeRepository bookLikeRepository;
+    private final BookRepository bookRepository;  // BookRepository 추가
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private BookLikeRepository bookLikeRepository;
-
-    @Autowired
-    private BookRepository bookRepository;  // BookRepository 추가
-
-    public List<MyPagePlaylistDTO> getUserPlaylists() {
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
-        System.out.println("로그인된 사용자 ID: " + userId); // 디버깅용 로그
-
+    /**
+     * 사용자 ID를 통해 유저가 생성한 플레이리스트를 조회합니다.
+     *
+     * @param userId 사용자 ID
+     * @return MyPagePlaylistDTO 리스트
+     */
+    public List<MyPagePlaylistDTO> getUserPlaylists(Long userId) {
         List<Playlist> playlists = playlistRepository.findByUser_Id(userId);
-        System.out.println("조회된 플레이리스트: " + playlists); // 디버깅용 로그
 
         return playlists.stream()
                 .map(playlist -> {
@@ -53,18 +47,26 @@ public class MypageService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 사용자 ID를 통해 사용자 프로필을 조회합니다.
+     *
+     * @param userId 사용자 ID
+     * @return UserProfileDTO
+     */
     public UserProfileDTO getUserProfile(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없음"));
         return new UserProfileDTO(user.getUsername());
     }
 
-    public List<MyPagePlaylistDTO> getLikedPlaylists() {
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
-        System.out.println("로그인된 사용자 ID: " + userId); // 디버깅용 로그
-
+    /**
+     * 사용자 ID를 통해 사용자가 좋아요한 플레이리스트를 조회합니다.
+     *
+     * @param userId 사용자 ID
+     * @return MyPagePlaylistDTO 리스트
+     */
+    public List<MyPagePlaylistDTO> getLikedPlaylists(Long userId) {
         List<Playlist> likedPlaylists = playlistRepository.findLikedPlaylistsByUserId(userId);
-        System.out.println("사용자가 좋아요한 플레이리스트: " + likedPlaylists); // 디버깅용 로그
 
         return likedPlaylists.stream()
                 .map(playlist -> {
@@ -79,10 +81,14 @@ public class MypageService {
                 .collect(Collectors.toList());
     }
 
-    // 특정 사용자가 좋아요한 책 조회
+    /**
+     * 특정 사용자가 좋아요한 책을 조회합니다.
+     *
+     * @param userId 사용자 ID
+     * @return UserBookLikeDTO 리스트
+     */
     public List<UserBookLikeDTO> getLikedBooksByUserId(Long userId) {
         List<Book> likedBooks = bookRepository.findLikedBooksByUserId(userId);
-        System.out.println("사용자가 좋아요한 책 목록: " + likedBooks); // 디버깅용 로그
 
         return likedBooks.stream()
                 .map(book -> {
@@ -98,7 +104,12 @@ public class MypageService {
                 .collect(Collectors.toList());
     }
 
-    // 닉네임 변경 메서드
+    /**
+     * 사용자 ID와 새로운 닉네임을 통해 닉네임을 변경합니다.
+     *
+     * @param userId      사용자 ID
+     * @param newUsername 새로운 닉네임
+     */
     public void updateUsername(Long userId, String newUsername) {
         // 유저 정보 조회
         User user = userRepository.findById(userId)

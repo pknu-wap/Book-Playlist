@@ -5,10 +5,13 @@ import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistDetailsDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistSummaryDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.SavePlaylistRequest;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
+import WEB_5.BOOKPLAYLIST.domain.entity.CustomUserDetails;
 import WEB_5.BOOKPLAYLIST.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -28,18 +31,32 @@ public class PlaylistController {
 
     // 빈 플레이리스트 생성 (POST /api/playlist/create)
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Long>> createEmptyPlaylist() {
-        Long playlistId = playlistService.createEmptyPlaylist();
+    @PreAuthorize("isAuthenticated()") // 인증된 사용자만 접근 가능
+    public ResponseEntity<Map<String, Long>> createEmptyPlaylist(
+            @AuthenticationPrincipal CustomUserDetails userDetails) { // 사용자 정보 주입
+        Long userId = userDetails.getId();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Long playlistId = playlistService.createEmptyPlaylist(userId);
         return ResponseEntity.ok(Map.of("playlistId", playlistId));
     }
 
     @PostMapping("/save")
+    @PreAuthorize("isAuthenticated()") // 인증된 사용자만 접근 가능
     public ResponseEntity<String> savePlaylist(
             @RequestParam Long playlistId,
             @RequestParam String title,
             @RequestParam String description,
             @RequestParam List<String> isbns,
-            @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+            @RequestParam(value = "image", required = false) MultipartFile imageFile,
+            @AuthenticationPrincipal CustomUserDetails userDetails) { // 사용자 정보 주입
+
+        Long userId = userDetails.getId();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 사용자입니다.");
+        }
 
         try {
             // 이미지 파일이 없으면 기본 이미지 설정
@@ -51,7 +68,7 @@ public class PlaylistController {
             }
 
             // 서비스 메서드 호출
-            return playlistService.savePlaylist(playlistId, title, description, isbns, imageData);
+            return playlistService.savePlaylist(playlistId, title, description, isbns, imageData, userId);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,7 +84,7 @@ public class PlaylistController {
         }
     }
 
-    //메인화면 플레이리스트 띄우기 (GET /api/playlist/top)
+    // 메인화면 플레이리스트 띄우기 (GET /api/playlist/top)
     @GetMapping("/top")
     public ResponseEntity<List<PlaylistSummaryDTO>> getTopPlaylists() {
         List<PlaylistSummaryDTO> topPlaylists = playlistService.getTopPlaylists(10);
@@ -89,8 +106,15 @@ public class PlaylistController {
 
     // 해당 플레이리스트 삭제 (DELETE /api/playlist/{playlistId})
     @DeleteMapping("/{playlistId}")
-    public ResponseEntity<String> deletePlaylist(@PathVariable Long playlistId) {
-        boolean isDeleted = playlistService.deletePlaylistById(playlistId);
+    @PreAuthorize("isAuthenticated()") // 인증된 사용자만 접근 가능
+    public ResponseEntity<String> deletePlaylist(@PathVariable Long playlistId,
+                                                 @AuthenticationPrincipal CustomUserDetails userDetails) { // 사용자 정보 주입
+        Long userId = userDetails.getId();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 사용자입니다.");
+        }
+
+        boolean isDeleted = playlistService.deletePlaylistById(playlistId, userId);
         if (isDeleted) {
             return ResponseEntity.ok("플레이리스트가 성공적으로 삭제되었습니다.");
         } else {
@@ -100,9 +124,17 @@ public class PlaylistController {
 
     // 특정 플레이리스트에 책 추가 (POST /api/playlist/{playlistId}/addBook)
     @PostMapping("/{playlistId}/addBook")
-    public ResponseEntity<String> addBookToPlaylist(@PathVariable Long playlistId, @RequestParam String isbn) {
+    @PreAuthorize("isAuthenticated()") // 인증된 사용자만 접근 가능
+    public ResponseEntity<String> addBookToPlaylist(@PathVariable Long playlistId,
+                                                    @RequestParam String isbn,
+                                                    @AuthenticationPrincipal CustomUserDetails userDetails) { // 사용자 정보 주입
+        Long userId = userDetails.getId();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 사용자입니다.");
+        }
+
         try {
-            boolean success = playlistService.addBookToPlaylist(playlistId, isbn);
+            boolean success = playlistService.addBookToPlaylist(playlistId, isbn, userId);
             if (success) {
                 return ResponseEntity.ok("책이 플레이리스트에 성공적으로 추가되었습니다.");
             } else {
@@ -113,7 +145,7 @@ public class PlaylistController {
         }
     }
 
-    // 플레이리스트를 찜 순서대로 반환
+    // 플레이리스트를 찜 순서대로 반환 (GET /api/playlist/top-by-likes)
     @GetMapping("/top-by-likes")
     public ResponseEntity<List<PlaylistSummaryDTO>> getPlaylistsByLikes() {
         List<PlaylistSummaryDTO> playlists = playlistService.getPlaylistsOrderByLikes();

@@ -1,6 +1,5 @@
 package WEB_5.BOOKPLAYLIST.service;
 
-import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 import WEB_5.BOOKPLAYLIST.domain.dto.NaverBookResponse;
 import WEB_5.BOOKPLAYLIST.domain.entity.Book;
 import WEB_5.BOOKPLAYLIST.domain.entity.BookLike;
@@ -29,9 +28,8 @@ public class BookLikeService {
     private final UserRepository userRepository;
     private final BookSearchService bookSearchService;
 
-    public BookLike likeBook(Long bookId) { // ISBN 대신 bookId 사용
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
-
+    // 사용자 ID를 인자로 받도록 수정
+    public BookLike likeBook(Long bookId, Long userId) {
         if (userId == null) {
             throw new UserNotFoundException("User not authenticated");
         }
@@ -51,9 +49,8 @@ public class BookLikeService {
         return bookLikeRepository.save(bookLike);
     }
 
-    public void unlikeBook(Long bookId) { // ISBN 대신 bookId 사용
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
-
+    // 사용자 ID를 인자로 받도록 수정
+    public void unlikeBook(Long bookId, Long userId) {
         if (userId == null) {
             throw new UserNotFoundException("User not authenticated");
         }
@@ -69,8 +66,8 @@ public class BookLikeService {
         bookLikeRepository.deleteByUser_IdAndBook_Id(userId, bookId);
     }
 
-    public boolean isBookLiked(Long bookId) { // ISBN 대신 bookId 사용
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
+    // 사용자 ID를 인자로 받도록 수정
+    public boolean isBookLiked(Long bookId, Long userId) {
         if (userId == null) {
             return false;
         }
@@ -83,9 +80,7 @@ public class BookLikeService {
     }
 
     // 사용자가 특정 책을 "좋아요" 표시하는 메소드
-    public boolean likeBookByIsbn(String isbn) {
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
-
+    public boolean likeBookByIsbn(String isbn, Long userId) {
         if (userId == null) {
             throw new IllegalArgumentException("User not authenticated");
         }

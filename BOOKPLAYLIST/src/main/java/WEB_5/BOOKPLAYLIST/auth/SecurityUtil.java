@@ -1,17 +1,32 @@
 package WEB_5.BOOKPLAYLIST.auth;
 
-import WEB_5.BOOKPLAYLIST.domain.entity.CustomUserDetails;
-import WEB_5.BOOKPLAYLIST.exception.UnauthorizedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import WEB_5.BOOKPLAYLIST.domain.entity.CustomUserDetails;
 
 public class SecurityUtil {
-    public static Long getCurrentUserIdFromSession() {
+
+    public static Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            return userDetails.getId();
+
+        if (authentication == null || !authentication.isAuthenticated() ||
+                authentication.getPrincipal().equals("anonymousUser")) {
+            return null;
         }
-        throw new UnauthorizedException("로그인된 유저가 없습니다.");
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return userDetails.getId();
+    }
+
+    public static String getCurrentEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated() ||
+                authentication.getPrincipal().equals("anonymousUser")) {
+            return null;
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return userDetails.getUsername(); // 또는 getEmail() 등 필요에 따라
     }
 }

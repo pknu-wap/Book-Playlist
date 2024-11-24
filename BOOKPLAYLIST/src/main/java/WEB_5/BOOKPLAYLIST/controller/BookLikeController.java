@@ -1,6 +1,5 @@
 package WEB_5.BOOKPLAYLIST.controller;
 
-import WEB_5.BOOKPLAYLIST.domain.entity.BookLike;
 import WEB_5.BOOKPLAYLIST.service.BookLikeService;
 import WEB_5.BOOKPLAYLIST.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import WEB_5.BOOKPLAYLIST.domain.entity.CustomUserDetails;
 
 @RestController
 @RequestMapping("/api/booklikes")
@@ -20,43 +19,54 @@ public class BookLikeController {
 
     @PostMapping("/{isbn}/like")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> likeBook(@PathVariable String isbn, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<String> likeBook(
+            @PathVariable String isbn,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long bookId = bookService.getBookIdByIsbn(isbn);
         if (bookId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found");
         }
-        bookLikeService.likeBook(bookId);
+        Long userId = userDetails.getId(); // 사용자 ID 추출
+        bookLikeService.likeBook(bookId, userId); // 사용자 ID 전달
         return ResponseEntity.ok("Book liked successfully");
     }
 
     @DeleteMapping("/{isbn}/unlike")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> unlikeBook(@PathVariable String isbn, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<String> unlikeBook(
+            @PathVariable String isbn,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long bookId = bookService.getBookIdByIsbn(isbn);
         if (bookId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found");
         }
-        bookLikeService.unlikeBook(bookId);
+        Long userId = userDetails.getId();
+        bookLikeService.unlikeBook(bookId, userId);
         return ResponseEntity.ok("Book unliked successfully");
     }
 
     @GetMapping("/{isbn}/isLiked")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Boolean> isBookLiked(@PathVariable String isbn, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Boolean> isBookLiked(
+            @PathVariable String isbn,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long bookId = bookService.getBookIdByIsbn(isbn);
         if (bookId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         }
-        boolean isLiked = bookLikeService.isBookLiked(bookId);
+        Long userId = userDetails.getId();
+        boolean isLiked = bookLikeService.isBookLiked(bookId, userId);
         return ResponseEntity.ok(isLiked);
     }
 
-    @PostMapping("mainpage/like-by-isbn")
+    @PostMapping("/mainpage/like-by-isbn")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> likeBookByIsbn(@RequestParam String isbn, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<String> likeBookByIsbn(
+            @RequestParam String isbn,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            // 찜 시도
-            boolean isLiked = bookLikeService.likeBookByIsbn(isbn);
+            Long userId = userDetails.getId();
+            boolean isLiked = bookLikeService.likeBookByIsbn(isbn, userId);
 
             if (isLiked) {
                 return ResponseEntity.ok("책이 성공적으로 찜 되었습니다.");
@@ -70,5 +80,3 @@ public class BookLikeController {
         }
     }
 }
-
-

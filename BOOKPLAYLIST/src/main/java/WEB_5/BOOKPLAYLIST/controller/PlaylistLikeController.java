@@ -1,12 +1,13 @@
 package WEB_5.BOOKPLAYLIST.controller;
 
+import WEB_5.BOOKPLAYLIST.domain.entity.CustomUserDetails;
+import WEB_5.BOOKPLAYLIST.exception.PlaylistAlreadyLikedException;
 import WEB_5.BOOKPLAYLIST.service.PlaylistLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,42 +18,60 @@ import java.util.Map;
 public class PlaylistLikeController {
     private final PlaylistLikeService playlistLikeService;
 
-    // 사용자가 특정 플리를 찜하는 메소드
     @PostMapping("/{playlistId}/like")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> likePlaylist(@PathVariable Long playlistId, @AuthenticationPrincipal UserDetails userDetails) {
-        boolean success = playlistLikeService.likePlaylist(playlistId);
-        if (success) {
-            return ResponseEntity.ok("Playlist liked successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Playlist not found");
+    public ResponseEntity<String> likePlaylist(
+            @PathVariable Long playlistId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getId();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 사용자입니다.");
+        }
+
+        try {
+            boolean success = playlistLikeService.likePlaylist(playlistId, userId);
+            return success ? ResponseEntity.ok("Playlist liked successfully")
+                    : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Playlist not found");
+        } catch (PlaylistAlreadyLikedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    // 사용자가 특정 플리를 찜취소 하는 메소드
     @DeleteMapping("/{playlistId}/unlike")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<String> unlikePlaylist(@PathVariable Long playlistId, @AuthenticationPrincipal UserDetails userDetails) {
-        boolean success = playlistLikeService.unlikePlaylist(playlistId);
-        if (success) {
-            return ResponseEntity.ok("Playlist unliked successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Playlist not found");
+    public ResponseEntity<String> unlikePlaylist(
+            @PathVariable Long playlistId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getId();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증되지 않은 사용자입니다.");
+        }
+
+        try {
+            boolean success = playlistLikeService.unlikePlaylist(playlistId, userId);
+            return success ? ResponseEntity.ok("Playlist unliked successfully")
+                    : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Playlist not found");
+        } catch (PlaylistAlreadyLikedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    // 사용자가 특정 플레이리스트를 좋아요했는지 여부를 확인하는 메소드
     @GetMapping("/{playlistId}/isLiked")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Boolean> isPlaylistLiked(@PathVariable Long playlistId, @AuthenticationPrincipal UserDetails userDetails) {
-        boolean isLiked = playlistLikeService.isPlaylistLiked(playlistId);
+    public ResponseEntity<Boolean> isPlaylistLiked(
+            @PathVariable Long playlistId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getId();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
+        }
+        boolean isLiked = playlistLikeService.isPlaylistLiked(playlistId, userId);
         return ResponseEntity.ok(isLiked);
     }
 
-    // 플레이리스트 찜 수 확인
     @GetMapping("/{playlistId}/likeCount")
-    public ResponseEntity<?> getPlaylistLikeCount(@PathVariable Long playlistId) {
+    public ResponseEntity<Map<String, Integer>> getPlaylistLikeCount(@PathVariable Long playlistId) {
         int likeCount = playlistLikeService.getLikeCount(playlistId);
-        return ResponseEntity.ok().body(Map.of("likeCount", likeCount));
+        return ResponseEntity.ok(Map.of("likeCount", likeCount));
     }
 }

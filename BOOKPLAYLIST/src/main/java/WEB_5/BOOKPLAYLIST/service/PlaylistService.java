@@ -1,6 +1,5 @@
 package WEB_5.BOOKPLAYLIST.service;
 
-import WEB_5.BOOKPLAYLIST.domain.dto.MyPagePlaylistDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistDetailsDTO;
 import WEB_5.BOOKPLAYLIST.domain.dto.PlaylistSummaryDTO;
 import WEB_5.BOOKPLAYLIST.domain.entity.Playlist;
@@ -9,13 +8,12 @@ import WEB_5.BOOKPLAYLIST.domain.entity.User;
 import WEB_5.BOOKPLAYLIST.exception.PlaylistNotFoundException;
 import WEB_5.BOOKPLAYLIST.repository.BookRepository;
 import WEB_5.BOOKPLAYLIST.repository.PlaylistRepository;
+import WEB_5.BOOKPLAYLIST.repository.UserRepository;
 import WEB_5.BOOKPLAYLIST.domain.dto.NaverBookResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import WEB_5.BOOKPLAYLIST.repository.UserRepository;
-import WEB_5.BOOKPLAYLIST.auth.SecurityUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,9 +37,7 @@ public class PlaylistService {
     @Autowired
     private BookSearchService bookSearchService;
 
-    // 플레이리스트를 저장하거나 수정하는 메서드 (이미지와 책 목록 포함)
-    public ResponseEntity<String> savePlaylist(Long playlistId, String title, String description, List<String> isbns, byte[] imageData) {
-        // 플레이리스트 조회
+    public ResponseEntity<String> savePlaylist(Long playlistId, String title, String description, List<String> isbns, byte[] imageData, Long userId) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         if (!playlistOpt.isPresent()) {
             return ResponseEntity.badRequest().body("플레이리스트를 찾을 수 없습니다.");
@@ -49,12 +45,12 @@ public class PlaylistService {
 
         Playlist playlist = playlistOpt.get();
 
-        // 디폴트 값 설정
-        if (title == null || title.isBlank()) {
-            Long userId = SecurityUtil.getCurrentUserIdFromSession();
-            Optional<User> userOpt = userRepository.findById(userId);
+        if (!playlist.getUser().getId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("플레이리스트를 수정할 권한이 없습니다.");
+        }
 
-            // 사용자가 존재하면 이름 기반 기본 제목 생성, 그렇지 않으면 고정된 기본 제목
+        if (title == null || title.isBlank()) {
+            Optional<User> userOpt = userRepository.findById(userId);
             title = userOpt.map(user -> user.getUsername() + "님의 북플레이리스트").orElse("기본 플레이리스트 제목");
         }
 
@@ -67,29 +63,25 @@ public class PlaylistService {
                 ClassPathResource defaultImageResource = new ClassPathResource("static/default_playlist_image.jpg");
                 imageData = Files.readAllBytes(defaultImageResource.getFile().toPath());
             } catch (IOException e) {
-                imageData = new byte[0]; // 빈 배열로 초기화
+                imageData = new byte[0];
             }
         }
 
-        // 필드 업데이트
         playlist.setTitle(title);
         playlist.setDescription(description);
         playlist.setImageData(imageData);
 
-        // 현재 플레이리스트의 책 목록
         List<Book> currentBooks = playlist.getBooks();
         List<String> currentIsbns = currentBooks.stream()
                 .map(Book::getIsbn)
                 .collect(Collectors.toList());
 
-        // 삭제할 책들: 현재 책 목록 중 새로운 `isbns` 목록에 없는 책
         List<Book> booksToRemove = currentBooks.stream()
                 .filter(book -> !isbns.contains(book.getIsbn()))
                 .collect(Collectors.toList());
 
         playlist.getBooks().removeAll(booksToRemove);
 
-        // 추가할 책들: 새로운 `isbns` 목록 중 현재 책 목록에 없는 책
         List<Book> booksToAdd = isbns.stream()
                 .distinct()
                 .map(isbn -> {
@@ -97,7 +89,7 @@ public class PlaylistService {
                     if (bookOpt.isPresent()) {
                         return bookOpt.get();
                     } else {
-                        return fetchAndSaveBook(isbn); // ISBN으로 책 정보 가져오기
+                        return fetchAndSaveBook(isbn);
                     }
                 })
                 .filter(book -> book != null && !currentIsbns.contains(book.getIsbn()))
@@ -105,23 +97,23 @@ public class PlaylistService {
 
         playlist.getBooks().addAll(booksToAdd);
 
-        // 플레이리스트 저장
         playlistRepository.save(playlist);
 
         return ResponseEntity.ok("플레이리스트가 성공적으로 저장되었습니다.");
     }
 
-    // 해당 플레이리스트를 삭제하는 메서드
-    public boolean deletePlaylistById(Long playlistId) {
+    public boolean deletePlaylistById(Long playlistId, Long userId) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         if (playlistOpt.isPresent()) {
             Playlist playlist = playlistOpt.get();
 
-            // 연결된 책 데이터 삭제 (Many-to-Many 연결 제거)
+            if (!playlist.getUser().getId().equals(userId)) {
+                return false;
+            }
+
             playlist.getBooks().clear();
             playlistRepository.save(playlist);
 
-            // 플레이리스트 삭제
             playlistRepository.deleteById(playlistId);
             return true;
         } else {
@@ -129,9 +121,6 @@ public class PlaylistService {
         }
     }
 
-
-
-    // 외부 API를 통해 책 정보를 가져와 저장하는 메서드
     private Book fetchAndSaveBook(String isbn) {
         ResponseEntity<NaverBookResponse> response = bookSearchService.searchBooks(isbn);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
@@ -151,15 +140,13 @@ public class PlaylistService {
                 book.setIsbn(item.getIsbn());
                 book.setDescription(item.getDescription());
 
-                return bookRepository.save(book); // DB에 저장 후 반환
+                return bookRepository.save(book);
             }
         }
         return null;
     }
 
-    // 현재 사용자에 대한 빈 플레이리스트를 생성하는 메서드
-    public Long createEmptyPlaylist() {
-        Long userId = SecurityUtil.getCurrentUserIdFromSession();
+    public Long createEmptyPlaylist(Long userId) {
         Optional<User> userOpt = userRepository.findById(userId);
 
         if (!userOpt.isPresent()) {
@@ -175,27 +162,23 @@ public class PlaylistService {
         return savedPlaylist.getId();
     }
 
-    // 특정 플레이리스트를 조회하는 메서드
     public ResponseEntity<PlaylistDetailsDTO> getPlaylistDetails(Long playlistId) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
 
         return playlistOpt.map(playlist -> {
-            // 책 정보를 BookDTO로 변환
             var bookDTOs = playlist.getBooks().stream()
                     .map(book -> new PlaylistDetailsDTO.BookDTO(
                             book.getTitle(),
                             book.getAuthor(),
                             book.getIsbn(),
                             book.getImage(),
-                            book.getPublisher() // 출판사 정보 추가
+                            book.getPublisher()
                     ))
                     .collect(Collectors.toList());
 
-            // Base64 이미지 인코딩
             String base64Image = playlist.getImageData() != null ?
                     Base64.getEncoder().encodeToString(playlist.getImageData()) : null;
 
-            // PlaylistDetailsDTO 생성
             PlaylistDetailsDTO detailsDTO = new PlaylistDetailsDTO(
                     playlist.getId(),
                     playlist.getTitle(),
@@ -209,11 +192,9 @@ public class PlaylistService {
         }).orElseGet(() -> ResponseEntity.status(404).body(null));
     }
 
-    // 모든 플레이리스트를 조회하여 요약 정보로 반환하는 메서드
     public List<PlaylistSummaryDTO> getAllPlaylists() {
         List<Playlist> playlists = playlistRepository.findAll();
 
-        // Playlist 엔터티를 PlaylistSummaryDTO로 변환
         return playlists.stream()
                 .map(playlist -> {
                     String base64Image = playlist.getImageData() != null
@@ -224,76 +205,68 @@ public class PlaylistService {
                             playlist.getTitle(),
                             playlist.getUser().getUsername(),
                             base64Image,
-                            playlist.getLikeCount() // 찜 수 추가
+                            playlist.getLikeCount()
                     );
                 })
                 .collect(Collectors.toList());
     }
 
-    // 상위 10개의 플레이리스트를 조회하여 요약 정보로 반환하는 메서드
     public List<PlaylistSummaryDTO> getTopPlaylists(int limit) {
-        // Repository에서 상위 플레이리스트 조회
         List<Playlist> playlists = playlistRepository.findTop10ByOrderByIdAsc();
 
-        // Playlist를 PlaylistSummaryDTO로 변환
         return playlists.stream()
                 .map(playlist -> {
-                    // 이미지 데이터를 Base64로 변환
                     String base64Image = playlist.getImageData() != null
                             ? Base64.getEncoder().encodeToString(playlist.getImageData())
                             : null;
 
-                    // DTO 생성
                     return new PlaylistSummaryDTO(
                             playlist.getId(),
                             playlist.getTitle(),
                             playlist.getUser().getUsername(),
-                            base64Image, // Base64 인코딩된 이미지
-                            playlist.getLikeCount() // 찜 수
+                            base64Image,
+                            playlist.getLikeCount()
                     );
                 })
                 .collect(Collectors.toList());
     }
 
-    public boolean addBookToPlaylist(Long playlistId, String isbn) {
-        // 플레이리스트를 먼저 찾는다
+    public boolean addBookToPlaylist(Long playlistId, String isbn, Long userId) {
         Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
         if (!playlistOpt.isPresent()) {
-            return false; // 플레이리스트를 찾을 수 없는 경우
+            return false;
         }
 
         Playlist playlist = playlistOpt.get();
 
-        // 플레이리스트에 이미 해당 책이 있는지 확인한다
+        if (!playlist.getUser().getId().equals(userId)) {
+            return false;
+        }
+
         boolean bookAlreadyExists = playlist.getBooks().stream()
                 .anyMatch(book -> book.getIsbn().equals(isbn));
         if (bookAlreadyExists) {
-            return true; // 이미 존재하는 경우 추가 작업 불필요
+            return true;
         }
 
-        // 데이터베이스에서 책을 찾는다
         Optional<Book> bookOpt = bookRepository.findByIsbn(isbn);
         Book book;
         if (bookOpt.isPresent()) {
-            // 책이 데이터베이스에 있으면 해당 책을 사용
             book = bookOpt.get();
         } else {
-            // 데이터베이스에 없으면, 네이버 API로 책 정보를 가져와 저장한다
             book = fetchAndSaveBook(isbn);
             if (book == null) {
                 throw new IllegalArgumentException("네이버 API에서 책 정보를 찾을 수 없습니다.");
             }
         }
 
-        // 플레이리스트에 책 추가
         playlist.getBooks().add(book);
-        playlistRepository.save(playlist); // 변경된 플레이리스트를 저장
+        playlistRepository.save(playlist);
 
         return true;
     }
 
     public List<PlaylistSummaryDTO> getPlaylistsOrderByLikes() {
-        // Repository에서 데이터를 가져와 DTO로 변환
         List<Playlist> playlists = playlistRepository.findAllOrderByLikeCountDesc();
         return playlists.stream()
                 .map(playlist -> {
@@ -316,5 +289,4 @@ public class PlaylistService {
                 .orElseThrow(() -> new PlaylistNotFoundException("Playlist not found with ID: " + playlistId));
         return playlist.getLikeCount();
     }
-
 }
