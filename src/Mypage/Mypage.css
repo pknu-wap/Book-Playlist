@@ -1,11 +1,64 @@
+.mypage {
+  width: 1300px;
+  height: 300px;
+}
+
 .mypage-Mycollection {
   width: 1050px;
-  height: 400px;
-  border: 1px solid rgb(223, 222, 222);
-  box-shadow: 0 4px 8px #dadada1a;
+  height: 320px;
   border-radius: 15px;
   margin-top: 30px;
   margin-left: 165px;
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+.mypage-Mycollection-content {
+  position: relative;
+}
+
+.mypage-Mycollection-header {
+  display: flex;
+}
+
+.mypage-Mycollection-button1 {
+  margin-top: 12px;
+  margin-left: 15px;
+  width: 185px;
+  height: 35px;
+  white-space: nowrap;
+}
+
+.mypage-Mycollection-button1 p {
+  font-weight: bold;
+  margin-top: 4px;
+  margin-left: 12px !important;
+}
+
+.mypage-Mycollection-button2 {
+  margin-top: 12px;
+  margin-left: 30px;
+  width: 180px;
+  height: 35px;
+  font-weight: bold;
+}
+.mypage-Mycollection-button2 p {
+  font-weight: bold;
+  margin-top: 5px;
+  margin-left: 55px !important;
+}
+
+.mypage-Mycollection-button3 {
+  margin-top: 12px;
+  margin-left: 15px;
+  width: 180px;
+  height: 35px;
+  font-weight: bold;
+}
+.mypage-Mycollection-button3 p {
+  font-weight: bold;
+  margin-top: 5px;
+  margin-left: 22px !important;
 }
 
 .mypage-Mycollection p {
@@ -14,7 +67,7 @@ margin-left: 30px;
 }
 
 .mypage-Mycollection-loadingbox p{
-  margin-left: 430px;
+  margin-left: 480px;
   
 }
 
@@ -45,10 +98,10 @@ margin-left: 30px;
 .mypage-Mycomment {
   width: 700px;
   height: 300px;
-  border: 1px solid rgb(223, 222, 222);
+  background-color: #FAFFF3;
   border-radius: 15px;
-  box-shadow: 0 4px 8px #dadada1a;
-  margin-left: 90px;
+  box-shadow: 0 4px 8px #4242421a;
+  margin-left: 85px;
 }
 
 
@@ -85,11 +138,11 @@ margin-left: 30px;
   display: flex;
   width: 620px;
   height: 100px;
-  border: 1px solid rgb(223, 222, 222);
   border-radius: 15px;
-  box-shadow: 0 4px 8px #0000001a;
+  box-shadow: 0 4px 8px #4242421a;
   margin-left: 40px;
-
+  background-color: white;
+  margin-bottom: 3px;
 }
 
 .mypage-comment-info {
@@ -98,7 +151,7 @@ margin-left: 30px;
 .mypage-comment-info-img {
   width: 65px;
   height: 80px;
-  border: 1px solid rgb(223, 222, 222);
+  box-shadow: 0 4px 8px #4242421a;
   border-radius: 10px;
   margin-left: 10px;
   margin-top: 10px;
@@ -107,7 +160,7 @@ margin-left: 30px;
 .mypage-comment-info-img img{
   width: 65px;
   height: 80px;
-  border: 1px solid rgb(223, 222, 222);
+  box-shadow: 0 4px 8px #4242421a;
   border-radius: 10px;
 }
 
@@ -168,33 +221,90 @@ margin-left: 30px;
   width: 130px;
   height: 130px;
   border-radius: 150px;
-  box-shadow: 0 4px 8px #dadada1a;
-  border: 1px solid rgb(223, 222, 222);
-  background-image: url('./userimage.jpg');
-  background-size: cover;
+  box-shadow: 0 4px 8px #4242421a;
+  background-image: url('./plimage.jpg');
+  background-size: 140%;
+  background-position: -25px;
   margin-left: 200px;
   margin-top: 50px;
 }
 
-.mypage-username {
-  width: 150px;
-  height: 40px;
-  border: 1px solid rgb(223, 222, 222);
-  border-radius: 15px;
-  box-shadow: 0 4px 8px #dadada1a;
-  text-align: center;
-  margin-left: 193px;
+.mypage-username-box {
+  margin-left: 186px;
   margin-top: 30px;
+  display: flex;
 }
 
-.mypage-username p {
- text-align: center;
- margin-top: 10px; 
+.mypage-username-p {
+  width: 125px;
+  height: 40px;
+  border-bottom: 1px;
+  border-color: #ddd;
+  border-radius: 10px 0 0 10px;
+  box-shadow: 0 4px 8px #4242421a;
+  text-align: center;
 }
+
+.mypage-username-p p {
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+.mypage-username-edit {
+
+  width: 35px;
+  height: 41px;
+  border-radius: 0 10px 10px 0;
+  background-color: rgb(255, 255, 247);
+  box-shadow: 0 4px 8px #4242421a;
+}
+
+.mypage-username-edit span {
+  margin-top: 8px;
+  margin-left: 5px;
+}
+
+.mypage-username-edit:hover {
+  background-color: #feffd4 ;
+}
+
+.mypage-username-editing {
+  display: flex;
+}
+
+.mypage-username-editing input{
+  width: 120px;
+  height: 38px;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 10px 0 0 10px;
+  font-size: 17px;
+  text-align: center;
+}
+
+.mypage-username-save {
+  width: 35px;
+  height: 41px;
+  border-radius: 0 10px 10px 0;
+  background-color: rgb(255, 255, 247);
+  box-shadow: 0 2px 2px #4242421a;
+  border: 0px solid white;  
+  
+}
+
+.mypage-username-save span {
+  margin-left: 1px;
+  margin-top: 2px;
+}
+
+.mypage-username-save:hover {
+  background-color: #feffd4 ;
+}
+
 
 .mypage-username  .mypage-loader {
   margin: auto;
-  margin-top: 6px;
+  margin-top: 35px;
+  margin-left: 250px;
   width: 20px;
   height: 20px;
   border: 4px solid #ddd;
@@ -205,47 +315,27 @@ margin-left: 30px;
 }
 
 .mypage-playlist-container {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 20px;
   margin-top: 20px;
-  margin-left: 40px;
-  overflow-y: auto;
-  width: 1000px;
-  height: 317px;
+  margin-left: 33px;
+  overflow-x: auto;
+  width: 995px;
+  height: 260px;
+  scroll-behavior: smooth;
+  flex-wrap: nowrap;
+  
 }
 
 .mypage-playlist-container::-webkit-scrollbar {
-  width: 10px; 
+  display: block;
 }
-
-.mypage-playlist-container::-webkit-scrollbar-track { 
-  background-color: rgb(221, 219, 219);
-}
-
-.mypage-playlist-container::-webkit-scrollbar-thumb { 
-  background-color: rgb(193, 251, 166);
-}  
-.mypage-playlist-container::-webkit-scrollbar-button {
-  display: none;
-}
-
-/* hover 효과 */
-.mypage-playlist-container::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(231, 255, 214);
-  transition: all 0.2s; /* 애니메이션 속도 */
-}
-
-/* 모서리 둥글게 */
-.mypage-playlist-container::-webkit-scrollbar-track,
-.mypage-playlist-container::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-}
-
 
 .mypage-playlist-box {
-  width: 150px;
-  height: 200px;
+  width: 130px;
+  height: 160px;
   text-align: center;
   border: 1px solid rgb(223, 222, 222);
   box-shadow: 0 4px 8px #0000001a;
@@ -253,14 +343,14 @@ margin-left: 30px;
   display: flex;
   flex-direction: column;
   margin-left: 13px;
-  margin-top: 35px;
+  margin-top: 15px;
 }
 
 
 
 .mypage-playlist-image {
-  width: 150px;
-  height: 200px;
+  width: 130px;
+  height: 160px;
   border-radius: 10px;
   border: 1px solid rgb(223, 222, 222);
 }
@@ -305,6 +395,7 @@ margin-left: 30px;
 
 .mypage-playlist-title p {
   width: 140px;
+  margin-top: 5px;
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;
@@ -318,6 +409,94 @@ margin-left: 30px;
 .mypage-playlist-hover-container {
   position: relative;
 }
+
+.mypage-playlist-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1;
+  width: 25px;
+  height: 25px;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.mypage-playlist-arrow:hover {
+  background-color: #f7f7f7;
+}
+
+.mypage-playlist-arrow-left {
+  left: 12px;
+  top: 100px; 
+  
+}
+
+.mypage-playlist-arrow-left span {
+  margin-left: -4px;
+  margin-top: -5px;
+}
+
+.mypage-playlist-arrow-right {
+  right: 12px; /* 오른쪽 화살표 위치 */
+  top: 100px;
+}
+
+.mypage-playlist-arrow-right span {
+  margin-left: -4px !important;
+  margin-top: -6px !important;
+}
+
+.mypage-playlist-arrow-right span {
+  margin-left: -1px;
+}
+
+
+/* 화살표 아이콘 스타일 */
+.mypage-playlist-arrow span {
+  font-size: 15px;
+  color: #333;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .mypage-playlist-modal-button {
   display: none; /* 기본적으로 숨김 */
