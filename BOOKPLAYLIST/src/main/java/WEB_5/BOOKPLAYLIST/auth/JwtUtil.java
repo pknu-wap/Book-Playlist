@@ -24,7 +24,7 @@ public class JwtUtil {
 
     public String generateToken(CustomUserDetails userDetails) {
         return Jwts.builder()
-                .setSubject(Long.toString(userDetails.getId())) // 사용자 ID로 변경
+                .setSubject(userDetails.getUsername()) // 이메일을 subject로 설정
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -41,9 +41,10 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
-        String userId = extractEmail(token);
-        return userId.equals(Long.toString(((CustomUserDetails) userDetails).getId())) && !isTokenExpired(token);
+        String email = extractEmail(token); // subject에서 이메일 추출
+        return email.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
+
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
