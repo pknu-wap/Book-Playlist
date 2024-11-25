@@ -33,14 +33,16 @@ export default function Login({ onLogin }) { // onLogin prop을 통해 로그인
                 body: JSON.stringify({
                     email: email,
                     password: pw
-                }),
-                credentials: 'include',
+                })
             });
 
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
-                    localStorage.setItem('user', JSON.stringify(data.user)); // 로컬 스토리지에 사용자 정보 저장
+                    // 토큰을 로컬 스토리지에 저장
+                    localStorage.setItem('token', data.token);
+                    // 사용자 정보를 로컬 스토리지에 저장
+                    localStorage.setItem('user', JSON.stringify(data.user));
                     onLogin(); // 로그인 상태 업데이트 함수 호출
                     alert('로그인에 성공했습니다.');
                     navigate('/'); // 메인 페이지로 이동
@@ -63,6 +65,30 @@ export default function Login({ onLogin }) { // onLogin prop을 통해 로그인
 
     const goToRegister = () => {
         navigate('/register'); // 회원가입 페이지로 이동
+    };
+
+    const onLogout = async () => {
+        try {
+            // 서버 로그아웃 요청
+            const response = await fetch('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/auth/logout', {
+                method: 'GET',
+                credentials: 'include' // 세션 쿠키 포함
+            });
+    
+            if (response.ok) {
+                // 로컬 스토리지 및 상태 초기화
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                sessionStorage.clear();
+                document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                console.log('로그아웃 완료');
+                navigate('/login');
+            } else {
+                console.error('서버 로그아웃 실패');
+            }
+        } catch (error) {
+            console.error('로그아웃 중 오류 발생:', error);
+        }
     };
 
     return (
