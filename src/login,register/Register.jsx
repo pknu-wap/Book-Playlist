@@ -47,7 +47,28 @@ export default function Register() {
             alert("유효한 이메일을 입력하세요.");
             return;
         }
-        setIsEmailChecked(true); // API 호출 생략
+
+        try {
+            const response = await fetch('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/auth/checkUserId', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert(data.message); // 사용 가능한 이메일 또는 중복된 이메일 메시지
+                setIsEmailChecked(data.success);
+            } else {
+                alert(data.message);
+                setIsEmailChecked(false);
+            }
+        } catch (error) {
+            console.error("이메일 중복 확인 오류:", error);
+            alert("이메일 중복 확인 중 문제가 발생했습니다.");
+        }
     };
 
     const checkUsernameAvailability = async () => {
@@ -55,10 +76,31 @@ export default function Register() {
             alert("닉네임은 최소 2자 이상이어야 합니다.");
             return;
         }
-        setIsUsernameChecked(true); // API 호출 생략
+
+        try {
+            const response = await fetch('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/auth/checkUsername', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(username), // 백엔드에서 username 직접 받도록 수정
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert(data.message); // 사용 가능한 닉네임 또는 중복된 닉네임 메시지
+                setIsUsernameChecked(data.success);
+            } else {
+                alert(data.message);
+                setIsUsernameChecked(false);
+            }
+        } catch (error) {
+            console.error("닉네임 중복 확인 오류:", error);
+            alert("닉네임 중복 확인 중 문제가 발생했습니다.");
+        }
     };
 
-    const onClickRegisterButton = () => {
+    const onClickRegisterButton = async () => {
         if (!passwordMatch) {
             alert('비밀번호가 일치하지 않습니다.');
             return;
@@ -67,8 +109,32 @@ export default function Register() {
             alert('이메일 또는 닉네임 중복 확인을 해주세요.');
             return;
         }
-        alert('회원가입 성공!');
-        navigate('/login');
+
+        try {
+            const response = await fetch('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    password1,
+                    password2,
+                    username,
+                }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert(data.message); // 회원가입 성공 메시지
+                navigate('/login'); // 회원가입 성공 시 로그인 페이지로 이동
+            } else {
+                alert(data.message || '회원가입 중 문제가 발생했습니다.');
+            }
+        } catch (error) {
+            console.error("회원가입 오류:", error);
+            alert("회원가입 중 문제가 발생했습니다.");
+        }
     };
 
     useEffect(() => {
