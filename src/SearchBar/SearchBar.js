@@ -164,26 +164,28 @@ const SearchBar = () => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: '20px',
     padding: '10px',
     borderBottom: '1px solid #ddd',
-    borderRadius: '8px',
-    backgroundColor: '#f9f9f9',
+    height:'140px'
   };
 
   const imageStyle = {
-    width: '100px',
-    height: '150px',
+    width: '90px',
+    height: '130px',
     objectFit: 'cover',
     borderRadius: '8px',
     marginRight: '20px',
+    marginLeft:'10px',
+    marginTop:'10px',
+    marginBottom:'10px',
+    boxShadow:'1px 2px 2px rgb(55,55,55,0.2)'
   };
 
   const titleStyle = {
     fontWeight: 'bold',
     fontSize: '1.1rem',
     marginBottom: '5px',
-    maxWidth: '200px',
+    maxWidth: '300px',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -296,7 +298,7 @@ const SearchBar = () => {
       {isModalOpen && (
         <div
           style={{
-            position: "fixed",
+            position: "absolute",
             top: "75px",
             left: "0px",
             right: "0",
@@ -312,9 +314,10 @@ const SearchBar = () => {
           <div
             className="modal-content"
             style={{
+              height:'500px',
+              border:'1px solid lightgray',
               backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "8px",
+              borderRadius: "30px",
               width: "80%",
               maxWidth: "550px",
               maxHeight: "70vh",
@@ -326,6 +329,7 @@ const SearchBar = () => {
               {searchResults.length > 0 ? (
                 searchResults.map((item) => (
                   <div
+                    className="modal-search-result"
                     key={item.id || item.isbn}
                     style={resultItemStyle}
                     onClick={() => handleBookClick(item)}
@@ -351,6 +355,14 @@ const SearchBar = () => {
                 <p>검색 결과가 없습니다.</p>
               )}
             </div>
+            {/* 스크롤바 숨기기 */}
+            <style>
+              {`
+                .modal-content::-webkit-scrollbar {
+                  display: none; /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
+                }
+              `}
+            </style>
           </div>
         </div>
       )}
@@ -359,13 +371,13 @@ const SearchBar = () => {
       {isSecondModalOpen && (
         <div
           style={{
-            height: '120px',
+            height: '142px',
             marginLeft: '20px',
             position: 'absolute',
-            top: `${modalPosition.top}px`,
-            left: `${modalPosition.left + 20}px`,  // 첫 번째 모달과 일정 간격 두기
+            marginTop: `${modalPosition.top - 100}px`,
+            left: `${modalPosition.left}px`,  // 첫 번째 모달과 일정 간격 두기
             backgroundColor: 'rgba(0, 0, 0, 0)',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -374,15 +386,18 @@ const SearchBar = () => {
             transform: 'translateY(0)',  // 상대적 위치 조정
           }}
         >
-          <div className="searchbar-second-modal" style={{ boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+          <div className="searchbar-second-modal" style={{border:'2px solid lightgray', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',borderRadius:'30px' }}>
             {selectedItem ? (
               <>
                 <button onClick={closeSecondModal} style={{
+                  width:'240px',
+                  margin:'0 0 0 0',
                   border: 'none',
                   backgroundColor: 'transparent',
                   fontSize: '16px',
                   cursor: 'pointer',
-                  padding: '10px'
+                  padding: '10px',
+                  borderBottom:'1px solid lightgray'
                 }}>
                   ✖
                 </button>
@@ -392,7 +407,15 @@ const SearchBar = () => {
                 >
                   플레이리스트 추가
                 </button>
-                {isLoading ? (<div className="playlists-loading"><p></p></div>):(<button className="searchbar-modal-button" onClick={onClickzzimButton}>찜하기</button>)}
+                {isLoading ? (<div className="playlists-loading"><p></p></div>):(
+                  <button 
+                    className="searchbar-modal-button" 
+                    onClick={onClickzzimButton}
+                    style={{borderRadius:'0 0 30px 30px'}}
+                  >
+                    찜하기
+                  </button>
+                )}
               </>
             ) : (
               <p>아이템을 선택해주세요.</p>
@@ -405,62 +428,81 @@ const SearchBar = () => {
       {isThirdModalOpen && (
         <div
           style={{
-            position: 'fixed',  // 변경된 부분
-            top: `${modalPosition.top + 100}px`,  // viewport에 상대적인 위치
-            left: `${modalPosition.left + 413}px`, // 첫 번째 모달과 두 번째 모달의 위치를 고려하여 조정
+            position: 'absolute',
+            top: `${modalPosition.top+100}px`,
+            left: `${modalPosition.left + 410}px`,
             transform: 'translate(-50%, -50%)',
             display: 'flex',
             backgroundColor: 'white',
-            borderRadius: '10px',
+            borderRadius: '30px',
             padding: '20px',
+            border: '1px solid lightgray',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             zIndex: 110,
             flexDirection: 'column',
             width: '300px',
-            height: '200px',
-            overflow: 'hidden',
+            height: '300px',
           }}
         >
           <button
             style={{
               position: 'absolute',
-              top: '10px',
-              left: '10px', // 우측 상단에 고정
+              margin: 'auto',
               border: 'none',
               backgroundColor: 'transparent',
               fontSize: '16px',
               cursor: 'pointer',
-              zIndex: 120, // 버튼이 다른 요소 위로 오게끔 설정
+              zIndex: 120,
             }}
             onClick={ThirdModelClose}
           >
             ✖
           </button>
-    
-          {/* 스크롤 가능한 내용 영역 */}
+
+          {/* 스크롤바 숨기기 */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              overflowY: 'auto',  // 세로 스크롤
+              overflowY: 'auto',  // 세로 스크롤을 허용
               marginTop: '30px', // 버튼 아래로 여백 추가
+              maxHeight: 'calc(100% - 40px)', // 전체 모달 높이에 맞게 조정
             }}
           >
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className="playlist-item">
-                {isplyLoading ? (<div className="playlists-loading"><p></p></div>) : (<button 
-                  className="playlist-list" 
-                  onClick={() => {
-                    handleClick(selectedItem, playlist);
-                    AddbooktoPlaylist(selectedItem, playlist);
-                  }}>{playlist.title || "제목없음"}</button>)}
+                {isplyLoading ? (
+                  <div className="playlists-loading"><p></p></div>
+                ) : (
+                  <button
+                    className="playlist-list"
+                    onClick={() => {
+                      handleClick(selectedItem, playlist);
+                      AddbooktoPlaylist(selectedItem, playlist);
+                    }}
+                  >
+                    {playlist.title || "제목없음"}
+                  </button>
+                )}
               </div>
             ))}
             <button className="adding" onClick={AddmodalOpen}>+</button>
           </div>
+
+          {/* 스크롤바를 숨기는 CSS */}
+          <style>
+            {`
+              .modal-content::-webkit-scrollbar {
+                display: none;  /* 크롬, 사파리, 엣지에서 스크롤바 숨기기 */
+              }
+              .modal-content {
+                -ms-overflow-style: none;  /* Internet Explorer 10+ */
+                scrollbar-width: none;  /* Firefox에서 스크롤바 숨기기 */
+              }
+            `}
+          </style>
         </div>
       )}
-    
       {/* Playlist Modal */}
       {addmodalOpen && (
         <PlaylistModal

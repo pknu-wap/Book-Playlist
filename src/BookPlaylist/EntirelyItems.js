@@ -41,7 +41,7 @@ const EntireItems = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState("latest");
-  const itemsPerPage = 25;
+  const itemsPerPage = 15;
 
   useEffect(() => {
     const loadPlaylists = async () => {
@@ -104,7 +104,7 @@ const EntireItems = () => {
     <div>
       <Filter onSortChange={(order) => setSortOrder(order)} />
       {loading ? (
-        <div className="playlist-loading"></div>
+        <div className="playlists-loading"></div>
       ) : error ? (
         <p className="error-message">{error}</p>
       ) : (
@@ -119,11 +119,22 @@ const EntireItems = () => {
                   <img
                     src={`data:image/jpeg;base64,${playlist.base64Image || ""}`}
                     alt={playlist.title}
-                    style={{ width: "100px", height: "150px", borderRadius: "4px" }}
+                    style={{ width: "200px", height: "275px", borderRadius: "10px",boxShadow:'2px 4px 4px rgba(0, 0, 0, 0.5)' }}
+                    id="grid-item-img"
                   />
-                  <p style={{margin:'0px',}}>{playlist.title && playlist.title.length > 7 ? `${playlist.title.slice(0, 7)}...`:playlist.title||"제목 없음"}</p>
-                  <p style={{margin:'0px'}}>만든이 : {playlist.username}</p>
-                  <p style={{paddingBottom:'10px'}}> ❤️ {playlist.likeCount}</p>
+                  <p 
+                    style={{
+                      fontWeight: 'bold',
+                      margin: '0px',
+                      fontSize: '25px',
+                      whiteSpace: 'nowrap',      // 텍스트가 한 줄로 유지되도록 설정
+                      overflow: 'hidden',       // 넘친 텍스트를 숨김
+                      textOverflow: 'ellipsis', // 넘친 부분에 ... 추가
+                    }}>
+                      {playlist.title || "제목 없음"}
+                  </p>
+                  <p style={{margin:'0px', color:'lightgray'}}>만든이 : {playlist.username}</p>
+                  <p style={{paddingBottom:'10px', color:'lightgray'}}> ❤️ {playlist.likeCount}</p>
                 </div>
               </div>
             ))}

@@ -4,8 +4,25 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/SimpleSlider.css";
 import axios from "axios";
+import LeftArrow from "../BookPlaylist/left-arrow.svg"
+import RightArrow from "../BookPlaylist/right-arrow.svg"
 
 const Modals = lazy(() => import("../BookPlaylist/Modals")); // 동적 import
+
+const arrowCss = {
+  width: '30px',
+  height: '30px',
+  borderRadius: '50%',
+};
+
+const SampleNextArrow = ({ currentSlide, slideCount, ...props }) => (
+  <img src={RightArrow} alt="nextArrow" {...props} style={arrowCss} />
+);
+
+const SamplePrevArrow = ({ currentSlide, slideCount, ...props}) => (
+  <img src={LeftArrow} alt="preArrow" {...props} style={arrowCss}/>
+);
+
 
 // API 요청 함수
 const fetchPlaylists = async () => {
@@ -34,42 +51,6 @@ const fetchPlaylistDetails = async (playlistId) => {
   }
 };
 
-// 화살표 커스터마이징
-function SampleNextArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        display: "block",
-        background: "gray",
-        width: "18px",
-        height: "16px",
-        borderRadius: "50%",
-      }}
-      onClick={onClick}
-    />
-  );
-}
-
-function SamplePrevArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        display: "block",
-        background: "gray",
-        width: "18px",
-        height: "16px",
-        borderRadius: "50%",
-      }}
-      onClick={onClick}
-    />
-  );
-}
 
 function SimpleSlider() {
   const [playlists, setPlaylists] = useState([]);
@@ -130,14 +111,13 @@ function SimpleSlider() {
     maxWidth: '1200px',
     minWidth: '1100px',
     padding: '0 20px',
-    boxSizing: 'border-box',
     marginLeft: '100px',
     marginRight: '100px',
     marginBottom: '100px',
   };
   return (
     <main className="slider-container" style={containerStyle}>
-      <h3>지금 가장 핫한 플레이리스트를 만나보세요!</h3>
+      <h3 style={{marginLeft:'20px'}}>지금 가장 핫한 플레이리스트를 만나보세요!</h3>
       {loading ? (
         <div className="loader"></div>
       ) : error ? (
@@ -170,8 +150,25 @@ function SimpleSlider() {
                   }}
                   className="book_image"
                 />
-                <h4>{playlist.title}</h4>
-                <p style={{ color: "gray", fontSize: "13px" }}>
+                <h3
+                  style={{
+                    margin: "10px 0 0 70px",
+                    width: "100px",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                >{playlist.title}</h3>
+                <p 
+                  style={{
+                    color:'lightgray',
+                    margin: "10px 0 0 55px",
+                    width: "100px",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                >
                   만든이: {playlist.username}
                 </p>
               </div>

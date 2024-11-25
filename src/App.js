@@ -174,7 +174,7 @@ function App() {
             <>
               <div className="slider-container">
                 <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
-                  <h2 style={{marginLeft: '120px' }}>🔥 BEST SELLER</h2>
+                  <h1 style={{marginLeft: '120px', fontSize:'35px' }}>🔥 BEST SELLER</h1>
                   <SimpleSlider {...settings}>
                     {books.map((book) => (
                       <div key={book.id} style={{ textAlign: 'center', padding: '10px' }}>
@@ -185,7 +185,7 @@ function App() {
                   </SimpleSlider>
                 </section>
                 <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
-                  <h2 style={{ marginLeft: '120px' }}>🔥 TODAY'S PLAYLIST</h2>
+                  <h1 style={{ marginLeft: '120px', fontSize:'35px' }}>🔥 TODAY'S PLAYLIST</h1>
                   <SimpleSlider1 playlists={playlists} {...settings}>
                     {playlists.map((playlist) => (
                       <div key={playlist.id} style={{ textAlign: 'center', padding: '10px' }}>

@@ -17,8 +17,8 @@
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  width: 80%;
   max-width: 1200px;
+  min-width: 1000px;
 }
 
 .modal-grid{
@@ -42,6 +42,8 @@
 .modal-image{
   width: 200px;
   height: 100%;
+  border-radius: 5px;
+  box-shadow: 1px 2px 2px rgba(184, 182, 182, 0.4);
 }
 
 .liking-button{
@@ -81,10 +83,12 @@
 }
 
 .playlist-loading {
-  margin: auto;
-  width: 30px;
-  height: 30px;
-  border: 4px solid #ddd;
+  margin-left: auto;
+  margin-top: 190px;
+  margin-right: auto;
+  width: 100px;
+  height: 100px;
+  border: 10px solid #ddd;
   border-right-color: rgb(2, 255, 107);
   border-top-color: rgb(2, 255, 107);
   border-radius: 50%;
@@ -101,6 +105,11 @@
   padding: 10px;
   border-radius: 10px;
   height: 150px;
+  transition: 0.2s ease;
+}
+
+.book-item:hover{
+  transform: scale(1.03);
 }
 
 .book-image{
@@ -109,11 +118,13 @@
   left: 10px;
   width: 100px;
   height: 150px;
+  border-radius: 5px;
+  box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.4);
 }
 
 .book-info{
   width: 400px;
-
+  margin-left:100px;
 }
 
 .modal-description{

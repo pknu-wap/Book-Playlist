@@ -21,7 +21,6 @@
 }
 
 .grid-item {
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
   background-color: #ffffff;
   padding: 10px;
@@ -29,11 +28,24 @@
   width: 150px;
   height: 200px;
   transition: transform 0.3s ease;
+  margin-bottom: 200px;
 }
+
 .grid-item:hover{ 
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 .grid-row {
   display: flex;
-  gap: 50px;
+  gap: 100px;
+}
+
+.playlists-loading{
+  margin: auto;
+  width: 100px;
+  height: 100px;
+  border: 10px solid #ddd;
+  border-right-color: rgb(2, 255, 107);
+  border-top-color: rgb(2, 255, 107);
+  border-radius: 50%;
+  animation: playlist-spin 0.8s linear infinite;
 }
