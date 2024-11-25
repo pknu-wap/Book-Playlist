@@ -29,8 +29,31 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 비활성화 (JWT 방식)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/playlist/**", "/api/mypage/**", "/api/booklikes/**", "/api/books/**", "/api/playlistlikes/**").authenticated() // 인증 필요 경로
-                        .anyRequest().permitAll() // 그 외 경로는 인증 없이 허용
+                        // 인증이 필요한 엔드포인트
+                        .requestMatchers(
+                                "/api/booklikes/{isbn}/like",
+                                "/api/booklikes/{isbn}/unlike",
+                                "/api/booklikes/{isbn}/isLiked",
+                                "/api/booklikes/mainpage/like-by-isbn",
+                                "/api/books/{isbn}/comments",
+                                "/api/books/comments/{commentId}",
+                                "/api/books/{bookisbn}/rating",
+                                "/api/mypage/mine/playlists",
+                                "/api/mypage/profile",
+                                "/api/mypage/favorite/playlists",
+                                "/api/mypage/favorite/books",
+                                "/api/mypage/mine/comments",
+                                "/api/mypage/profile/username",
+                                "/api/playlist/create",
+                                "/api/playlist/save",
+                                "/api/playlist/{playlistId}",
+                                "/api/playlist/{playlistId}/addBook",
+                                "/api/playlistlikes/{playlistId}/like",
+                                "/api/playlistlikes/{playlistId}/unlike",
+                                "/api/playlistlikes/{playlistId}/isLiked"
+                        ).authenticated()
+                        // 인증이 필요 없는 엔드포인트
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 인증 필터 추가
 
