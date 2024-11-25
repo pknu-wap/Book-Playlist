@@ -30,6 +30,9 @@ function PlaylistModal({ onClose }) {
   const navigate = useNavigate();
 
   const studyContainerRef = useRef(null);
+  const getToken = () => {
+    return localStorage.getItem('token');
+  };
 
   // 왼쪽으로 스크롤하는 함수
   const scrollLeft = () => {
@@ -229,12 +232,23 @@ function PlaylistModal({ onClose }) {
   // 플레이리스트 저장 함수
   const handleSavePlaylist = async () => {
     setIsSaving(true);
+    const token = getToken(); // getToken으로 JWT 가져오기
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsSaving(false);
+      return;
+    }
+  
     try {
       // 플레이리스트 생성 후 ID 가져오기
       const createResponse = await axios.post(
         'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/create',
         null,
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const playlistId = Number(createResponse.data.playlistId);
 
@@ -251,8 +265,8 @@ function PlaylistModal({ onClose }) {
         'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save',
         formData,
         {
-          withCredentials: true,
           headers: {
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
           },
         }
@@ -271,8 +285,21 @@ function PlaylistModal({ onClose }) {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      const token = getToken(); // getToken으로 JWT 가져오기
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsSaving(false);
+      return;
+    }
+      
       try {
-        const booksResponse = await axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/favorite/books', { withCredentials: true }) 
+        const booksResponse = await axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/favorite/books', 
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        ); 
 
         if (booksResponse.data) setLikedBooks(booksResponse.data);
       } catch (error) {

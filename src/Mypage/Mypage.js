@@ -17,6 +17,9 @@ const MyPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLikedModalOpen, setIsLikedModalOpen] = useState(false);
   const [likedBooks, setLikedBooks] = useState([]);
+  const getToken = () => {
+    return localStorage.getItem('token');
+  };
 
   // New state variables for editing username
   const [isEditingUsername, setIsEditingUsername] = useState(false);
@@ -62,13 +65,39 @@ const MyPage = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      const token = getToken(); // getToken으로 JWT 가져오기
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsLoading(false); 
+      return;
+    }
       try {
         const [profileResponse, playlistsResponse, commentsResponse, playlistResponse, booksResponse] = await axios.all([
-          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile', { withCredentials: true }),
-          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists', { withCredentials: true }),
-          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/comments', { withCredentials: true }),
-          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/favorite/playlists', { withCredentials: true }),
-          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/favorite/books', { withCredentials: true }),  
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/comments', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/favorite/playlists', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/favorite/books', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),  
         ]);
 
         if (profileResponse.data?.username) {
