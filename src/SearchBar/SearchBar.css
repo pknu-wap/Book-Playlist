@@ -87,13 +87,13 @@
     border: #000000 1px solid;
     border:none;
     background-color: #ffffff;
-    width: 250px;
+    width: 300px;
     transition: background-color 0.3s;
 }
 
   
 .adding:hover {
-    background-color: #f0f0f0;
+    background-color: #b7ff7d;
 }
 
 .playlists-loading {
