@@ -16,8 +16,8 @@ import Register from './login,register/Register.jsx';
 import axios from 'axios'; // axios를 import합니다.
 import BookDetail from './BookDetail';
 import BookPlaylist from './BookPlaylist/BookPlaylist.js';
-import CaterGory from './BookCategory/BookCategory.js';
 import MyPage from './Mypage/Mypage.js'
+import LikedBookPage from './LikedBookPage/LikedBookPage.js';
 
 
 
@@ -205,7 +205,7 @@ function App() {
 
           <Route path="/book/:id" element={<BookDetail />} /> {/* 상세 페이지 라우트 추가 */}
 
-          <Route path="/bookcatergory" element={<CaterGory />} />
+          <Route path="/bookcatergory" element={<LikedBookPage />} />
           <Route path="/bookplaylist" element={<BookPlaylist />} />
           <Route path="/mypage" element={<MyPage />} />
 
