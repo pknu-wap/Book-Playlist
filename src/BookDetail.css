@@ -215,3 +215,14 @@
     color: #333;
     line-height: 1.5;
 }
+.star-rating {
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .star-rating .rating-number {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+  
