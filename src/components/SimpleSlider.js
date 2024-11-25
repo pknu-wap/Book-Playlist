@@ -87,7 +87,7 @@ const SimpleSlider = () => {
     <main className="slider-container" style={containerStyle}>
       <h3>지금 가장 핫한 책을 만나보세요!</h3>
       {loading ? ( // 로딩 상태에 따라 로딩 메시지 표시
-        <div className="loader">로딩 중...</div>
+        <div className="loader"></div>
       ) : (
         <Slider {...settings}>
           {books.map((book) => (
