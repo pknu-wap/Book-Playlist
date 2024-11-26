@@ -199,18 +199,20 @@ function BookDetail() {
         <div className="book-detail-book-image">
           <img src={book.image} alt={book.title} />
         </div>
-        <div className="book-description">
+        <div className="book-title"> 
           <h1>{book.title}</h1>
+        <div className="book-authorpublisheraverage">
           <p>
             <strong>저자:</strong> {book.author}
-          </p>
+            </p> 
           <p>
             <strong>출판사:</strong> {book.publisher}
-          </p>
+            </p>
           <p>
             <strong>평점:</strong>{" "}
             {averageRating ? averageRating.toFixed(1) : "평가 없음"}
           </p>
+          <div className="book-description">
           <p>
             <strong>설명:</strong> {book.description}
           </p>
@@ -222,6 +224,8 @@ function BookDetail() {
             {isLiked ? "♥ 찜 취소" : "♡ 찜하기"}
           </button>
         </div>
+        </div>
+       </div>  
       </div>
 
       <div className="add-comment-section">
