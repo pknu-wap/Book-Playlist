@@ -51,7 +51,7 @@ public class SecurityConfig {
                                 "/api/mypage/profile/username",
                                 "/api/playlist/create",
                                 "/api/playlist/save",
-
+                                "/api/playlist/delete/{playlistId}",
                                 "/api/playlist/{playlistId}/addBook",
                                 "/api/playlistlikes/{playlistId}/like",
                                 "/api/playlistlikes/{playlistId}/unlike",

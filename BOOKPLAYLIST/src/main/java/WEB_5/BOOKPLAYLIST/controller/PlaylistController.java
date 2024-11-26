@@ -104,8 +104,8 @@ public class PlaylistController {
         return ResponseEntity.ok(allPlaylists);
     }
 
-    // 해당 플레이리스트 삭제 (DELETE /api/playlist/{playlistId})
-    @DeleteMapping("/{playlistId}")
+    // 해당 플레이리스트 삭제 (DELETE /api/playlist/delete/{playlistId})
+    @DeleteMapping("/delete/{playlistId}")
     @PreAuthorize("isAuthenticated()") // 인증된 사용자만 접근 가능
     public ResponseEntity<String> deletePlaylist(@PathVariable Long playlistId,
                                                  @AuthenticationPrincipal CustomUserDetails userDetails) { // 사용자 정보 주입
