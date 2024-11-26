@@ -3,6 +3,7 @@ import axios from "axios";
 import "./SearchBar.css";
 import PlaylistModal from "./PlaylistModal.js";
 import { useNavigate } from "react-router-dom";
+import Moreview from "./더보기.png";
 
 const SearchBar = () => {
   const [username, setUsername] = useState('');
@@ -229,7 +230,7 @@ const SearchBar = () => {
   const buttonStyle = {
     position: "relative",
     padding: '8px 15px',
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#ffffff',
     color: 'white',
     border: 'none',
     borderRadius: '5px',
@@ -239,6 +240,7 @@ const SearchBar = () => {
   };
 
   const handleBookClick = (book) => {
+    closeModal();
     navigate(`/book/${book.id}`, { state: { book } }); // 책 상세 페이지로 이동
   };
   
@@ -381,7 +383,7 @@ const SearchBar = () => {
                       style={buttonStyle}
                       onClick={(e) => handleButtonClick(e, item)}
                     >
-                      ...
+                      <img src={Moreview} alt="더보기" style={{width:'20px', height:'20px'}}></img>
                     </button>
                   </div>
                 ))

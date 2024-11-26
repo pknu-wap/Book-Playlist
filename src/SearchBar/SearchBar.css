@@ -118,3 +118,10 @@
     border-radius: 50%;
     animation: playlist-spin 0.8s linear infinite;
 }
+
+.modal-search-result{
+
+}
+.modal-search-result:hover {
+    cursor: pointer;  /* 호버 시 커서를 클릭 가능한 모양으로 변경 */
+  }
