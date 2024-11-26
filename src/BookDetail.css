@@ -3,7 +3,7 @@
     font-family: Arial, sans-serif;
     padding: 20px;
     background-color: #f9f9f9;
-    max-width: 800px; /* 페이지 너비 */
+    max-width: 1080px; /* 페이지 너비 */
     margin: 0 auto; /* 중앙 정렬 */
 }
 
@@ -14,7 +14,7 @@
     padding: 10px 15px;
     margin-bottom: 20px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 15px;
 }
 
 .back-button:hover {
@@ -27,21 +27,23 @@
     border: 1px solid #ddd; /* 테두리 */
     border-radius: 10px; /* 둥근 모서리 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 */
-    padding: 20px; /* 내부 여백 */
-    display: flex;
-    flex-direction: column; /* 세로 정렬 */
-    align-items: center; /* 중앙 정렬 */
-    text-align: center; /* 텍스트 중앙 정렬 */
+    padding: 40px; /* 내부 여백 */
+    display: flex;  
+    gap: 30px; /* 요소 간 간격 추가 */ 
+    align-items: flex-start; /* 중앙 정렬 */
+    text-align: left; /* 텍스트 중앙 정렬 */
     position: relative; /* 찜하기 버튼 위치를 설정하기 위해 상대 위치 설정 */
+    margin-bottom: 40px; /* 댓글 작성란과의 간격 추가 */
 }
 
 /* 책 이미지 스타일 */
 .book-detail-book-image img {
     width: 250px;
-    height: 350px;
+    height: 380px;
     object-fit: cover;
     border-radius: 10px;
     border: 1px solid #ddd;
+    margin-top: 40px;
 }
 
 /* 찜하기 버튼 */
@@ -51,10 +53,10 @@
     right: 10px; /* 카드 우측 */
     background-color: transparent;
     border: none;
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
     transition: transform 0.2s ease, color 0.2s ease; /* 부드러운 애니메이션 효과 */
-    color: #ccc; /* 기본 회색 */
+    color: #000000; /* 기본 회색 */
 }
 
 /* 찜하기 상태일 때 빨간색으로 변경 */
@@ -67,6 +69,30 @@
     color: #007bff; /* 호버 시 파란색 강조 */
 }
 
+/*책 제목 */
+.book-title {
+    margin-top: 20px;
+    width: 100%;
+    text-align: left; 
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.book-authorpublisheraverage {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: left; /* 텍스트 좌측 정렬 */
+}
+
+.book-authorpublisheraverage p {
+    margin: 10px 0;
+    line-height: 1.6;
+    font-size: 16px;
+    color: #555;
+}
+
 /* 설명 스타일 */
 .book-description {
     margin-top: 20px;
@@ -74,16 +100,10 @@
     text-align: left; /* 텍스트 좌측 정렬 */
 }
 
-.book-description h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
 .book-description p {
     margin: 10px 0;
-    line-height: 1.6;
-    font-size: 16px;
+    line-height: 1.4;
+    font-size: 14px;
     color: #555;
 }
 
@@ -94,51 +114,72 @@
 
 /* 댓글 작성 섹션 */
 .add-comment-section {
-    margin-top: 20px;
+    margin-top: 0px;
     padding: 20px;
-    border-top: 1px solid #ddd;
+    border: 1px solid #ddd; /* 테두리 추가 */
     background-color: #f5f5f5;
-    border-radius: 5px;
-    box-sizing: border-box;
+    border-radius: 10px; /* 모서리 둥글게 */
+    max-width: 900px; /* 페이지 중앙 정렬에 맞게 최대 너비 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
+    position: relative; /* 버튼 위치를 위한 기준 설정 */
+}
+
+.add-comment-section h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 10px;
 }
 
 /* 댓글 입력 칸 */
 .add-comment-section textarea {
-    width: 100%; /* 너비를 컨테이너 폭만큼 */
-    max-width: 500px; /* 최대 너비 제한 */
-    height: 120px; /* 높이 증가 */
+    width: 100%; /* 전체 너비로 확장 */
+    height: 80px; /* 높이 조정 */
     padding: 10px; /* 내부 여백 */
-    border: 1px solid #ddd; /* 테두리 */
-    border-radius: 5px; /* 둥근 모서리 */
-    font-size: 16px; /* 글자 크기 */
-    resize: none; /* 크기 조정 금지 */
-    box-sizing: border-box; /* 패딩 포함 크기 조정 */
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px; /* 모서리 둥글게 */
+    font-size: 14px; /* 글자 크기 */
+    resize: none; /* 크기 조정 비활성화 */
+    box-sizing: border-box; /* 전체 크기 계산에 패딩 포함 */
+    margin-top: 40px; /* 버튼과의 간격 추가 */
 }
 
 /* 댓글 등록 버튼 스타일 */
 .add-comment-section button {
-    background-color: #007bff; /* 기본 파란색 */
+    position: absolute; /* 버튼 위치를 절대 배치 */
+    top: 20px; /* 상단 간격 */
+    right: 20px; /* 우측 간격 */
+    background-color: #61B057; /* 기본 파란색 */
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 8px 15px; /* 크기 조정 */
+    border-radius: 10px; /* 모서리 둥글게 */
     cursor: pointer;
-    font-size: 16px; /* 글씨 크기 */
-    font-weight: bold; /* 글씨 두께 */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* 부드러운 전환 효과 */
+    font-size: 14px; /* 글씨 크기 */
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+/* 댓글 등록 버튼 호버 효과 */
 .add-comment-section button:hover {
-    background-color: #0056b3; /* 호버 시 더 어두운 파란색 */
+    background-color: #53904b; /* 어두운 파란색 */
     transform: scale(1.05); /* 살짝 확대 */
 }
 
 .add-comment-section button:active {
-    transform: scale(0.95); /* 클릭 시 살짝 축소 */
     background-color: #004080; /* 더 어두운 색 */
+    transform: scale(0.95); /* 살짝 축소 */
 }
 
+
 /* 별점 스타일 */
+.rating-input {
+    display: flex;
+    gap: 5px; /* 별 간격 */
+    justify-content: flex-start; /* 별을 왼쪽 정렬 */
+}
+
 .rating-input .star {
     font-size: 24px;
     cursor: pointer;
@@ -162,7 +203,14 @@
 /* 댓글 섹션 */
 .comments-section {
     margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    max-width: 900px; /* 페이지 중앙 정렬에 맞게 최대 너비 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
 }
+
 
 /* 댓글 아이템 */
 .comment-item {
@@ -170,7 +218,10 @@
     padding: 15px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* 요소 간 간격 */
 }
 
 /* 댓글 헤더 */
@@ -179,18 +230,17 @@
     align-items: center;
     justify-content: space-between; /* 공간을 균등하게 분배 */
     margin-bottom: 10px;
+    font-size: 14px; /* 폰트 크기 */
+    color: #333; /* 닉네임과 날짜 색상 */
 }
 
 /* 닉네임 스타일 */
 .comment-header .username {
     font-weight: bold;
-    font-size: 14px;
-    margin-right: 10px;
 }
 
 /* 날짜 스타일 */
 .comment-header .date {
-    font-size: 12px;
     color: #888; /* 날짜 색상 */
 }
 
@@ -211,7 +261,18 @@
 
 /* 댓글 내용 */
 .comment-text {
-    font-size: 16px;
+    font-size: 14px;
     color: #333;
     line-height: 1.5;
 }
+.star-rating {
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .star-rating .rating-number {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+  

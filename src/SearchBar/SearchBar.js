@@ -21,12 +21,30 @@ const SearchBar = () => {
   const [selectedIsbn, setSelectedIsbn] = useState(null);
   const [isplyLoading,setIsplyLoading] = useState(false);
 
+  const getToken = () => {
+    return localStorage.getItem('token');
+  };
+
   useEffect(() => {
     const fetchUserData = async () => {
+        const token = getToken();
+      if (!token) {
+        alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+        setIsLoading(false); 
+        return;
+      }
       try {
         const [profileResponse, playlistsResponse] = await axios.all([
-          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile', { withCredentials: true }),
-          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists', { withCredentials: true }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
         ]);
 
         if (profileResponse.data?.username) setUsername(profileResponse.data.username);
@@ -130,6 +148,12 @@ const SearchBar = () => {
 
   const onClickzzimButton = async () => {
     setIsLoading(true);
+    const token = getToken();
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsLoading(false); 
+      return;
+    }
     try {
       // selectedIsbn이 null이 아닌지 확인
       if (!selectedIsbn) {
@@ -139,16 +163,20 @@ const SearchBar = () => {
   
       // 전달된 isbn 확인
       console.log("전달된 isbn:", selectedIsbn);
-  
+
       // axios 요청
       const response = await axios.post(
         `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/mainpage/like-by-isbn?isbn=${selectedIsbn}`, 
-        {},  // 빈 본문 전달
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      console.log("Sending ISBN:", selectedIsbn);
-      console.log("Request body:", { isbn: selectedIsbn });
-      // 성공적인 응답 처리
+      console.log("전송된 요청 데이터:", {
+        isbn: selectedIsbn,
+        token: token, // 사용된 토큰을 콘솔에 로그로 남깁니다
+      });
       console.log("응답 데이터:", response.data);
       alert('책이 찜되었습니다!');
     } catch (error) {
@@ -219,6 +247,7 @@ const SearchBar = () => {
     }
   };
   const AddbooktoPlaylist = async (item, playlist) => {
+    const token = getToken();
     try {
       setIsplyLoading(true);
       console.log("클릭한 플레이리스트Id:", playlist.playlistId);  // playlistId 확인
@@ -226,8 +255,11 @@ const SearchBar = () => {
       
       const response = await axios.post(
         `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlist.playlistId}/addBook?isbn=${item.isbn}`,  // isbn을 query parameter로 전달
-        {},
-        { withCredentials: true }  // 로그인 상태 유지
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        } // 로그인 상태 유지
       );
   
       console.log("Book added successfully:", response.data);
@@ -429,7 +461,7 @@ const SearchBar = () => {
         <div
           style={{
             position: 'absolute',
-            top: `${modalPosition.top+100}px`,
+            top: `${modalPosition.top + 100}px`,
             left: `${modalPosition.left + 410}px`,
             transform: 'translate(-50%, -50%)',
             display: 'flex',
@@ -442,6 +474,7 @@ const SearchBar = () => {
             flexDirection: 'column',
             width: '300px',
             height: '300px',
+            overflow: 'hidden',  // 전체 모달 영역에서 스크롤 숨기기
           }}
         >
           <button
@@ -459,12 +492,13 @@ const SearchBar = () => {
             ✖
           </button>
 
-          {/* 스크롤바 숨기기 */}
+          {/* 스크롤을 허용하되, 스크롤바는 숨기기 */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              overflowY: 'auto',  // 세로 스크롤을 허용
+              overflowX: 'hidden',
+              overflowY: 'auto',  // 세로 스크롤 허용
               marginTop: '30px', // 버튼 아래로 여백 추가
               maxHeight: 'calc(100% - 40px)', // 전체 모달 높이에 맞게 조정
             }}
@@ -489,15 +523,12 @@ const SearchBar = () => {
             <button className="adding" onClick={AddmodalOpen}>+</button>
           </div>
 
-          {/* 스크롤바를 숨기는 CSS */}
+          {/* 웹킷 브라우저에서 스크롤바 숨기기 */}
           <style>
             {`
-              .modal-content::-webkit-scrollbar {
-                display: none;  /* 크롬, 사파리, 엣지에서 스크롤바 숨기기 */
-              }
-              .modal-content {
-                -ms-overflow-style: none;  /* Internet Explorer 10+ */
-                scrollbar-width: none;  /* Firefox에서 스크롤바 숨기기 */
+              /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
+              .playlist-item::-webkit-scrollbar {
+                display: none;
               }
             `}
           </style>

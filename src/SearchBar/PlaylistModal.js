@@ -34,6 +34,10 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
 
   const navigate = useNavigate();
 
+  const getToken = () => {
+    return localStorage.getItem('token');
+  };
+
   const [playlistTitle, setPlaylistTitle] = useState('');
   const [playlistDescription, setPlaylistDescription] = useState('');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -210,6 +214,7 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
   // 플레이리스트 저장 함수
   const handleSavePlaylist = async () => {
     setIsSaving(true);
+    const token = getToken(); // getToken으로 JWT 가져오기
     try {
       // 플레이리스트 생성 후 ID 가져오기
       const createResponse = await axios.post(

@@ -33,7 +33,11 @@ const fetchPlaylists = async () => {
     );
     return response.data;
   } catch (error) {
-    console.error("플레이리스트 목록을 불러오는 데 실패했습니다.", error);
+    if (error.response?.status === 401){
+      console.error("플레이리스트 목록을 불러오는 데 실패했습니다.", error);
+    } else {
+      console.error("플레이리스트 목록을 불러오는 데 실패했습니다.", error);
+    }
     return null;
   }
 };
@@ -42,7 +46,7 @@ const fetchPlaylistDetails = async (playlistId) => {
   try {
     const response = await axios.get(
       `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlistId}`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return response.data;
   } catch (error) {
@@ -52,6 +56,7 @@ const fetchPlaylistDetails = async (playlistId) => {
 };
 
 
+
 function SimpleSlider() {
   const [playlists, setPlaylists] = useState([]);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
@@ -59,6 +64,22 @@ function SimpleSlider() {
   const [modalLoading, setModalLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [token, setToken] = useState(null); // 토큰 상태 추가
+useEffect(() => {
+  const loadPlaylists = async () => {
+    setLoading(true);
+    const data = await fetchPlaylists(token);
+    if (data) {
+      setPlaylists([...data]); // 불변성 유지
+      setError(null);
+    } else {
+      setError("플레이리스트를 불러오는 데 실패했습니다.");
+    }
+    setLoading(false);
+  };
+
+  loadPlaylists();
+},[]); // 토큰 변경 시 재요청
 
   const settings = {
     arrows: true,

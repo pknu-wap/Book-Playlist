@@ -105,81 +105,112 @@ function BookDetail() {
       return;
     }
 
-    setIsLoadingLike(true);
-    try {
-      const endpoint = isLiked
-        ? `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/${book.isbn}/unlike`
-        : `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/${book.isbn}/like`;
+    const token = localStorage.getItem("authToken"); // JWT 토큰 가져오기
+  if (!token) {
+    alert("로그인이 필요합니다.");
+    navigate("/login");
+    return;
+  }
 
-      if (isLiked) {
-        await axios.delete(endpoint, { withCredentials: true });
-      } else {
-        await axios.post(endpoint, {}, { withCredentials: true });
-      }
+  setIsLoadingLike(true); // 로딩 상태 활성화
+  try {
+    const endpoint = isLiked
+      ? `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/${book.isbn}/unlike` // 찜 취소 API
+      : `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/${book.isbn}/like`; // 찜하기 API
 
-      setIsLiked(!isLiked);
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        alert("로그인이 필요합니다.");
-        navigate("/login");
-      } else {
-        console.error("Error toggling like status:", error);
-      }
-    } finally {
-      setIsLoadingLike(false);
+    const headers = {
+      Authorization: `Bearer ${token}`, // JWT 토큰을 Authorization 헤더에 포함
+    };
+
+    if (isLiked) {
+      await axios.delete(endpoint, { headers }); // 찜 취소 요청
+    } else {
+      await axios.post(endpoint, {}, { headers }); // 찜하기 요청
     }
-  };
+
+    setIsLiked(!isLiked); // 상태 토글
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      alert("로그인이 필요합니다."); // 인증 오류 시 알림
+      navigate("/login"); // 로그인 페이지로 이동
+    } else {
+      console.error("Error toggling like status:", error);
+    }
+  } finally {
+    setIsLoadingLike(false); // 로딩 상태 비활성화
+  }
+};
 
   const handleAddComment = async () => {
     if (newComment.trim() === "") return;
+
+    const token = localStorage.getItem("authToken"); // JWT 토큰 가져오기
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
 
     try {
       const response = await axios.post(
         `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/books/${book.isbn}/comments`,
         {
-          content: newComment,
-          rating,
+          content: newComment, // 댓글 내용
+          rating, // 평점
         },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // JWT 토큰을 Authorization 헤더에 포함
+          },
+        }
       );
       setComments([
         ...comments,
-        { ...response.data, username, isAuthor: true }, // 새 댓글은 현재 사용자가 작성한 것으로 처리
+        { ...response.data, username, isAuthor: true }, // 새 댓글 추가
       ]);
-      setNewComment("");
-      setRating(0);
+      setNewComment(""); // 입력 필드 초기화
+      setRating(0); // 평점 초기화
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("로그인이 필요합니다.");
-        navigate("/login");
+        alert("로그인이 필요합니다."); // 인증 오류 시 알림
+        navigate("/login"); // 로그인 페이지로 이동
       } else {
         console.error("Error adding comment:", error);
       }
     }
   };
 
-  const handleDeleteComment = async (commentId) => {
-    try {
-      const response = await axios.delete(
-        `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/books/comments/${commentId}`,
-        {
-          data: {},
-          withCredentials: true,
-        }
-      );
+  // 댓글 삭제 기능 (JWT 토큰 인증)
+const handleDeleteComment = async (commentId) => {
+  const token = localStorage.getItem("authToken"); // JWT 토큰 가져오기
+  if (!token) {
+    alert("로그인이 필요합니다.");
+    navigate("/login");
+    return;
+  }
 
-      if (response.data.success) {
-        setComments(comments.filter((comment) => comment.id !== commentId));
+  try {
+    const response = await axios.delete(
+      `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/books/comments/${commentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // JWT 토큰을 Authorization 헤더에 포함
+        },
       }
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        alert("로그인이 필요합니다.");
-        navigate("/login");
-      } else {
-        console.error("Error deleting comment:", error);
-      }
+    );
+
+    if (response.data.success) {
+      setComments(comments.filter((comment) => comment.id !== commentId)); // 댓글 목록 갱신
     }
-  };
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      alert("로그인이 필요합니다."); // 인증 오류 시 알림
+      navigate("/login"); // 로그인 페이지로 이동
+    } else {
+      console.error("Error deleting comment:", error);
+    }
+  }
+};
 
   const handleStarClick = (starValue) => {
     setRating(starValue);
@@ -199,18 +230,20 @@ function BookDetail() {
         <div className="book-detail-book-image">
           <img src={book.image} alt={book.title} />
         </div>
-        <div className="book-description">
+        <div className="book-title"> 
           <h1>{book.title}</h1>
+        <div className="book-authorpublisheraverage">
           <p>
             <strong>저자:</strong> {book.author}
-          </p>
+            </p> 
           <p>
             <strong>출판사:</strong> {book.publisher}
-          </p>
+            </p>
           <p>
             <strong>평점:</strong>{" "}
             {averageRating ? averageRating.toFixed(1) : "평가 없음"}
           </p>
+          <div className="book-description">
           <p>
             <strong>설명:</strong> {book.description}
           </p>
@@ -222,6 +255,8 @@ function BookDetail() {
             {isLiked ? "♥ 찜 취소" : "♡ 찜하기"}
           </button>
         </div>
+        </div>
+       </div>  
       </div>
 
       <div className="add-comment-section">
