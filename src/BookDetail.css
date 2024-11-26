@@ -39,10 +39,11 @@
 /* 책 이미지 스타일 */
 .book-detail-book-image img {
     width: 250px;
-    height: 350px;
+    height: 380px;
     object-fit: cover;
     border-radius: 10px;
     border: 1px solid #ddd;
+    margin-top: 40px;
 }
 
 /* 찜하기 버튼 */
