@@ -39,7 +39,8 @@ public class BookService {
                         book.getAuthor(),
                         book.getPublisher(),
                         book.getImage(),
-                        book.getBookLikes().size() // 찜 개수 계산
+                        book.getBookLikes().size(), // 찜 개수 계산
+                        book.getIsbn()
                 ))
                 .collect(Collectors.toList());
     }
