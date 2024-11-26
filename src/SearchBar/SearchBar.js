@@ -237,8 +237,8 @@ const SearchBar = () => {
 
   };
 
-  const handleBookClick = (item) => {
-    navigate(`/book/${item.id}`, { state: { item } }); // 책 상세 페이지로 이동
+  const handleBookClick = (book) => {
+    navigate(`/book/${book.id}`, { state: { book } }); // 책 상세 페이지로 이동
   };
   
   const handleKeyPress = (e) => {
