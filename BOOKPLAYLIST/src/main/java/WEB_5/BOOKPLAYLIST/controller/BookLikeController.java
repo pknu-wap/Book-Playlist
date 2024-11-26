@@ -10,6 +10,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import WEB_5.BOOKPLAYLIST.domain.entity.CustomUserDetails;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/booklikes")
 @RequiredArgsConstructor
@@ -62,9 +64,14 @@ public class BookLikeController {
     @PostMapping("/mainpage/like-by-isbn")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> likeBookByIsbn(
-            @RequestParam String isbn,
+            @RequestBody Map<String, String> payload, // JSON 본문으로 매핑
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
+            String isbn = payload.get("isbn"); // JSON에서 isbn 추출
+            if (isbn == null || isbn.isEmpty()) {
+                return ResponseEntity.badRequest().body("ISBN 값이 없습니다.");
+            }
+
             Long userId = userDetails.getId();
             boolean isLiked = bookLikeService.likeBookByIsbn(isbn, userId);
 
