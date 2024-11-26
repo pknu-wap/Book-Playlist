@@ -25,26 +25,43 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // CORS 설정
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // CSRF 비활성화 (JWT 사용)
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // JWT를 사용하므로 세션 비활성화
+                // 세션을 사용하지 않음
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        // 인증이 필요하지 않은 API
+                        // 인증이 필요 없는 요청
+                        .requestMatchers("/api/playlist/playlists").permitAll() // 모든 플레이리스트 조회 허용
+                        // 인증이 필요한 요청
                         .requestMatchers(
-                                "/api/playlist/playlists", // 모든 플레이리스트 조회
-                                "/api/public/**" // 예: 공개 API 경로
-                        ).permitAll()
-                        // 인증이 필요한 API
-                        .requestMatchers(
-                                "/api/booklikes/**",
-                                "/api/mypage/**",
-                                "/api/playlist/**",
-                                "/api/playlistlikes/**"
+                                "/api/booklikes/{isbn}/like",
+                                "/api/booklikes/{isbn}/unlike",
+                                "/api/booklikes/{isbn}/isLiked",
+                                "/api/booklikes/mainpage/like-by-isbn",
+                                "/api/books/{isbn}/comments",
+                                "/api/books/comments/{commentId}",
+                                "/api/books/{bookisbn}/rating",
+                                "/api/mypage/mine/playlists",
+                                "/api/mypage/profile",
+                                "/api/mypage/favorite/playlists",
+                                "/api/mypage/favorite/books",
+                                "/api/mypage/mine/comments",
+                                "/api/mypage/profile/username",
+                                "/api/playlist/create",
+                                "/api/playlist/save",
+                                "/api/playlist/{playlistId}",
+                                "/api/playlist/{playlistId}/addBook",
+                                "/api/playlistlikes/{playlistId}/like",
+                                "/api/playlistlikes/{playlistId}/unlike",
+                                "/api/playlistlikes/{playlistId}/isLiked"
                         ).authenticated()
-                        // 나머지 요청
+                        // 그 외 모든 요청
                         .anyRequest().permitAll()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 인증 필터 추가
+                // JWT 인증 필터 추가
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -53,10 +70,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://book-playlist.netlify.app")); // 허용 도메인
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
-        configuration.setExposedHeaders(List.of("Authorization")); // 응답에서 노출할 헤더
-        configuration.setAllowCredentials(true); // 쿠키와 같은 인증 정보를 허용
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // 허용 HTTP 메서드
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With")); // 허용 헤더
+        configuration.setExposedHeaders(List.of("Authorization")); // 노출 헤더
+        configuration.setAllowCredentials(true); // 인증 정보 허용
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
