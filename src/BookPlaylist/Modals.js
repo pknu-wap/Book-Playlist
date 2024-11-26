@@ -8,13 +8,26 @@ const Modals = ({ show, onClose, data, loading }) => {
   const [likeCount, setLikeCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
 
+  const getToken = () => {
+    return localStorage.getItem('token');
+  };
+
   useEffect(() => {
     const fetchLikeData = async () => {
-      
+      const token = getToken();
+      if (!token) {
+        alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+        setIsLoading(false); 
+        return;
+      }
       try {
         const { data: isLikedData } = await axios.get(
           `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${data.playlistId}/isLiked`,
-          { withCredentials: true }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const { data: likeCountData } = await axios.get(
           `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${data.playlistId}/likeCount`,
@@ -35,13 +48,29 @@ const Modals = ({ show, onClose, data, loading }) => {
       fetchLikeData();
     }
   }, [data]);
-  
   const handleLike = () => {
     setIsLoading(true); // 찜하기 버튼 클릭 시 로딩 시작
+    const token = getToken();
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsLoading(false); 
+      return;
+    }
+  
+    // 요청 URL
+    const likeUrl = `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${data.playlistId}/like`;
+    const unlikeUrl = `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${data.playlistId}/unlike`;
+  
+    // 요청 헤더에 Authorization 추가
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // 토큰을 Authorization 헤더에 포함
+    };
+  
     if (!isLiked) {
-      setIsLoading(true);
+      // 찜하기
       axios
-        .post(`https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${data.playlistId}/like`, {}, {
+        .post(likeUrl, {}, {
+          headers: headers,
           withCredentials: true,
         })
         .then(() => {
@@ -53,12 +82,13 @@ const Modals = ({ show, onClose, data, loading }) => {
           console.error("찜하기 실패:", error);
         })
         .finally(() => {
-           setIsLoading(false);
+          setIsLoading(false);
         });
     } else {
       // 찜 취소
       axios
-        .delete(`https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${data.playlistId}/unlike`, {
+        .delete(unlikeUrl, {
+          headers: headers,
           withCredentials: true,
         })
         .then(() => {
@@ -74,6 +104,7 @@ const Modals = ({ show, onClose, data, loading }) => {
         });
     }
   };
+  
   
   if (!show) return null;
 

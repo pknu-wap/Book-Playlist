@@ -11,7 +11,7 @@ const Filter = ({ onSortChange }) => {
 
   return (
     <div className="filter">
-      <h1 style={{ marginLeft: '40px' }}>전체 북 플레이리스트!</h1>
+      <h1 style={{ marginLeft: '40px', fontSize:'40px' }}>전체 북 플레이리스트</h1>
       <button 
         onClick={() => handleClick("latest", 0)} 
         style={{

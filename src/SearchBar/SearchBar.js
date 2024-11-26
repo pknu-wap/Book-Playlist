@@ -21,12 +21,30 @@ const SearchBar = () => {
   const [selectedIsbn, setSelectedIsbn] = useState(null);
   const [isplyLoading,setIsplyLoading] = useState(false);
 
+  const getToken = () => {
+    return localStorage.getItem('token');
+  };
+
   useEffect(() => {
     const fetchUserData = async () => {
+        const token = getToken();
+      if (!token) {
+        alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+        setIsLoading(false); 
+        return;
+      }
       try {
         const [profileResponse, playlistsResponse] = await axios.all([
-          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile', { withCredentials: true }),
-          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists', { withCredentials: true }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+          axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/mine/playlists', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
         ]);
 
         if (profileResponse.data?.username) setUsername(profileResponse.data.username);
@@ -130,6 +148,12 @@ const SearchBar = () => {
 
   const onClickzzimButton = async () => {
     setIsLoading(true);
+    const token = getToken();
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsLoading(false); 
+      return;
+    }
     try {
       // selectedIsbn이 null이 아닌지 확인
       if (!selectedIsbn) {
@@ -139,16 +163,20 @@ const SearchBar = () => {
   
       // 전달된 isbn 확인
       console.log("전달된 isbn:", selectedIsbn);
-  
+
       // axios 요청
       const response = await axios.post(
         `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/mainpage/like-by-isbn?isbn=${selectedIsbn}`, 
-        {},  // 빈 본문 전달
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      console.log("Sending ISBN:", selectedIsbn);
-      console.log("Request body:", { isbn: selectedIsbn });
-      // 성공적인 응답 처리
+      console.log("전송된 요청 데이터:", {
+        isbn: selectedIsbn,
+        token: token, // 사용된 토큰을 콘솔에 로그로 남깁니다
+      });
       console.log("응답 데이터:", response.data);
       alert('책이 찜되었습니다!');
     } catch (error) {
@@ -164,26 +192,28 @@ const SearchBar = () => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: '20px',
     padding: '10px',
     borderBottom: '1px solid #ddd',
-    borderRadius: '8px',
-    backgroundColor: '#f9f9f9',
+    height:'140px'
   };
 
   const imageStyle = {
-    width: '100px',
-    height: '150px',
+    width: '90px',
+    height: '130px',
     objectFit: 'cover',
     borderRadius: '8px',
     marginRight: '20px',
+    marginLeft:'10px',
+    marginTop:'10px',
+    marginBottom:'10px',
+    boxShadow:'1px 2px 2px rgb(55,55,55,0.2)'
   };
 
   const titleStyle = {
     fontWeight: 'bold',
     fontSize: '1.1rem',
     marginBottom: '5px',
-    maxWidth: '200px',
+    maxWidth: '300px',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
@@ -217,6 +247,7 @@ const SearchBar = () => {
     }
   };
   const AddbooktoPlaylist = async (item, playlist) => {
+    const token = getToken();
     try {
       setIsplyLoading(true);
       console.log("클릭한 플레이리스트Id:", playlist.playlistId);  // playlistId 확인
@@ -224,8 +255,11 @@ const SearchBar = () => {
       
       const response = await axios.post(
         `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlist.playlistId}/addBook?isbn=${item.isbn}`,  // isbn을 query parameter로 전달
-        {},
-        { withCredentials: true }  // 로그인 상태 유지
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        } // 로그인 상태 유지
       );
   
       console.log("Book added successfully:", response.data);
@@ -296,7 +330,7 @@ const SearchBar = () => {
       {isModalOpen && (
         <div
           style={{
-            position: "fixed",
+            position: "absolute",
             top: "75px",
             left: "0px",
             right: "0",
@@ -312,9 +346,10 @@ const SearchBar = () => {
           <div
             className="modal-content"
             style={{
+              height:'500px',
+              border:'1px solid lightgray',
               backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "8px",
+              borderRadius: "30px",
               width: "80%",
               maxWidth: "550px",
               maxHeight: "70vh",
@@ -326,6 +361,7 @@ const SearchBar = () => {
               {searchResults.length > 0 ? (
                 searchResults.map((item) => (
                   <div
+                    className="modal-search-result"
                     key={item.id || item.isbn}
                     style={resultItemStyle}
                     onClick={() => handleBookClick(item)}
@@ -351,6 +387,14 @@ const SearchBar = () => {
                 <p>검색 결과가 없습니다.</p>
               )}
             </div>
+            {/* 스크롤바 숨기기 */}
+            <style>
+              {`
+                .modal-content::-webkit-scrollbar {
+                  display: none; /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
+                }
+              `}
+            </style>
           </div>
         </div>
       )}
@@ -359,13 +403,13 @@ const SearchBar = () => {
       {isSecondModalOpen && (
         <div
           style={{
-            height: '120px',
+            height: '142px',
             marginLeft: '20px',
             position: 'absolute',
-            top: `${modalPosition.top}px`,
-            left: `${modalPosition.left + 20}px`,  // 첫 번째 모달과 일정 간격 두기
+            marginTop: `${modalPosition.top - 100}px`,
+            left: `${modalPosition.left}px`,  // 첫 번째 모달과 일정 간격 두기
             backgroundColor: 'rgba(0, 0, 0, 0)',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -374,15 +418,18 @@ const SearchBar = () => {
             transform: 'translateY(0)',  // 상대적 위치 조정
           }}
         >
-          <div className="searchbar-second-modal" style={{ boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+          <div className="searchbar-second-modal" style={{border:'2px solid lightgray', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',borderRadius:'30px' }}>
             {selectedItem ? (
               <>
                 <button onClick={closeSecondModal} style={{
+                  width:'240px',
+                  margin:'0 0 0 0',
                   border: 'none',
                   backgroundColor: 'transparent',
                   fontSize: '16px',
                   cursor: 'pointer',
-                  padding: '10px'
+                  padding: '10px',
+                  borderBottom:'1px solid lightgray'
                 }}>
                   ✖
                 </button>
@@ -392,7 +439,15 @@ const SearchBar = () => {
                 >
                   플레이리스트 추가
                 </button>
-                {isLoading ? (<div className="playlists-loading"><p></p></div>):(<button className="searchbar-modal-button" onClick={onClickzzimButton}>찜하기</button>)}
+                {isLoading ? (<div className="playlists-loading"><p></p></div>):(
+                  <button 
+                    className="searchbar-modal-button" 
+                    onClick={onClickzzimButton}
+                    style={{borderRadius:'0 0 30px 30px'}}
+                  >
+                    찜하기
+                  </button>
+                )}
               </>
             ) : (
               <p>아이템을 선택해주세요.</p>
@@ -405,62 +460,80 @@ const SearchBar = () => {
       {isThirdModalOpen && (
         <div
           style={{
-            position: 'fixed',  // 변경된 부분
-            top: `${modalPosition.top + 100}px`,  // viewport에 상대적인 위치
-            left: `${modalPosition.left + 413}px`, // 첫 번째 모달과 두 번째 모달의 위치를 고려하여 조정
+            position: 'absolute',
+            top: `${modalPosition.top + 100}px`,
+            left: `${modalPosition.left + 410}px`,
             transform: 'translate(-50%, -50%)',
             display: 'flex',
             backgroundColor: 'white',
-            borderRadius: '10px',
+            borderRadius: '30px',
             padding: '20px',
+            border: '1px solid lightgray',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             zIndex: 110,
             flexDirection: 'column',
             width: '300px',
-            height: '200px',
-            overflow: 'hidden',
+            height: '300px',
+            overflow: 'hidden',  // 전체 모달 영역에서 스크롤 숨기기
           }}
         >
           <button
             style={{
               position: 'absolute',
-              top: '10px',
-              left: '10px', // 우측 상단에 고정
+              margin: 'auto',
               border: 'none',
               backgroundColor: 'transparent',
               fontSize: '16px',
               cursor: 'pointer',
-              zIndex: 120, // 버튼이 다른 요소 위로 오게끔 설정
+              zIndex: 120,
             }}
             onClick={ThirdModelClose}
           >
             ✖
           </button>
-    
-          {/* 스크롤 가능한 내용 영역 */}
+
+          {/* 스크롤을 허용하되, 스크롤바는 숨기기 */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              overflowY: 'auto',  // 세로 스크롤
+              overflowX: 'hidden',
+              overflowY: 'auto',  // 세로 스크롤 허용
               marginTop: '30px', // 버튼 아래로 여백 추가
+              maxHeight: 'calc(100% - 40px)', // 전체 모달 높이에 맞게 조정
             }}
           >
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className="playlist-item">
-                {isplyLoading ? (<div className="playlists-loading"><p></p></div>) : (<button 
-                  className="playlist-list" 
-                  onClick={() => {
-                    handleClick(selectedItem, playlist);
-                    AddbooktoPlaylist(selectedItem, playlist);
-                  }}>{playlist.title || "제목없음"}</button>)}
+                {isplyLoading ? (
+                  <div className="playlists-loading"><p></p></div>
+                ) : (
+                  <button
+                    className="playlist-list"
+                    onClick={() => {
+                      handleClick(selectedItem, playlist);
+                      AddbooktoPlaylist(selectedItem, playlist);
+                    }}
+                  >
+                    {playlist.title || "제목없음"}
+                  </button>
+                )}
               </div>
             ))}
             <button className="adding" onClick={AddmodalOpen}>+</button>
           </div>
+
+          {/* 웹킷 브라우저에서 스크롤바 숨기기 */}
+          <style>
+            {`
+              /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
+              .playlist-item::-webkit-scrollbar {
+                display: none;
+              }
+            `}
+          </style>
         </div>
       )}
-    
       {/* Playlist Modal */}
       {addmodalOpen && (
         <PlaylistModal
