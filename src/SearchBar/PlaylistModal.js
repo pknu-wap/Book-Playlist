@@ -1,10 +1,11 @@
-import React, { useEffect ,useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import './Playlist.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 
-function PlaylistModal({ bookitem, onClose,addPlaylist }) {
+function PlaylistModal({bookitem, onClose,addPlaylist }) {
+  const [isLoading, setIsLoading] = useState(true);
   const placeholderImage = 'https://www.svgrepo.com/show/508699/landscape-placeholder.svg';
   const [imageSrc, setImageSrc] = useState(placeholderImage);
   const [isSaving, setIsSaving] = useState(false);
@@ -31,12 +32,36 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
     }
     console.log(bookitem);
   }, [bookitem, bookList]);
+  const [likedBooks, setLikedBooks] = useState([]);
 
   const navigate = useNavigate();
 
+  const studyContainerRef = useRef(null);
   const getToken = () => {
     return localStorage.getItem('token');
   };
+
+  // 왼쪽으로 스크롤하는 함수
+  const scrollLeft = () => {
+    if (studyContainerRef.current) {
+      studyContainerRef.current.scrollBy({
+        left: -1200, // 원하는 스크롤 거리 조정
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  // 오른쪽으로 스크롤하는 함수
+  const scrollRight = () => {
+    if (studyContainerRef.current) {
+      studyContainerRef.current.scrollBy({
+        left: 1200, // 원하는 스크롤 거리 조정
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const MAX_EMPTY_ITEMS = 5;
 
   const [playlistTitle, setPlaylistTitle] = useState('');
   const [playlistDescription, setPlaylistDescription] = useState('');
@@ -172,23 +197,23 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
   // 책 추가 함수
   const handleAddBook = (book) => {
     const isbn = book.isbn || book.isbn13 || book.isbn10 || '';
-    if (!bookList.some((existingBook) => existingBook.isbn === isbn)) {
-        setBookList((prevBookList) => [
-          ...prevBookList,
-          {
-            title: book.title,
-            author: book.author,
-            publisher: book.publisher,
-            cover: book.image,
-            isbn: isbn,
-          },
-        ]);
-      }
-    };
+    setBookList((prevBookList) => [
+      ...prevBookList,
+      {
+        title: book.title,
+        author: book.author,
+        publisher: book.publisher,
+        cover: book.image,
+        isbn: isbn,
+      },
+    ]);
+  };
 
   // 책 삭제 함수
-  const handleRemoveBook = (id) => {
-    setBookList((prevBookList) => prevBookList.filter((book) => book.id !== id));
+  const handleRemoveBook = (index) => {
+    setBookList((prevBookList) =>
+      prevBookList.filter((_, i) => i !== index)
+    );
   };
 
   // 책 클릭 시 상세 정보 표시 함수
@@ -215,12 +240,22 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
   const handleSavePlaylist = async () => {
     setIsSaving(true);
     const token = getToken(); // getToken으로 JWT 가져오기
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsSaving(false);
+      return;
+    }
+  
     try {
       // 플레이리스트 생성 후 ID 가져오기
       const createResponse = await axios.post(
         'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/create',
         null,
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const playlistId = Number(createResponse.data.playlistId);
 
@@ -237,8 +272,8 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
         'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save',
         formData,
         {
-          withCredentials: true,
           headers: {
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
           },
         }
@@ -254,6 +289,36 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
       setIsSaving(false); // 로딩 종료
     }
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = getToken(); // getToken으로 JWT 가져오기
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsSaving(false);
+      return;
+    }
+      
+      try {
+        const booksResponse = await axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/favorite/books', 
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        ); 
+
+        if (booksResponse.data) setLikedBooks(booksResponse.data);
+      } catch (error) {
+        console.error('데이터 가져오기 오류:', error);
+        alert('데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <>
@@ -350,7 +415,14 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
 
           <div className="playlist-book-list">
             {bookList.length === 0 ? (
-                <p>책이 없습니다. 추가해보세요!</p>
+              // 책이 없을 때 빈 아이템 박스 5개 표시
+              Array.from({ length: MAX_EMPTY_ITEMS }).map((_, index) => (
+                <div key={index} className="playlist-book-item empty">
+                  <div className="playlist-booktitle">
+                    <h3>책이름 | 저자</h3>
+                  </div>
+                </div>
+              ))
             ) : (
               // 책이 추가되면 추가된 책들만 표시
               bookList.map((book, index) => (
@@ -361,7 +433,7 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
                 >
                   <div className="playlist-book-info">
                     <img
-                      src={book.image}
+                      src={book.cover}
                       alt={book.title}
                       className="playlist-book-mcover"
                     />
@@ -375,7 +447,7 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
                       className="playlist-remove-book-btn"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleRemoveBook(book.id);
+                        handleRemoveBook(index);
                       }}
                     >
                       <span className='material-symbols-outlined'>delete</span>
@@ -405,6 +477,11 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="책 이름/저자를 검색해주세요!"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                  }
+                }}
               />
               <button onClick={handleSearch}>
                 <span className="material-symbols-outlined">search</span>
@@ -413,7 +490,7 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
 
             <div className="playlist-search-results">
               {searchResults.length === 0 ? (
-                <p>검색 결과가 없습니다.</p>
+                <p>책을 검색해주세요!</p>
               ) : (
                 searchResults.map((book, index) => (
                   <div key={index}>
@@ -451,7 +528,56 @@ function PlaylistModal({ bookitem, onClose,addPlaylist }) {
 
             <div className="playlist-mystudy">
               <p>내 서재</p>
+              <div className="playlist-mystudy-wrapper">
+              {isLoading ? (
+                <div className='playlist-mystudy-loadingbox'>
+                  <div className="playlist-loader"></div>
+                  <p>불러오는중...</p>
+                </div>
+            ) : (
+              <div className="playlist-mystudy-container" ref={studyContainerRef}>
+                <button className="playlist-arrow playlist-arrow-left" onClick={scrollLeft}>
+                  <span className="material-symbols-outlined">Arrow_Back</span>
+                </button> 
+                {likedBooks.length > 0 ? (
+                    likedBooks.map((book) => {
+                      let imageUrl = '';
+                      try {
+                        imageUrl = atob(book.image);
+                      } catch (e) {
+                        console.error('이미지 URL 디코딩 오류:', e);
+                      }
+                      return (
+                        <div key={book.isbn} className="playlist-mystudy-box">
+                          <div className="mypage-playlist-hover-container">
+                            {imageUrl ? (
+                              <img
+                                src={imageUrl}
+                                alt={book.title}
+                                className="mypage-playlist-image"
+                              />
+                            ) : (
+                              <div className="mypage-placeholder-image">
+                                이미지 없음
+                              </div>
+                            )}
+                          </div>
+                          <div className="mypage-playlist-title">
+                            <p>{book.title}</p>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p>찜한 책이 없습니다.</p>
+                  )}
+                  <button className="playlist-arrow playlist-arrow-right" onClick={scrollRight}>
+                   <span className="material-symbols-outlined">Arrow_forward</span>
+                  </button>
+                </div>
+                )}
             </div>
+           </div>
           </div>
         </div>
       )}

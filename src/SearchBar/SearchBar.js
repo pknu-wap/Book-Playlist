@@ -167,6 +167,7 @@ const SearchBar = () => {
       // axios 요청
       const response = await axios.post(
         `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/mainpage/like-by-isbn?isbn=${selectedIsbn}`, 
+        { isbn: selectedIsbn },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -255,6 +256,7 @@ const SearchBar = () => {
       
       const response = await axios.post(
         `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlist.playlistId}/addBook?isbn=${item.isbn}`,  // isbn을 query parameter로 전달
+        { isbn: selectedIsbn },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -439,7 +441,7 @@ const SearchBar = () => {
                 >
                   플레이리스트 추가
                 </button>
-                {isLoading ? (<div className="playlists-loading"><p></p></div>):(
+                {isLoading ? (<div className="playlists1-loading"></div>):(
                   <button 
                     className="searchbar-modal-button" 
                     onClick={onClickzzimButton}
@@ -506,7 +508,7 @@ const SearchBar = () => {
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className="playlist-item">
                 {isplyLoading ? (
-                  <div className="playlists-loading"><p></p></div>
+                  <div className="playlists1-loading"><p></p></div>
                 ) : (
                   <button
                     className="playlist-list"
