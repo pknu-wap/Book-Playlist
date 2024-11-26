@@ -27,32 +27,21 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 비활성화 (JWT 방식)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // JWT를 사용하므로 세션 비활성화
                 .authorizeHttpRequests(authorize -> authorize
-                        // 인증이 필요한 엔드포인트
+                        // 인증이 필요하지 않은 API
                         .requestMatchers(
-                                "/api/booklikes/{isbn}/like",
-                                "/api/booklikes/{isbn}/unlike",
-                                "/api/booklikes/{isbn}/isLiked",
-                                "/api/booklikes/mainpage/like-by-isbn",
-                                "/api/books/{isbn}/comments",
-                                "/api/books/comments/{commentId}",
-                                "/api/books/{bookisbn}/rating",
-                                "/api/mypage/mine/playlists",
-                                "/api/mypage/profile",
-                                "/api/mypage/favorite/playlists",
-                                "/api/mypage/favorite/books",
-                                "/api/mypage/mine/comments",
-                                "/api/mypage/profile/username",
-                                "/api/playlist/create",
-                                "/api/playlist/save",
-                                "/api/playlist/{playlistId}",
-                                "/api/playlist/{playlistId}/addBook",
-                                "/api/playlistlikes/{playlistId}/like",
-                                "/api/playlistlikes/{playlistId}/unlike",
-                                "/api/playlistlikes/{playlistId}/isLiked"
+                                "/api/playlist/playlists", // 모든 플레이리스트 조회
+                                "/api/public/**" // 예: 공개 API 경로
+                        ).permitAll()
+                        // 인증이 필요한 API
+                        .requestMatchers(
+                                "/api/booklikes/**",
+                                "/api/mypage/**",
+                                "/api/playlist/**",
+                                "/api/playlistlikes/**"
                         ).authenticated()
-                        // 인증이 필요 없는 엔드포인트
+                        // 나머지 요청
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 인증 필터 추가
@@ -63,10 +52,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://book-playlist.netlify.app")); // 슬래시 제거
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://book-playlist.netlify.app")); // 허용 도메인
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
+        configuration.setExposedHeaders(List.of("Authorization")); // 응답에서 노출할 헤더
+        configuration.setAllowCredentials(true); // 쿠키와 같은 인증 정보를 허용
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
