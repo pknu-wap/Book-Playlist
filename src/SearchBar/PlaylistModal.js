@@ -433,7 +433,7 @@ function PlaylistModal({bookitem, onClose,addPlaylist }) {
                 >
                   <div className="playlist-book-info">
                     <img
-                      src={book.image}
+                      src={book.cover}
                       alt={book.title}
                       className="playlist-book-mcover"
                     />
