@@ -14,6 +14,9 @@ function BookDetail() {
   const [isLiked, setIsLiked] = useState(false);
   const [isLoadingLike, setIsLoadingLike] = useState(false);
   const [username, setUsername] = useState(""); // 로그인 시 사용한 닉네임
+  const getToken = () => {
+    return localStorage.getItem('token');
+  };
 
   useEffect(() => {
     if (!book || !book.isbn) {
@@ -28,7 +31,6 @@ function BookDetail() {
         await axios.post(
           `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/search/books/isbn`,
           { isbn: book.isbn },
-          { withCredentials: true }
         );
       } catch (error) {
         console.error("Error posting book ISBN to backend:", error);
@@ -39,7 +41,7 @@ function BookDetail() {
     const fetchComments = async () => {
       try {
         const response = await axios.get(
-          `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/books/${book.isbn}/comments`,
+          `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/books/${book.isbn}/all/comments`,
           { withCredentials: true }
         );
         setComments(
@@ -69,9 +71,14 @@ function BookDetail() {
     // 찜하기 상태 확인
     const fetchLikeStatus = async () => {
       try {
+        const token = getToken(); // JWT 토큰 가져오기
         const response = await axios.get(
           `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/${book.isbn}/isLiked`,
-          { withCredentials: true }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 토큰 추가
+            },
+          }
         );
         setIsLiked(response.data || false);
       } catch (error) {
@@ -82,9 +89,14 @@ function BookDetail() {
     // 사용자 닉네임 가져오기
     const fetchUsername = async () => {
       try {
+        const token = getToken(); // getToken으로 JWT 가져오기); // JWT 토큰 가져오기
         const response = await axios.get(
-          `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/user`,
-          { withCredentials: true }
+          `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 토큰 추가
+            },
+          }
         );
         setUsername(response.data.username || "익명");
       } catch (error) {
@@ -105,7 +117,7 @@ function BookDetail() {
       return;
     }
 
-    const token = localStorage.getItem("authToken"); // JWT 토큰 가져오기
+    const token = getToken(); // getToken으로 JWT 가져오기
   if (!token) {
     alert("로그인이 필요합니다.");
     navigate("/login");
@@ -118,7 +130,14 @@ function BookDetail() {
       ? `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/${book.isbn}/unlike` // 찜 취소 API
       : `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/${book.isbn}/like`; // 찜하기 API
 
-    const headers = {
+      const token = getToken(); // getToken으로 JWT 가져오기
+      if (!token) {
+        alert("로그인이 필요합니다."); // 토큰이 없으면 로그인 필요 알림
+        navigate("/login"); // 로그인 페이지로 이동
+        return;
+      }
+      
+      const headers = {
       Authorization: `Bearer ${token}`, // JWT 토큰을 Authorization 헤더에 포함
     };
 
@@ -131,7 +150,7 @@ function BookDetail() {
     setIsLiked(!isLiked); // 상태 토글
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      alert("로그인이 필요합니다."); // 인증 오류 시 알림
+      alert("인증이 만료되었습니다. 다시 로그인해주세요."); // 인증 오류 시 알림
       navigate("/login"); // 로그인 페이지로 이동
     } else {
       console.error("Error toggling like status:", error);
@@ -144,7 +163,7 @@ function BookDetail() {
   const handleAddComment = async () => {
     if (newComment.trim() === "") return;
 
-    const token = localStorage.getItem("authToken"); // JWT 토큰 가져오기
+    const token = getToken(); // getToken으로 JWT 가져오기 
     if (!token) {
       alert("로그인이 필요합니다.");
       navigate("/login");
@@ -182,7 +201,7 @@ function BookDetail() {
 
   // 댓글 삭제 기능 (JWT 토큰 인증)
 const handleDeleteComment = async (commentId) => {
-  const token = localStorage.getItem("authToken"); // JWT 토큰 가져오기
+  const token = getToken(); // getToken으로 JWT 가져오기c // JWT 토큰 가져오기
   if (!token) {
     alert("로그인이 필요합니다.");
     navigate("/login");
