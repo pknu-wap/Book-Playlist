@@ -146,6 +146,12 @@ const MyPage = () => {
 
   // Handle username save
   const handleUsernameSave = async () => {
+    const token = getToken(); // getToken으로 JWT 가져오기
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsLoading(false); 
+      return;
+    }
     if (!newUsername.trim()) {
       alert('닉네임을 입력해주세요.');
       return;
@@ -154,7 +160,8 @@ const MyPage = () => {
       await axios.put(
         'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/profile/username',
         { newUsername },
-        { withCredentials: true }
+        {  headers:{
+          Authorization: `Bearer ${token}`,}}
       );
       setUsername(newUsername);
       setIsEditingUsername(false);

@@ -34,7 +34,7 @@ const Sidebar = () => {
             </li>
             <li>
               <img src={Icon4} alt="Icon4" />
-              <NavLink to="/bookcatergory">북 카테고리</NavLink>
+              <NavLink to="/bookcatergory">책 둘러보기</NavLink>
             </li>
             <li>
               <img src={Icon5} alt="Icon5" />
