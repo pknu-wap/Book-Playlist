@@ -40,7 +40,8 @@ public class BookService {
                         book.getPublisher(),
                         book.getImage(),
                         book.getBookLikes().size(), // 찜 개수 계산
-                        book.getIsbn()
+                        book.getIsbn(),
+                        book.getDescription() // 추가된 description 필드
                 ))
                 .collect(Collectors.toList());
     }

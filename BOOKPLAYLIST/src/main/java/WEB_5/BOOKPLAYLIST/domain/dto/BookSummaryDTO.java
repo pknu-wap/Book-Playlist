@@ -13,4 +13,5 @@ public class BookSummaryDTO {
     private String image;
     private int likeCount;
     private String isbn;
+    private String description;
 }
