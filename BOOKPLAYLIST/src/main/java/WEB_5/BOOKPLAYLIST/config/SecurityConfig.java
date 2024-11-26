@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         // 인증이 필요 없는 요청
-                        .requestMatchers("/api/playlist/playlists", "/api/playlist/{playlistId}").permitAll() // 모든 플레이리스트 조회 허용
+                        .requestMatchers("/api/books/{isbn}/all/comments", "/api/playlist/playlists", "/api/playlist/{playlistId}").permitAll() // 모든 플레이리스트 조회 허용
                         // 인증이 필요한 요청
                         .requestMatchers(
                                 "/api/booklikes/{isbn}/like",

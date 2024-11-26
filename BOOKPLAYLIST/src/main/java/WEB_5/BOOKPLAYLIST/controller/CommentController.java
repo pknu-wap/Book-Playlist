@@ -73,7 +73,7 @@ public class CommentController {
     }
 
     // 댓글 조회
-    @GetMapping("/{isbn}/comments")
+    @GetMapping("/{isbn}/all/comments")
     public ResponseEntity<List<CommentResponse>> getComments(@PathVariable String isbn) {
         List<CommentResponse> responses = commentService.getCommentsByBookIsbn(isbn).stream()
                 .map(comment -> new CommentResponse(
