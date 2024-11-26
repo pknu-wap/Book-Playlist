@@ -27,6 +27,9 @@ function PlaylistModal({ onClose, playlistId }) {
     author: '지은이',
   });
   const [bookList, setBookList] = useState([]);
+  const getToken = () => {
+    return localStorage.getItem('token');
+  };
 
   const studyContainerRef = useRef(null);
 
@@ -260,6 +263,12 @@ function PlaylistModal({ onClose, playlistId }) {
 
   // 플레이리스트 저장 함수
   const handleSavePlaylist = async () => {
+    const token = getToken(); // getToken으로 JWT 가져오기
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsLoading(false); 
+      return;
+    }
     setIsSaving(true);
     try {
       // FormData 객체 생성 및 데이터 추가
@@ -277,12 +286,12 @@ function PlaylistModal({ onClose, playlistId }) {
 
       // 서버로 전송
       await axios.post(
-        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save',
+        "https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/save",
         formData,
         {
-          withCredentials: true,
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -300,13 +309,21 @@ function PlaylistModal({ onClose, playlistId }) {
 
 
   const handleDeletePlaylist = async () => {
+    const token = getToken(); // getToken으로 JWT 가져오기
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsLoading(false); 
+      return;
+    }
     setIsDelete(true);
     try {
       // 서버로 전송
       await axios.delete(
-        `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlistId}`,
+        `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/delete/${playlistId}`,
         {
-          withCredentials: true,
+          headers: {
+              Authorization: `Bearer ${token}`,
+            },
         }
       );
   
@@ -325,8 +342,18 @@ function PlaylistModal({ onClose, playlistId }) {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      const token = getToken(); // getToken으로 JWT 가져오기
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsLoading(false); 
+      return;
+    }
       try {
-        const booksResponse = await axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/favorite/books', { withCredentials: true }) 
+        const booksResponse = await axios.get('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/mypage/favorite/books', { 
+          headers:{
+            Authorization: `Bearer ${token}`,
+          }
+         }) 
 
         if (booksResponse.data) setLikedBooks(booksResponse.data);
       } catch (error) {
@@ -636,7 +663,7 @@ function PlaylistModal({ onClose, playlistId }) {
                   className="playlist-zoom-range"
                 />
               </div>
-              
+              <button className='playlist-plimage-save' onClick={showCroppedImage}>저장</button>
             </div>
           </div>
         </div>
