@@ -408,7 +408,7 @@ const SearchBar = () => {
             marginLeft: '20px',
             position: 'absolute',
             marginTop: `${modalPosition.top - 100}px`,
-            left: `${modalPosition.left}px`,  // 첫 번째 모달과 일정 간격 두기
+            marginLeft:"1118px",
             backgroundColor: 'rgba(0, 0, 0, 0)',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
             display: 'flex',
@@ -462,8 +462,8 @@ const SearchBar = () => {
         <div
           style={{
             position: 'absolute',
-            top: `${modalPosition.top + 100}px`,
-            left: `${modalPosition.left + 410}px`,
+            top: `${modalPosition.top + 135}px`,
+            marginLeft:'1514px',
             transform: 'translate(-50%, -50%)',
             display: 'flex',
             backgroundColor: 'white',
