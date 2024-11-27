@@ -133,8 +133,8 @@
 
   .nextpage-button span {
     position: absolute;
-    left: 2px;
-    top: 0px;
+    left: 10px;
+    top: 10px;
   }
 
   .beforepage-button {
@@ -143,8 +143,8 @@
 
   .beforepage-button span {
     position: absolute;
-    left: 0px;
-    top: 0px;
+    left: 10px;
+    top: 10px;
   }
   
   

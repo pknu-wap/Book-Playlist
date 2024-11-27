@@ -1,5 +1,4 @@
 import React, { useEffect ,useState, useCallback } from 'react';
-import './Playlist.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';

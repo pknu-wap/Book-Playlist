@@ -188,7 +188,7 @@ const SearchBar = () => {
   };
 
   const resultItemStyle = {
-    width: '500px',
+    width: '720px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -227,14 +227,9 @@ const SearchBar = () => {
 
   const buttonStyle = {
     position: "relative",
-    padding: '8px 15px',
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
-
+    backgroundColor: 'white',
+    
+  
   };
 
   const handleBookClick = (book) => {
@@ -274,6 +269,7 @@ const SearchBar = () => {
     <div>
       {/* 검색 바 디자인 */}
       <div
+      className="search-bar-box"
         style={{
           display: "flex",
           alignItems: "center",
@@ -282,10 +278,10 @@ const SearchBar = () => {
           marginLeft:'105%',
           transform: "translateX(-50%)",
           zIndex: 1000,
-          width: "700px", // 검색 바 전체 폭
+          width: "750px", 
           maxWidth: "800px",
-          padding: "10px",
-          backgroundColor: "#f5f5f5", // 검색창 배경색
+          height: "60px",
+          backgroundColor: "white", 
           borderRadius: "30px",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         }}
@@ -296,13 +292,12 @@ const SearchBar = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="Search for books..."
+          placeholder="책을 검색해주세요!"
           style={{
             flex: 1,
-            height: "40px",
+            height: "50px",
             border: "none",
             outline: "none",
-            padding: "0 15px",
             fontSize: "16px",
             borderRadius: "30px 0 0 30px",
             backgroundColor: "#fff",
@@ -312,17 +307,17 @@ const SearchBar = () => {
           className="search-button"
           onClick={handleSearch}
           style={{
-            padding: "0 20px",
+            
             height: "40px",
             fontSize: "16px",
             border: "none",
             borderRadius: "0 30px 30px 0",
-            backgroundColor: "#4CAF50",
-            color: "white",
+            backgroundColor: "white",
+            color: "#61d87b",
             cursor: "pointer",
           }}
         >
-          검색
+          <span className="material-symbols-outlined">Search</span>
         </button>
       </div>
     
@@ -331,8 +326,8 @@ const SearchBar = () => {
         <div
           style={{
             position: "absolute",
-            top: "75px",
-            left: "0px",
+            top: "77px",
+            left: "80px",
             right: "0",
             backgroundColor: "rgba(0, 0, 0, 0)",
             display: "flex",
@@ -350,8 +345,8 @@ const SearchBar = () => {
               border:'1px solid lightgray',
               backgroundColor: "white",
               borderRadius: "30px",
-              width: "80%",
-              maxWidth: "550px",
+              width: "750px",
+              maxWidth: "750px",
               maxHeight: "70vh",
               overflowY: "auto",
             }}
@@ -375,12 +370,17 @@ const SearchBar = () => {
                       <p style={titleStyle}>{item.title}</p>
                       <p style={authorStyle}>{item.author}</p>
                     </div>
-                    <button
-                      style={buttonStyle}
-                      onClick={(e) => handleButtonClick(e, item)}
-                    >
-                      ...
-                    </button>
+                    
+                    
+                     <div className='dots'
+                     style={buttonStyle}
+                     onClick={(e) => handleButtonClick(e, item)}
+                     >
+                      <span>.</span>
+                      <span>.</span>
+                      <span>.</span>
+                    </div> 
+                    
                   </div>
                 ))
               ) : (

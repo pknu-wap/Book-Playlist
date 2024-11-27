@@ -12,11 +12,13 @@
     border-radius: 50px;
     gap: 10px; 
 }
-.search-bar {
-    outline:none;
-    border:none;
-    width: 600px;
-    height: 62px;  
+.search-bar-box {
+    border: 2px solid #61d87b;
+}
+
+.search-bar-box input {
+    
+    margin-left: 20px;
 }
   
 .search-button {
@@ -106,3 +108,23 @@
     border-radius: 50%;
     animation: playlist-spin 0.8s linear infinite;
 }
+
+.dots {
+    gap: 20px;
+}
+
+.dots span{
+    gap: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #000000;
+    border-radius: 50%;
+    font-size: 20px;
+    
+}
+
+.dots:hover {
+    background-color: #b1b1b1;
+}
+
+
