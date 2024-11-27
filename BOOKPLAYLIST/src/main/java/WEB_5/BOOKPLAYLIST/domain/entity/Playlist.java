@@ -21,7 +21,7 @@ public class Playlist {
     @Lob // 이미지 데이터를 Blob 형식으로 저장
     private byte[] imageData;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
