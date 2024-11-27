@@ -59,9 +59,11 @@ export default function Login({ onLogin }) { // onLogin prop을 통해 로그인
         }
     };
 
-    useEffect(() => {
-        setNotAllow(!(emailValid && pwValid)); // 이메일과 비밀번호 유효성 검사 결과에 따라 버튼 비활성화
-    }, [emailValid, pwValid]);
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && !notAllow) {
+            onClickConfirmButton(); // Enter 키가 눌렸을 때 로그인 실행
+        }
+    };
 
     const goToRegister = () => {
         navigate('/register'); // 회원가입 페이지로 이동
@@ -81,15 +83,22 @@ export default function Login({ onLogin }) { // onLogin prop을 통해 로그인
                 localStorage.removeItem('user');
                 sessionStorage.clear();
                 document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                console.log('로그아웃 완료');
+                alert('로그아웃되었습니다.');
                 navigate('/login');
             } else {
-                console.error('서버 로그아웃 실패');
+                const errorData = await response.json();
+                console.error('서버 로그아웃 실패:', errorData.message || '알 수 없는 오류');
+                alert('로그아웃에 실패했습니다.');
             }
         } catch (error) {
             console.error('로그아웃 중 오류 발생:', error);
+            alert('로그아웃 중 오류가 발생했습니다.');
         }
     };
+
+    useEffect(() => {
+        setNotAllow(!(emailValid && pwValid)); // 이메일과 비밀번호 유효성 검사 결과에 따라 버튼 비활성화
+    }, [emailValid, pwValid]);
 
     return (
         <div className="page">
@@ -106,6 +115,7 @@ export default function Login({ onLogin }) { // onLogin prop을 통해 로그인
                                 placeholder="이메일을 입력하세요"
                                 value={email}
                                 onChange={handleEmail}
+                                onKeyDown={handleKeyDown} // Enter 키 입력 처리
                             />
                         </div>
                         <div className="errorMessageWrap">
@@ -121,6 +131,7 @@ export default function Login({ onLogin }) { // onLogin prop을 통해 로그인
                                 placeholder="비밀번호를 입력하세요"
                                 value={pw}
                                 onChange={handlePassword}
+                                onKeyDown={handleKeyDown} // Enter 키 입력 처리
                             />
                         </div>
                         <div className="errorMessageWrap">
