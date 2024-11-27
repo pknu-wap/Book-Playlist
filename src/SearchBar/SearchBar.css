@@ -71,7 +71,7 @@
     border: #000000 1px solid;
     border:none;
     background-color: #ffffff;
-    width: 270px;
+    width: 100%;
     transition: background-color 0.3s;
     border-bottom: 1px solid lightgray;
 }
@@ -87,7 +87,7 @@
     border: #000000 1px solid;
     border:none;
     background-color: #ffffff;
-    width: 300px;
+    width: 100%;
     transition: background-color 0.3s;
 }
 
@@ -124,4 +124,17 @@
 }
 .modal-search-result:hover {
     cursor: pointer;  /* 호버 시 커서를 클릭 가능한 모양으로 변경 */
+  }
+
+  .addtoplaylists{
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    margin-top: 30px; /* 버튼 아래로 여백 추가 */
+    max-height: calc(100% - 40px); /* 전체 모달 높이에 맞게 조정 */
+    -ms-overflow-style: none;
+  }
+
+  .addtoplaylists::-webkit-scrollbar{
+    display:none;
   }

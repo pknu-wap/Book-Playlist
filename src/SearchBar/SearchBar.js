@@ -478,7 +478,6 @@ const SearchBar = () => {
             flexDirection: 'column',
             width: '300px',
             height: '300px',
-            overflow: 'hidden',  // 전체 모달 영역에서 스크롤 숨기기
           }}
         >
           <button
@@ -498,14 +497,7 @@ const SearchBar = () => {
 
           {/* 스크롤을 허용하되, 스크롤바는 숨기기 */}
           <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              overflowX: 'hidden',
-              overflowY: 'auto',  // 세로 스크롤 허용
-              marginTop: '30px', // 버튼 아래로 여백 추가
-              maxHeight: 'calc(100% - 40px)', // 전체 모달 높이에 맞게 조정
-            }}
+            className="addtoplaylists"
           >
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className="playlist-item">
