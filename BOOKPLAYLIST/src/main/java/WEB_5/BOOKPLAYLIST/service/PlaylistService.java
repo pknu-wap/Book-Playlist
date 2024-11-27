@@ -267,22 +267,24 @@ public class PlaylistService {
     }
 
     public List<PlaylistSummaryDTO> getPlaylistsOrderByLikes() {
-        List<Playlist> playlists = playlistRepository.findAllOrderByLikeCountDesc();
+        List<Playlist> playlists = playlistRepository.findTopPlaylistsWithUser();
+
         return playlists.stream()
                 .map(playlist -> {
                     String base64Image = playlist.getImageData() != null
                             ? Base64.getEncoder().encodeToString(playlist.getImageData())
-                            : null;
+                            : null; // Base64 인코딩된 이미지 데이터
                     return new PlaylistSummaryDTO(
                             playlist.getId(),
                             playlist.getTitle(),
                             playlist.getUser().getUsername(),
-                            base64Image,
+                            base64Image, // 이미지 데이터 포함
                             playlist.getLikeCount()
                     );
                 })
                 .collect(Collectors.toList());
     }
+
 
     public int getLikeCount(Long playlistId) {
         Playlist playlist = playlistRepository.findById(playlistId)
