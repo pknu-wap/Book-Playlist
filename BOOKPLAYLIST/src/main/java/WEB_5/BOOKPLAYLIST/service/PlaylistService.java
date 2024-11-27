@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +51,7 @@ public class PlaylistService {
 
         if (title == null || title.isBlank()) {
             Optional<User> userOpt = userRepository.findById(userId);
-            title = userOpt.map(User::getUsername).orElse("기본 플레이리스트 제목") + "님의 북플레이리스트";
+            title = userOpt.map(user -> user.getUsername() + "님의 북플레이리스트").orElse("기본 플레이리스트 제목");
         }
 
         if (description == null || description.isBlank()) {
@@ -86,7 +85,7 @@ public class PlaylistService {
         List<Book> booksToAdd = isbns.stream()
                 .distinct()
                 .map(isbn -> {
-                    Optional<Book> bookOpt = bookRepository.findByIsbn(isbn);
+                    Optional<Book> bookOpt = bookRepository.findTopByIsbn(isbn);
                     if (bookOpt.isPresent()) {
                         return bookOpt.get();
                     } else {
@@ -157,7 +156,7 @@ public class PlaylistService {
         User user = userOpt.get();
         Playlist playlist = new Playlist();
         playlist.setUser(user);
-        playlist.setBooks(new ArrayList<>());
+        playlist.setBooks(List.of());
 
         Playlist savedPlaylist = playlistRepository.save(playlist);
         return savedPlaylist.getId();
@@ -285,6 +284,7 @@ public class PlaylistService {
                 })
                 .collect(Collectors.toList());
     }
+
 
     public int getLikeCount(Long playlistId) {
         Playlist playlist = playlistRepository.findById(playlistId)

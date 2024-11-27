@@ -151,5 +151,4 @@ public class PlaylistController {
         List<PlaylistSummaryDTO> playlists = playlistService.getPlaylistsOrderByLikes();
         return ResponseEntity.ok(playlists);
     }
-
 }
