@@ -193,7 +193,7 @@ public class PlaylistService {
     }
 
     public List<PlaylistSummaryDTO> getAllPlaylists() {
-        List<Playlist> playlists = playlistRepository.findAll();
+        List<Playlist> playlists = playlistRepository.findAllWithUser(); // Fetch Join 사용
 
         return playlists.stream()
                 .map(playlist -> {
@@ -203,7 +203,7 @@ public class PlaylistService {
                     return new PlaylistSummaryDTO(
                             playlist.getId(),
                             playlist.getTitle(),
-                            playlist.getUser().getUsername(),
+                            playlist.getUser().getUsername(), // User 정보 이미 로드됨
                             base64Image,
                             playlist.getLikeCount()
                     );
