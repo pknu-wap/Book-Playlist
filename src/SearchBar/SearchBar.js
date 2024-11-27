@@ -1,4 +1,4 @@
-import React, { useState, useEffect,navigate } from "react";
+import React, { useState, useEffect,navigate,useRef } from "react";
 import axios from "axios";
 import "./SearchBar.css";
 import PlaylistModal from "./PlaylistModal.js";
@@ -101,13 +101,14 @@ const SearchBar = () => {
 
   const closeSecondModal = () => {
     setIsSecondModalOpen(false);
-    setIsThirdModalOpen();
+    setIsThirdModalOpen(false);
   };
 
   const handleModalClick = (e) => {
     if (e.target.closest(".modal-content")) return;
     closeModal();
   };
+
 
   const handleButtonClick = (e, item) => {
     e.stopPropagation(); // 클릭 이벤트 전파 방지
@@ -356,7 +357,7 @@ const SearchBar = () => {
               maxWidth: "700px",
               overflowY: "auto",
             }}
-            onClick={(e) => e.stopPropagation()} // 모달 외부 클릭 시 닫기 방지
+            onClick={(e) =>e.stopPropagation()}
           >
             <div>
               {searchResults.length > 0 ? (
@@ -463,7 +464,7 @@ const SearchBar = () => {
           style={{
             position: 'absolute',
             top: `${modalPosition.top + 135}px`,
-            marginLeft:'1514px',
+            marginLeft:'1464px',
             transform: 'translate(-50%, -50%)',
             display: 'flex',
             backgroundColor: 'white',
@@ -473,7 +474,7 @@ const SearchBar = () => {
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             zIndex: 110,
             flexDirection: 'column',
-            width: '300px',
+            width: '200px',
             height: '300px',
           }}
         >

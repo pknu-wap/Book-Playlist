@@ -113,28 +113,21 @@ const EntireItems = () => {
             {currentItems.map((playlist) => (
               <div key={playlist.playlistId}>
                 <div
-                  className="grid-item"
+                  className="grid-bookplaylist-item"
                   onClick={() => handleItemClick(playlist.playlistId)}
                 >
                   <img
                     src={`data:image/jpeg;base64,${playlist.base64Image || ""}`}
-                    alt={playlist.title}
-                    style={{ width: "200px", height: "275px", borderRadius: "10px",boxShadow:'2px 4px 4px rgba(0, 0, 0, 0.5)' }}
-                    id="grid-item-img"
+                    alt={playlist.title}                    
+                    className="grid-bookplaylist-img"
                   />
-                  <p 
-                    style={{
-                      fontWeight: 'bold',
-                      margin: '0px',
-                      fontSize: '25px',
-                      whiteSpace: 'nowrap',      // 텍스트가 한 줄로 유지되도록 설정
-                      overflow: 'hidden',       // 넘친 텍스트를 숨김
-                      textOverflow: 'ellipsis', // 넘친 부분에 ... 추가
-                    }}>
+                  <h3 
+                    className="grid-bookplaylist-title"
+                  >
                       {playlist.title || "제목 없음"}
-                  </p>
-                  <p style={{margin:'0px', color:'lightgray'}}>만든이 : {playlist.username}</p>
-                  <p style={{paddingBottom:'10px', color:'lightgray'}}> ❤️ {playlist.likeCount}</p>
+                  </h3>
+                  <p className="gird-bookplaylist-username">만든이 : {playlist.username}</p>
+                  <p className="gird-bookplaylist-likeCount"> ❤️ {playlist.likeCount}</p>
                 </div>
               </div>
             ))}
