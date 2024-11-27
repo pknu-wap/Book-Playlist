@@ -190,7 +190,7 @@ const SearchBar = () => {
   };
 
   const resultItemStyle = {
-    width: '500px',
+    width: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -229,7 +229,8 @@ const SearchBar = () => {
 
   const buttonStyle = {
     position: "relative",
-    padding: '8px 15px',
+    marginRight:"20px",
+    padding: '8px 15px 10px 10px',
     backgroundColor: '#ffffff',
     color: 'white',
     border: 'none',
@@ -336,12 +337,9 @@ const SearchBar = () => {
           style={{
             position: "absolute",
             top: "75px",
-            left: "0px",
-            right: "0",
             backgroundColor: "rgba(0, 0, 0, 0)",
             display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-start",
+            marginLeft:'400px',
             zIndex: 99,
             paddingTop: "10px",
           }}
@@ -354,9 +352,8 @@ const SearchBar = () => {
               border:'1px solid lightgray',
               backgroundColor: "white",
               borderRadius: "30px",
-              width: "80%",
-              maxWidth: "550px",
-              maxHeight: "70vh",
+              width: "700px",
+              maxWidth: "700px",
               overflowY: "auto",
             }}
             onClick={(e) => e.stopPropagation()} // 모달 외부 클릭 시 닫기 방지
