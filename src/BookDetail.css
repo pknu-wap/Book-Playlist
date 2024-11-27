@@ -276,3 +276,17 @@
     color: #555;
   }
   
+  .average-rating-stars {
+    margin-left: 10px;
+  }
+  
+  .star {
+    color: lightgray;
+    font-size: 18px;
+    margin: 0 2px;
+  }
+  
+  .star.active {
+    color: gold; /* 활성화된 별은 금색으로 표시 */
+  }
+  
