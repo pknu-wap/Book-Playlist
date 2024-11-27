@@ -95,10 +95,45 @@ function App() {
 
   useEffect(() => {
     const user = localStorage.getItem('user');
-    if (user) {
+    const token = localStorage.getItem('token'); // 토큰 확인
+    if (user && token) {
       setIsLoggedIn(true);
     }
   }, []);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+ 
+  const handleLogout = async () => {
+    try {
+      console.log('로그아웃 시도 중...');
+      // 서버 로그아웃 요청
+      const response = await axios.post(
+        'https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/auth/logout',
+        {},
+        { withCredentials: true }
+      );
+
+      if (response.status === 200) {
+        console.log('서버 로그아웃 성공');
+        // 로컬 스토리지 및 상태 초기화
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setIsLoggedIn(false);
+        alert('로그아웃 되었습니다.');
+        navigate('/login');
+      } else {
+        console.error('서버 로그아웃 실패:', response);
+        alert('로그아웃 실패: 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('로그아웃 중 오류 발생:', error);
+      alert('로그아웃 중 오류가 발생했습니다.');
+    }
+  };
+
+
 
   // API 요청을 위한 useEffect
   useEffect(() => {
@@ -136,16 +171,6 @@ function App() {
 
   const closePlaylistModal = () => {
     setIsPlaylistModalOpen(false);
-  };
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
-  
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    setIsLoggedIn(false);
-    alert('로그아웃 되었습니다.');
   };
 
   const settings = {
