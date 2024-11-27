@@ -73,7 +73,10 @@ export default function Login({ onLogin }) { // onLogin prop을 통해 로그인
         try {
             // 서버 로그아웃 요청
             const response = await fetch('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/auth/logout', {
-                method: 'GET',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 credentials: 'include' // 세션 쿠키 포함
             });
     
