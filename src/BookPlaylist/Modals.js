@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import "./Modals.css";
 
@@ -7,6 +8,11 @@ const Modals = ({ show, onClose, data, loading }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
+  const navigate = useNavigate();
+
+  const goToBookDetail = (isbn) => {
+    navigate(`/book/detail?isbn=${isbn}`); // ISBN을 쿼리 파라미터로 전달
+  };
 
   const getToken = () => {
     return localStorage.getItem('token');
@@ -135,7 +141,7 @@ const Modals = ({ show, onClose, data, loading }) => {
                     <span>작성자: {data.username}</span>
                   </li>
                   <li>
-                    <span>설명: {data.description}</span>
+                    <span><p style={{whiteSpace: 'nowrap', width:"200px",overflow: 'hidden', textOverflow: 'ellipsis'}}>설명: {data.description}</p></span>
                   </li>
                   <li>
                     {isLoading ? (
@@ -168,10 +174,11 @@ const Modals = ({ show, onClose, data, loading }) => {
                         src={book.image}
                         alt={book.title}
                         className="book-image"
+                        onClick={()=>goToBookDetail(book.isbn)}
                       />
                       <div className="book-info">
-                        <h4>{book.title}</h4>
-                        <p>저자: {book.author}</p>
+                        <h4 onClick={()=>goToBookDetail(book.isbn)}>{book.title}</h4>
+                        <p onClick={()=>goToBookDetail(book.isbn)}>저자: {book.author}</p>
                       </div>
                     </div>
                   ))}
