@@ -15,10 +15,10 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 기본 키
+    private Long id;
 
     @Column(nullable = false, unique = true)
-    private String isbn; // 고유 ISBN
+    private String isbn;
 
     @Column(nullable = false)
     private String title;
@@ -34,9 +34,8 @@ public class Book {
     private String description;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments; // 책에 달린 댓글 리스트
+    private List<BookLike> bookLikes;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookLike> bookLikes; // 이 책을 좋아요한 유저 리스트
-
+    @Transient // 데이터베이스에 저장하지 않음
+    private long likeCount; // 좋아요 수 필드
 }

@@ -30,19 +30,24 @@ public class BookService {
     }
 
     public List<BookSummaryDTO> getBooksOrderByLikes() {
-        List<Book> books = bookRepository.findBooksOrderByLikeCountDesc();
+        List<Object[]> booksWithLikes = bookRepository.findBooksOrderByLikeCountDesc();
 
-        return books.stream()
-                .map(book -> new BookSummaryDTO(
-                        book.getId(),
-                        book.getTitle(),
-                        book.getAuthor(),
-                        book.getPublisher(),
-                        book.getImage(),
-                        book.getBookLikes().size(), // 찜 개수 계산
-                        book.getIsbn(),
-                        book.getDescription() // 추가된 description 필드
-                ))
+        return booksWithLikes.stream()
+                .map(obj -> {
+                    Book book = (Book) obj[0];
+                    Long likeCount = (Long) obj[1];
+                    return new BookSummaryDTO(
+                            book.getId(),
+                            book.getTitle(),
+                            book.getAuthor(),
+                            book.getPublisher(),
+                            book.getImage(),
+                            likeCount.intValue(), // 좋아요 수
+                            book.getIsbn(),
+                            book.getDescription()
+                    );
+                })
                 .collect(Collectors.toList());
     }
+
 }
