@@ -104,7 +104,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity<Map<String, Object>> logout() {
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
