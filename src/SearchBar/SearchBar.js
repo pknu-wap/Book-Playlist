@@ -3,6 +3,7 @@ import axios from "axios";
 import "./SearchBar.css";
 import PlaylistModal from "./PlaylistModal.js";
 import { useNavigate } from "react-router-dom";
+import Moreview from "./더보기.png";
 
 const SearchBar = () => {
   const [username, setUsername] = useState('');
@@ -189,7 +190,7 @@ const SearchBar = () => {
   };
 
   const resultItemStyle = {
-    width: '500px',
+    width: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -228,8 +229,9 @@ const SearchBar = () => {
 
   const buttonStyle = {
     position: "relative",
-    padding: '8px 15px',
-    backgroundColor: '#4CAF50',
+    marginRight:"20px",
+    padding: '8px 15px 10px 10px',
+    backgroundColor: '#ffffff',
     color: 'white',
     border: 'none',
     borderRadius: '5px',
@@ -239,6 +241,7 @@ const SearchBar = () => {
   };
 
   const handleBookClick = (book) => {
+    closeModal();
     navigate(`/book/${book.id}`, { state: { book } }); // 책 상세 페이지로 이동
   };
   
@@ -334,12 +337,9 @@ const SearchBar = () => {
           style={{
             position: "absolute",
             top: "75px",
-            left: "0px",
-            right: "0",
             backgroundColor: "rgba(0, 0, 0, 0)",
             display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-start",
+            marginLeft:'400px',
             zIndex: 99,
             paddingTop: "10px",
           }}
@@ -352,9 +352,8 @@ const SearchBar = () => {
               border:'1px solid lightgray',
               backgroundColor: "white",
               borderRadius: "30px",
-              width: "80%",
-              maxWidth: "550px",
-              maxHeight: "70vh",
+              width: "700px",
+              maxWidth: "700px",
               overflowY: "auto",
             }}
             onClick={(e) => e.stopPropagation()} // 모달 외부 클릭 시 닫기 방지
@@ -381,7 +380,7 @@ const SearchBar = () => {
                       style={buttonStyle}
                       onClick={(e) => handleButtonClick(e, item)}
                     >
-                      ...
+                      <img src={Moreview} alt="더보기" style={{width:'20px', height:'20px'}}></img>
                     </button>
                   </div>
                 ))
@@ -409,7 +408,7 @@ const SearchBar = () => {
             marginLeft: '20px',
             position: 'absolute',
             marginTop: `${modalPosition.top - 100}px`,
-            left: `${modalPosition.left}px`,  // 첫 번째 모달과 일정 간격 두기
+            marginLeft:"1118px",
             backgroundColor: 'rgba(0, 0, 0, 0)',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
             display: 'flex',
@@ -463,8 +462,8 @@ const SearchBar = () => {
         <div
           style={{
             position: 'absolute',
-            top: `${modalPosition.top + 100}px`,
-            left: `${modalPosition.left + 410}px`,
+            top: `${modalPosition.top + 135}px`,
+            marginLeft:'1514px',
             transform: 'translate(-50%, -50%)',
             display: 'flex',
             backgroundColor: 'white',
@@ -476,7 +475,6 @@ const SearchBar = () => {
             flexDirection: 'column',
             width: '300px',
             height: '300px',
-            overflow: 'hidden',  // 전체 모달 영역에서 스크롤 숨기기
           }}
         >
           <button
@@ -496,14 +494,7 @@ const SearchBar = () => {
 
           {/* 스크롤을 허용하되, 스크롤바는 숨기기 */}
           <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              overflowX: 'hidden',
-              overflowY: 'auto',  // 세로 스크롤 허용
-              marginTop: '30px', // 버튼 아래로 여백 추가
-              maxHeight: 'calc(100% - 40px)', // 전체 모달 높이에 맞게 조정
-            }}
+            className="addtoplaylists"
           >
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className="playlist-item">
