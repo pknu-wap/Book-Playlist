@@ -326,14 +326,13 @@ const SearchBar = () => {
         <div
           style={{
             position: "absolute",
-            top: "75px",
-            left: "0px",
+            top: "77px",
+            left: "80px",
             right: "0",
             backgroundColor: "rgba(0, 0, 0, 0)",
             display: "flex",
-            bottom:'0',
-            paddingRight:"50%",
-            paddingLeft:"440px",
+            justifyContent: "center",
+            alignItems: "flex-start",
             zIndex: 99,
             paddingTop: "10px",
           }}
