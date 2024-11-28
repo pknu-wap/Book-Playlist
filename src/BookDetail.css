@@ -227,8 +227,7 @@
 /* 댓글 헤더 */
 .comment-header {
     display: flex;
-    align-items: center;
-    justify-content: space-between; /* 공간을 균등하게 분배 */
+    flex-direction: column; /* 수직 정렬 */
     margin-bottom: 10px;
     font-size: 14px; /* 폰트 크기 */
     color: #333; /* 닉네임과 날짜 색상 */
@@ -237,22 +236,37 @@
 /* 닉네임 스타일 */
 .comment-header .username {
     font-weight: bold;
+    flex-direction: column; /* 수직 정렬 */
+    align-items: flex-end; /* 왼쪽 정렬 */
+}
+
+/* 날짜와 삭제 버튼 컨테이너 */
+.comment-header .date-button-container {
+    display: flex;
+    align-items: flex-end; 
 }
 
 /* 날짜 스타일 */
 .comment-header .date {
     color: #888; /* 날짜 색상 */
+    font-size: 12px;
+    flex-direction: column;
+    margin-bottom: 5px;
+    text-align: right; 
 }
 
 /* 삭제 버튼 스타일 */
 .delete-button {
     background-color: #ff4d4f;
     color: white;
+    flex-direction: column;
     border: none;
     padding: 5px 10px;
     border-radius: 5px; /* 부드러운 느낌을 위한 둥근 모서리 */
     cursor: pointer;
     margin-left: 10px;
+    margin-top: 5px;
+    font-size: 12px; /* 버튼 크기 */
 }
 
 .delete-button:hover {
@@ -265,9 +279,11 @@
     color: #333;
     line-height: 1.5;
 }
-.star-rating {
+.comment-header .star-rating {
     display: inline-flex;
     align-items: center;
+    align-items: flex-start; 
+    flex-direction: row;
   }
   
   .star-rating .rating-number {

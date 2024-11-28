@@ -317,7 +317,8 @@ const handleDeleteComment = async (commentId) => {
           comments.map((comment) => (
             <div key={comment.id} className="comment-item">
               <div className="comment-header">
-                <span className="username">{comment.username || "익명"}</span>
+              <span className="username">{comment.username || "익명"}</span>
+              <div className="date-button-container">
                 <span className="date">
                   {comment.createdAt
                     ? new Date(comment.createdAt).toLocaleDateString()
@@ -341,6 +342,7 @@ const handleDeleteComment = async (commentId) => {
                     ★
                   </span>
                 ))}
+              </div>
               </div>
               <p className="comment-text">{comment.content}</p>
             </div>
