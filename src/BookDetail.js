@@ -259,21 +259,21 @@ const handleDeleteComment = async (commentId) => {
             <strong>출판사:</strong> {book.publisher}
             </p>
           <p>
-            <strong>평점:</strong>{" "}
-            {averageRating ? averageRating.toFixed(1) : "평가 없음"}
-            {averageRating && (
-    <span className="average-rating-stars">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <span
-          key={star}
-          className={`star ${Math.round(averageRating) >= star ? "active" : ""}`}
-        >
-          ★
-        </span>
-      ))}
-    </span>
-  )}
-          </p>
+          <strong>평점:</strong>{" "}
+          {averageRating > 0 ? averageRating.toFixed(1) : "평가 없음"}
+          {averageRating > 0 && (
+           <span className="average-rating-stars">
+             {[1, 2, 3, 4, 5].map((star) => (
+              <span
+              key={star}
+              className={`star ${Math.round(averageRating) >= star ? "active" : ""}`}
+              >    
+                ★
+               </span>
+            ))}
+          </span>
+          )}
+       </p>
           <div className="book-description">
           <p>
             <strong>설명:</strong> {book.description}
