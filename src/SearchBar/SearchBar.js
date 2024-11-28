@@ -285,10 +285,10 @@ const SearchBar = () => {
           alignItems: "center",
           justifyContent: "center",
           top: "20px",
-          marginLeft:'105%',
+          marginLeft:'120%',
           transform: "translateX(-50%)",
           zIndex: 1000,
-          width: "700px", // 검색 바 전체 폭
+          width: "600px", // 검색 바 전체 폭
           maxWidth: "800px",
           padding: "10px",
           backgroundColor: "#f5f5f5", // 검색창 배경색
@@ -322,9 +322,9 @@ const SearchBar = () => {
             height: "40px",
             fontSize: "16px",
             border: "none",
-            borderRadius: "0 30px 30px 0",
-            backgroundColor: "#4CAF50",
-            color: "white",
+            borderRadius: "10px 30px 30px 10px",
+            backgroundColor: "#F0F0F0",
+            color: "black",
             cursor: "pointer",
           }}
         >
@@ -340,7 +340,9 @@ const SearchBar = () => {
             top: "75px",
             backgroundColor: "rgba(0, 0, 0, 0)",
             display: "flex",
-            marginLeft:'400px',
+            bottom:'0',
+            paddingRight:"50%",
+            paddingLeft:"440px",
             zIndex: 99,
             paddingTop: "10px",
           }}
@@ -353,7 +355,7 @@ const SearchBar = () => {
               border:'1px solid lightgray',
               backgroundColor: "white",
               borderRadius: "30px",
-              width: "700px",
+              width: "600px",
               maxWidth: "700px",
               overflowY: "auto",
             }}
@@ -409,14 +411,14 @@ const SearchBar = () => {
             marginLeft: '20px',
             position: 'absolute',
             marginTop: `${modalPosition.top - 100}px`,
-            marginLeft:"1118px",
+            marginLeft:"1060px",
             backgroundColor: 'rgba(0, 0, 0, 0)',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 100,
-            width: '200px',
+            width: '180px',
             transform: 'translateY(0)',  // 상대적 위치 조정
           }}
         >
@@ -424,7 +426,7 @@ const SearchBar = () => {
             {selectedItem ? (
               <>
                 <button onClick={closeSecondModal} style={{
-                  width:'240px',
+                  width:'220px',
                   margin:'0 0 0 0',
                   border: 'none',
                   backgroundColor: 'transparent',
@@ -464,7 +466,7 @@ const SearchBar = () => {
           style={{
             position: 'absolute',
             top: `${modalPosition.top + 135}px`,
-            marginLeft:'1464px',
+            marginLeft:'1375px',
             transform: 'translate(-50%, -50%)',
             display: 'flex',
             backgroundColor: 'white',
@@ -474,19 +476,21 @@ const SearchBar = () => {
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             zIndex: 110,
             flexDirection: 'column',
-            width: '200px',
+            width: '180px',
             height: '300px',
           }}
         >
           <button
             style={{
               position: 'absolute',
-              margin: 'auto',
+              paddingBottom:"10px",
               border: 'none',
               backgroundColor: 'transparent',
               fontSize: '16px',
               cursor: 'pointer',
+              width:"180px",
               zIndex: 120,
+              borderBottom:'1px solid lightgray'
             }}
             onClick={ThirdModelClose}
           >
