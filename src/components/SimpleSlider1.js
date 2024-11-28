@@ -173,7 +173,7 @@ useEffect(() => {
                 />
                 <h3
                   style={{
-                    margin: "10px 0 0 70px",
+                    margin: "10px 0 0 40px",
                     width: "100px",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
@@ -183,7 +183,7 @@ useEffect(() => {
                 <p 
                   style={{
                     color:'lightgray',
-                    margin: "10px 0 0 55px",
+                    margin: "10px 0 0 40px",
                     width: "100px",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
