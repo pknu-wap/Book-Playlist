@@ -40,7 +40,7 @@ const Sidebar = () => {
             <li>
               <img src={Icon4} alt="Icon4" />
               <NavLink 
-                to="/bookcategory" 
+                to="/bookcatergory" 
                 className={({ isActive }) => (isActive ? 'active-link' : '')} // active 클래스를 추가
               >
                 책 둘러보기
