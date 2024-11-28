@@ -6,11 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     List<Playlist> findTop10ByOrderByIdAsc();
     // 특정 유저의 플레이리스트 조회
+
     List<Playlist> findByUser_Id(Long userId);
+    @Query("SELECT p FROM Playlist p JOIN FETCH p.books WHERE p.id = :playlistId")
+    Optional<Playlist> findPlaylistWithBooks(@Param("playlistId") Long playlistId);
 
     @Query("SELECT p FROM Playlist p JOIN PlaylistLike pl ON p.id = pl.playlist.id WHERE pl.user.id = :userId")
     List<Playlist> findLikedPlaylistsByUserId(@Param("userId") Long userId);

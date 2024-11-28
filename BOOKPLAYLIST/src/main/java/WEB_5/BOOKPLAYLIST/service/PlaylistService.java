@@ -38,7 +38,7 @@ public class PlaylistService {
     private BookSearchService bookSearchService;
 
     public ResponseEntity<String> savePlaylist(Long playlistId, String title, String description, List<String> isbns, byte[] imageData, Long userId) {
-        Optional<Playlist> playlistOpt = playlistRepository.findById(playlistId);
+        Optional<Playlist> playlistOpt = playlistRepository.findPlaylistWithBooks(playlistId);
         if (!playlistOpt.isPresent()) {
             return ResponseEntity.badRequest().body("플레이리스트를 찾을 수 없습니다.");
         }
