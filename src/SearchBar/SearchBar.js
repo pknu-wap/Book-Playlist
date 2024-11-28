@@ -340,7 +340,9 @@ const SearchBar = () => {
             top: "75px",
             backgroundColor: "rgba(0, 0, 0, 0)",
             display: "flex",
-            marginLeft:'440px',
+            bottom:'0',
+            paddingRight:"50%",
+            paddingLeft:"440px",
             zIndex: 99,
             paddingTop: "10px",
           }}
