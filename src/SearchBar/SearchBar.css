@@ -50,7 +50,6 @@
     border-radius: 0 0 0 0;
 }
 
-
 .s-p {
     font-size: 13px;
     white-space: nowrap;
@@ -62,8 +61,9 @@
 }
 
 .searchbar-second-modal{
+    margin-left: 10px;
     background-color: white;
-    padding: 0 20px;
+    padding: 20px;
     border-radius: 8px;
     width: 100%;
     height: 100%;
@@ -80,7 +80,7 @@
     border: #000000 1px solid;
     border:none;
     background-color: #ffffff;
-    width: 100%;
+    width: 270px;
     transition: background-color 0.3s;
     border-bottom: 1px solid lightgray;
     text-align: start;
@@ -125,7 +125,7 @@
     border: #000000 1px solid;
     border:none;
     background-color: #ffffff;
-    width: 100%;
+    width: 300px;
     transition: background-color 0.3s;
     text-align: start;
     
@@ -136,19 +136,7 @@
     background-color: #b7ff7d;
 }
 
-.playlists1-loading {
-    margin: auto;
-    width: 30px;
-    height: 30px;
-    border: 4px solid #ddd;
-    border-right-color: rgb(2, 255, 107);
-    border-top-color: rgb(2, 255, 107);
-    border-radius: 50%;
-    animation: playlist-spin 0.8s linear infinite;
-}
-
-.books-zzims-loading{
-    padding-top: 10px;
+.playlists-loading {
     margin: auto;
     width: 30px;
     height: 30px;
@@ -165,6 +153,7 @@
     background-image: url(./더보기.png);
     background-size: cover;
     border-radius: 20px;
+    margin-right: 10px;
 }
 
 
@@ -173,21 +162,3 @@
 }
 
 
-
-
-.modal-search-result:hover {
-    cursor: pointer;  /* 호버 시 커서를 클릭 가능한 모양으로 변경 */
-  }
-
-  .addtoplaylists{
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    margin-top: 30px; /* 버튼 아래로 여백 추가 */
-    max-height: calc(100% - 40px); /* 전체 모달 높이에 맞게 조정 */
-    -ms-overflow-style: none;
-  }
-
-  .addtoplaylists::-webkit-scrollbar{
-    display:none;
-  }
