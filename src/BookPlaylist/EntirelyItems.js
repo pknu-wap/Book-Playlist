@@ -241,7 +241,6 @@ const EntireItems = () => {
                   <p className="gird-bookplaylist-username">만든이 : {playlist.username}</p>
                   <p 
                     className="gird-bookplaylist-likeCount"
-                    onClick={()=>handleLike(playlist.playlistId)}
                   > 
                     ❤️ {playlist.likeCount}
                   </p>
