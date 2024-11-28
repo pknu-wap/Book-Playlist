@@ -15,8 +15,7 @@ const Filter = ({ onSortChange }) => {
       <button 
         onClick={() => handleClick("latest", 0)} 
         style={{
-          color: activeButton === 0 ? 'black' : 'lightgray',
-          marginRight: '10px'
+          color: activeButton === 0 ? 'black' : 'lightgray'
         }}>
         최신순
       </button>

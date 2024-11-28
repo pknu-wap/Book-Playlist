@@ -112,7 +112,7 @@ const SimpleSlider = () => {
                 className="book-title"
                 style={{
                   margin: "10px 0 0 50px",
-                  width: "100px",
+                  width: "143.81px",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
@@ -122,9 +122,9 @@ const SimpleSlider = () => {
               </h3>
               <p
                 style={{
-                  color: "lightgray",
+                  color: "darkgray",
                   margin: "10px 0 0 55px",
-                  width: "100px",
+                  width: "143.81px",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
