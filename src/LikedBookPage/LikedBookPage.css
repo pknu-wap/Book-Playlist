@@ -134,44 +134,46 @@
 
 .nextpage-button span {
   position: absolute;
-  left: 2px;
-  top: 0px;
-}
-
-.beforepage-button {
-  position: relative;
+  left: 10px;
+  top: 10px;
 }
 
 .beforepage-button span {
   position: absolute;
-  left: 0px;
-  top: 0px;
+  left: 10px;
+  top: 10px;
 }
 
-
-@media (max-width: 1200px) {
-  .likedbookpage-book-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  .beforepage-button span {
+    position: absolute;
+    left: 0px;
+    top: 0px;
   }
-}
-
-@media (max-width: 768px) {
-  .likedbookpage-book-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  
+  
+  @media (max-width: 1200px) {
+    .likedbookpage-book-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
   }
-
-  .likedbookpage-book-image {
-    height: 200px;
+  
+  @media (max-width: 768px) {
+    .likedbookpage-book-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+  
+    .likedbookpage-book-image {
+      height: 200px;
+    }
   }
-}
-
-@media (max-width: 480px) {
-  .likedbookpage-book-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  
+  @media (max-width: 480px) {
+    .likedbookpage-book-grid {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+  
+    .likedbookpage-book-image {
+      height: 160px;
+    }
   }
-
-  .likedbookpage-book-image {
-    height: 160px;
-  }
-}
-
+ 

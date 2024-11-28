@@ -6,8 +6,7 @@ import "../styles/SimpleSlider.css";
 import axios from "axios";
 import LeftArrow from "../BookPlaylist/left-arrow.svg"
 import RightArrow from "../BookPlaylist/right-arrow.svg"
-
-const Modals = lazy(() => import("../BookPlaylist/Modals")); // 동적 import
+import Mainpageplaylist from './Mainpageplaylist'
 
 const arrowCss = {
   width: '30px',
@@ -59,7 +58,7 @@ const fetchPlaylistDetails = async (playlistId) => {
 
 function SimpleSlider() {
   const [playlists, setPlaylists] = useState([]);
-  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalLoading, setModalLoading] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -80,6 +79,17 @@ useEffect(() => {
 
   loadPlaylists();
 },[]); // 토큰 변경 시 재요청
+
+
+const openModal = (playlistId) => {
+  setSelectedPlaylistId(playlistId);
+  setIsModalOpen(true);
+};
+
+const closeModal = () => {
+  setSelectedPlaylistId(null);
+  setIsModalOpen(false);
+};
 
   const settings = {
     arrows: true,
@@ -109,24 +119,7 @@ useEffect(() => {
     loadPlaylists();
   }, []);
 
-  const handleItemClick = async (playlistId) => {
-    setModalLoading(true);
-    setIsModalOpen(true);
-    const data = await fetchPlaylistDetails(playlistId);
-    setModalLoading(false);
-
-    if (data) {
-      setSelectedPlaylist(data);
-    } else {
-      setSelectedPlaylist(null);
-      alert("플레이리스트 데이터를 불러오는 데 실패했습니다.");
-    }
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedPlaylist(null);
-  };
+  
   const containerStyle = {
     width: '100%',
     maxWidth: '1200px',
@@ -151,7 +144,7 @@ useEffect(() => {
             .map((playlist) => (
               <div
                 key={playlist.playlistId}
-                onClick={() => handleItemClick(playlist.playlistId)}
+                onClick={() => openModal(playlist.playlistId)}
                 style={{
                   textAlign: "center",
                   margin: "0 5px",
@@ -196,14 +189,9 @@ useEffect(() => {
           ))}
         </Slider>
       )}
-      <Suspense fallback={<div>Loading Modal...</div>}>
-        <Modals
-          show={isModalOpen}
-          onClose={handleCloseModal}
-          data={selectedPlaylist}
-          loading={modalLoading}
-        />
-      </Suspense>
+      {isModalOpen && (
+        <Mainpageplaylist playlistId={selectedPlaylistId} onClose={closeModal} />
+      )}
     </main>
   );
 }
