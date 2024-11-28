@@ -10,22 +10,24 @@
 
 /* 오른쪽 로그인/회원가입 폼 영역 */
 .rightSection {
-    width: 40%;
+    width: 40% !important;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 450px;
+    margin-left: 600px;
 }
 
 /* 폼 컨테이너 스타일 */
 .registerForm {
-    width: 440px;
-    padding: 30px;
+    width: 500px;
+    padding: 40px;
     box-sizing: border-box;
     background: #FFFFFF;
-    border-radius: 30px;
+    border-radius: 50px;
     border: 1.5px solid #999999;
+    position: relative;
+    left: 50px;
 }
 
 /* 제목 스타일 */
@@ -43,10 +45,10 @@
 .inputWrap {
     display: flex;
     align-items: center; /* 버튼과 입력 필드 수직 정렬 */
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 0 10px;
     background-color: white;
-    border: 1.5px solid #8AC140;
+    border: 2px solid #8AC140;
     margin-top: 20px;
 }
 
