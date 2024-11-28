@@ -30,15 +30,30 @@ const Sidebar = () => {
             <Outlet />
             <li>
               <img src={Icon3} alt="Icon3" />
-              <Link to="/mypage">마이페이지</Link>
+              <NavLink 
+                to="/mypage" 
+                className={({ isActive }) => (isActive ? 'active-link' : '')} // active 클래스를 추가
+              >
+                마이페이지
+              </NavLink>
             </li>
             <li>
               <img src={Icon4} alt="Icon4" />
-              <NavLink to="/bookcatergory">책 둘러보기</NavLink>
+              <NavLink 
+                to="/bookcategory" 
+                className={({ isActive }) => (isActive ? 'active-link' : '')} // active 클래스를 추가
+              >
+                책 둘러보기
+              </NavLink>
             </li>
             <li>
               <img src={Icon5} alt="Icon5" />
-              <NavLink to="/bookplaylist">전체 북 플레이리스트</NavLink>
+              <NavLink 
+                to="/bookplaylist" 
+                className={({ isActive }) => (isActive ? 'active-link' : '')} // active 클래스를 추가
+              >
+                전체 북 플레이리스트
+              </NavLink>
             </li>
           </ul>
         </nav>
@@ -46,6 +61,7 @@ const Sidebar = () => {
     </aside>
   );
 }
+
 
 const PlaylistButton = ({ onClick }) => {
   return (

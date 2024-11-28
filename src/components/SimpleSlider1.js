@@ -174,7 +174,7 @@ useEffect(() => {
                 <h3
                   style={{
                     margin: "10px 0 0 40px",
-                    width: "100px",
+                    width: "180px",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
@@ -182,9 +182,9 @@ useEffect(() => {
                 >{playlist.title}</h3>
                 <p 
                   style={{
-                    color:'lightgray',
+                    color:'darkgray',
                     margin: "10px 0 0 40px",
-                    width: "100px",
+                    width: "180px",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",

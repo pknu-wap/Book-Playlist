@@ -152,6 +152,28 @@ header {
   color: #333;
 }
 
+/* 활성화된 링크 스타일 */
+.sidebar nav ul li a.active-link {
+  color: #32e044; /* 활성화된 링크 색상 */
+  font-weight: bold; /* 강조된 글씨 */
+}
+
+/* 활성화된 링크에서 호버 효과 */
+.sidebar nav ul li a.active-link:hover {
+  color: #000000; /* 호버 시 텍스트 색상 변경 */
+  transform: scale(1.1);
+}
+
+.sidebar nav ul li a:hover {
+  color: #000000; /* 일반 호버 텍스트 색상 */
+  transform: scale(1.1);
+}
+
+/* 부드러운 전환 효과 */
+.sidebar nav ul li a {
+  transition: transform 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
+}
+
 .main-content {
   margin-left: 200px;
   padding: 10px;
