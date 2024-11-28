@@ -76,3 +76,7 @@
   margin: 2px 0;
   color: #555;
 }
+
+.gird-bookplaylist-likeCount{
+  cursor: pointer;
+}

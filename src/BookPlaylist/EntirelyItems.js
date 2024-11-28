@@ -3,7 +3,6 @@ import "./EntireItem.css";
 import Filter from "./Filter.js";
 import Pagination from "../components/Pagination";
 import axios from "axios";
-import { SlEarphones } from "react-icons/sl";
 
 const Modals = lazy(() => import("./Modals")); // 동적 import
 
@@ -43,7 +42,7 @@ const EntireItems = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState("latest");
-  const [isLoading, setIsLoading] = useState(false); //로딩상태 
+  const [loadingStates, setLoadingStates] = useState({}); 
   const [likeCount, setLikeCount] = useState(0);
   const itemsPerPage = 15;
   const getToken = () => {
@@ -66,16 +65,16 @@ const EntireItems = () => {
     loadPlaylists();
   }, []);
 
-  useEffect(() => {
-    const fetchLikeData = async (selectedPlaylist) => {
+  useEffect(()=>{
+    const fetchLikeData = async (playlistId)=>{
       const token = getToken();
-      if (!token) {
+      if(!token){
         alert("로그인해주세요.");
         return;
       }
       try {
-        const { selectedPlaylist: isLikedData } = await axios.get(
-          `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${selectedPlaylist}/isLiked`,
+        const {data: isLikedData} = await axios.get(
+          `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${playlistId.playlistId}/isLiked`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -84,54 +83,51 @@ const EntireItems = () => {
         );
         setIsLiked(isLikedData);
 
-      } catch (error) {
-        console.error("찜 정보 가져오기 실패:", error);
+      } catch (error){
+        console.error("찜 정보 가져오기 실패:",error);
       } finally {
 
       }
     };
-    const fetchLikeCount = async (playlistId) => {
-      try {
-        const { selectedPlaylist: likeCountData } = await axios.get(
+    const fetchLikeCount = async(playlistId)=>{
+      try{
+        const { data: likeCountData } = await axios.get(
           `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${playlistId}/likeCount`,
           { withCredentials: true }
         );
         setLikeCount(likeCountData.likeCount);
-      } catch (error) {
-        console.error("찜 수 정보 가져오기 실패:", error);
-      } finally {
+      } catch(error){
+        console.error("찜 수 정보 가져오기 실패:",error);
+      } finally{
 
       }
-    };
+    }
     if (selectedPlaylist && selectedPlaylist.playlistId) {
       fetchLikeData(selectedPlaylist.playlistId);
       fetchLikeCount(selectedPlaylist.playlistId);
     }
   }, [selectedPlaylist]);
 
+//찜하기 함수
   const handleLike = (playlistId) => {
-    if (!playlistId) {
-      console.error("유효하지 않은 플레이리스트 ID입니다.");
-      return; // selectedPlaylist가 없으면 함수 종료
-    }
-    setIsLoading(true); // 찜하기 버튼 클릭 시 로딩 시작
-    console.log("클릭한 요소:", playlistId);
+    setLoadingStates((prevState) => ({ ...prevState, [playlistId]: true }));
+    console.log("클릭한 요소:",playlistId);
     const token = getToken();
     if (!token) {
       alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
-      setIsLoading(false);
+      setLoadingStates((prevState) => ({ ...prevState, [playlistId]: false }));
       return;
     }
-
+  
     // 요청 URL
     const likeUrl = `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${playlistId}/like`;
     const unlikeUrl = `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${playlistId}/unlike`;
-
+  
     // 요청 헤더에 Authorization 추가
     const headers = {
-      'Authorization': `Bearer ${token}`,  // 토큰을 Authorization 헤더에 포함
+      Authorization: `Bearer ${token}`,  // 토큰을 Authorization 헤더에 포함
     };
-
+  
     if (!isLiked) {
       // 찜하기
       axios
@@ -141,16 +137,21 @@ const EntireItems = () => {
         })
         .then(() => {
           setIsLiked(true);
-          setLikeCount((prevCount) => prevCount + 1); //likeCount값 증가
-          setIsLoading(false);
-          alert("플레이리스트가 찜 되었습니다.");
+          setPlaylists((prevPlaylists) => 
+            prevPlaylists.map((playlist)=>
+              playlist.playlistId === playlistId ? {...playlist, likeCount: playlist.likeCount + 1} : playlist
+            )
+          );
+          alert(`플레이리스트가 찜이 되었습니다!`);
         })
         .catch((error) => {
           console.error("찜하기 실패:", error);
-          alert("이미 찜한 플레이리스트입니다!", error);
+          alert("이미 찜이 된 플레이리스트입니다.",error);
         })
         .finally(() => {
-          setIsLoading(false);
+          setLoadingStates((prevState) => ({ ...prevState, [playlistId]: false }));
+
+          // window.location.reload()
         });
     } else {
       // 찜 취소
@@ -161,16 +162,21 @@ const EntireItems = () => {
         })
         .then(() => {
           setIsLiked(false);
-          setLikeCount((prevCount) => prevCount - 1); //likeCount값 감소
-          setIsLoading(false);
-          alert("찜이 취소 되었습니다.");
+          setPlaylists((prevPlaylists)=>
+            prevPlaylists.map((playlist)=>
+              playlist.playlistId === playlistId ? {...playlist, likeCount: playlist.likeCount - 1} : playlist
+            )
+          );
+          alert("플레이리스트가 찜취소가 되었습니다!");
         })
         .catch((error) => {
           console.error("찜 취소 실패:", error);
-          alert("이미 찜한 플레이리스트입니다!", error);
+          alert("이미 취소된 플레이리스트입니다.",error);
         })
         .finally(() => {
-          setIsLoading(false);
+          setLoadingStates((prevState) => ({ ...prevState, [playlistId]: false }));
+
+          // window.location.reload()
         });
     }
   };
@@ -196,15 +202,15 @@ const EntireItems = () => {
   };
 
   const sortedPlaylists = [...playlists];
-  switch (sortOrder) {
+  switch(sortOrder){
     case "latest":
-      sortedPlaylists.sort((a, b) => b.playlistId - a.playlistId);
+      sortedPlaylists.sort((a,b)=>b.playlistId-a.playlistId);
       break;
     case "date":
-      sortedPlaylists.sort((a, b) => a.playlistId - b.playlistId);
+      sortedPlaylists.sort((a,b)=>a.playlistId-b.playlistId);
       break;
     case "best":
-      sortedPlaylists.sort((a, b) => b.likeCount - a.likeCount);
+      sortedPlaylists.sort((a,b)=>b.likeCount-a.likeCount);
       break;
     default:
       break;
@@ -233,22 +239,25 @@ const EntireItems = () => {
                   className="grid-bookplaylist-item"
                 >
                   <img
-                    src={`data:image/jpeg;base64,${playlist.base64Image || ""}`}
-                    alt={playlist.title}
+                    src={`data:image/jpeg;base64,${playlist.base64Image}` || ""}
+                    alt={playlist.title}                    
                     className="grid-bookplaylist-img"
                     onClick={() => handleItemClick(playlist.playlistId)}
                   />
                   <h3 
                     className="grid-bookplaylist-title"
                   >
-                    {playlist.title || "제목 없음"}
+                      {playlist.title || "제목 없음"}
                   </h3>
                   <p className="gird-bookplaylist-username">만든이 : {playlist.username}</p>
                   <p 
                     className="gird-bookplaylist-likeCount"
-                    onClick={() => handleLike(playlist.playlistId)}
+                    onClick={()=>handleLike(playlist.playlistId)}
                   > 
                     ❤️ {playlist.likeCount}
+                    {loadingStates[playlist.playlistId] && (
+                      <span className="like-loading">...</span>
+                    )}
                   </p>
                 </div>
               </div>
