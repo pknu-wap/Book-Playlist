@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import "./EntireItem.css";
 import Filter from "./Filter.js";
 import Pagination from "../components/Pagination";
@@ -18,34 +18,19 @@ const fetchPlaylists = async () => {
   }
 };
 
-const fetchPlaylistDetails = async (playlistId) => {
-  try {
-    const response = await axios.get(
-      `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlistId}`,
-      { withCredentials: true }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(`플레이리스트 ${playlistId} 데이터를 불러오는 데 실패했습니다.`, error);
-    return null;
-  }
-};
 
 const EntireItems = () => {
   
   const [playlists, setPlaylists] = useState([]);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalLoading, setModalLoading] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState("latest");
   
   const itemsPerPage = 15;
-  const getToken = () => {
-    return localStorage.getItem('token');
-  };
+  
 
   useEffect(() => {
     const loadPlaylists = async () => {
@@ -72,7 +57,8 @@ const EntireItems = () => {
   
   const closeModal = () => {
     setSelectedPlaylistId(null);
-    
+
+  };  
 
   const sortedPlaylists = [...playlists];
   switch(sortOrder){
@@ -116,7 +102,7 @@ const EntireItems = () => {
                     src={`data:image/jpeg;base64,${playlist.base64Image || ""}`}
                     alt={playlist.title}                    
                     className="grid-bookplaylist-img"
-                    onClick={() => handleItemClick(playlist.playlistId)}
+                    
                   />
                   <h3 
                     className="grid-bookplaylist-title"
