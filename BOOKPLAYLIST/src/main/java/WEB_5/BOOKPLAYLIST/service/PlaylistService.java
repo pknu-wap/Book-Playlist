@@ -49,6 +49,7 @@ public class PlaylistService {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("플레이리스트를 수정할 권한이 없습니다.");
         }
 
+        // 기본값 설정
         if (title == null || title.isBlank()) {
             Optional<User> userOpt = userRepository.findById(userId);
             title = userOpt.map(user -> user.getUsername() + "님의 북플레이리스트").orElse("기본 플레이리스트 제목");
@@ -71,30 +72,40 @@ public class PlaylistService {
         playlist.setDescription(description);
         playlist.setImageData(imageData);
 
+        // 현재 플레이리스트에 있는 책의 ISBN 가져오기
         List<Book> currentBooks = playlist.getBooks();
         List<String> currentIsbns = currentBooks.stream()
                 .map(Book::getIsbn)
                 .collect(Collectors.toList());
 
+        // 새로 추가할 ISBN과 기존 ISBN 비교
+        List<String> newIsbns = isbns.stream()
+                .filter(isbn -> !currentIsbns.contains(isbn))
+                .distinct()
+                .collect(Collectors.toList());
+
+        // 기존 책과 겹치지 않는 ISBN 목록만 한 번에 조회
+        List<Book> booksToAdd = bookRepository.findAllByIsbnIn(newIsbns);
+
+        // 데이터베이스에 없는 ISBN을 추가적으로 조회 및 저장
+        List<String> notFoundIsbns = newIsbns.stream()
+                .filter(isbn -> booksToAdd.stream().noneMatch(book -> book.getIsbn().equals(isbn)))
+                .collect(Collectors.toList());
+
+        for (String isbn : notFoundIsbns) {
+            Book fetchedBook = fetchAndSaveBook(isbn);
+            if (fetchedBook != null) {
+                booksToAdd.add(fetchedBook);
+            }
+        }
+
+        // 플레이리스트에서 삭제할 책 결정
         List<Book> booksToRemove = currentBooks.stream()
                 .filter(book -> !isbns.contains(book.getIsbn()))
                 .collect(Collectors.toList());
 
+        // 책 삭제 및 추가
         playlist.getBooks().removeAll(booksToRemove);
-
-        List<Book> booksToAdd = isbns.stream()
-                .distinct()
-                .map(isbn -> {
-                    Optional<Book> bookOpt = bookRepository.findTopByIsbn(isbn);
-                    if (bookOpt.isPresent()) {
-                        return bookOpt.get();
-                    } else {
-                        return fetchAndSaveBook(isbn);
-                    }
-                })
-                .filter(book -> book != null && !currentIsbns.contains(book.getIsbn()))
-                .collect(Collectors.toList());
-
         playlist.getBooks().addAll(booksToAdd);
 
         playlistRepository.save(playlist);

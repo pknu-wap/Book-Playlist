@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
-    Optional<Book> findTopByIsbn(String isbn); // 중복이 있는 경우 가장 먼저 발견된 책 하나만 반환
+    @Query("SELECT b FROM Book b WHERE b.isbn IN :isbns")
+    List<Book> findAllByIsbnIn(@Param("isbns") List<String> isbns);
     Optional<Book> findByIsbn(String isbn);
     @Query("SELECT b FROM Book b JOIN BookLike bl ON b.id = bl.book.id WHERE bl.user.id = :userId")
     List<Book> findLikedBooksByUserId(@Param("userId") Long userId);
