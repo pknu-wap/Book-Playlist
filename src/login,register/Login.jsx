@@ -105,7 +105,6 @@ export default function Login({ onLogin }) { // onLogin prop을 통해 로그인
 
     return (
         <div className="page">
-            <div className="leftSection"></div>
             <div className="rightSection">
                 <div className="formContainer">
                     <div className="titleWrap">Welcome to BookPlayList! 😊📚</div>
