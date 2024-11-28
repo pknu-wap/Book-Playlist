@@ -663,7 +663,7 @@ function PlaylistModal({ onClose, playlistId }) {
                   className="playlist-zoom-range"
                 />
               </div>
-              
+              <button className='playlist-plimage-save' onClick={showCroppedImage}>저장</button>
             </div>
           </div>
         </div>

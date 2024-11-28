@@ -225,12 +225,7 @@ const SearchBar = () => {
     marginBottom: '5px',
   };
 
-  const buttonStyle = {
-    position: "relative",
-    backgroundColor: 'white',
-    
   
-  };
 
   const handleBookClick = (book) => {
     navigate(`/book/${book.id}`, { state: { book } }); // 책 상세 페이지로 이동
@@ -373,12 +368,10 @@ const SearchBar = () => {
                     
                     
                      <div className='dots'
-                     style={buttonStyle}
+                    
                      onClick={(e) => handleButtonClick(e, item)}
                      >
-                      <span>.</span>
-                      <span>.</span>
-                      <span>.</span>
+                      
                     </div> 
                     
                   </div>
@@ -414,7 +407,7 @@ const SearchBar = () => {
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 100,
-            width: '200px',
+            width: '100px',
             transform: 'translateY(0)',  // 상대적 위치 조정
           }}
         >
@@ -422,7 +415,7 @@ const SearchBar = () => {
             {selectedItem ? (
               <>
                 <button onClick={closeSecondModal} style={{
-                  width:'240px',
+                  width:'140px',
                   margin:'0 0 0 0',
                   border: 'none',
                   backgroundColor: 'transparent',
@@ -437,7 +430,7 @@ const SearchBar = () => {
                   className="searchbar-modal-button"
                   onClick={(e) => handleSecondButtonClick(e)}
                 >
-                  플레이리스트 추가
+                  <p className="s-p">플레이리스트 추가</p>
                 </button>
                 {isLoading ? (<div className="playlists-loading"><p></p></div>):(
                   <button 
@@ -461,19 +454,19 @@ const SearchBar = () => {
         <div
           style={{
             position: 'absolute',
-            top: `${modalPosition.top + 100}px`,
-            left: `${modalPosition.left + 410}px`,
+            top: `${modalPosition.top + 70}px`,
+            left: `${modalPosition.left + 237}px`,
             transform: 'translate(-50%, -50%)',
             display: 'flex',
             backgroundColor: 'white',
             borderRadius: '30px',
-            padding: '20px',
+            padding: '10px',
             border: '1px solid lightgray',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             zIndex: 110,
             flexDirection: 'column',
-            width: '300px',
-            height: '300px',
+            width: '150px',
+            height: '200px',
             overflow: 'hidden',  // 전체 모달 영역에서 스크롤 숨기기
           }}
         >
@@ -483,7 +476,7 @@ const SearchBar = () => {
               margin: 'auto',
               border: 'none',
               backgroundColor: 'transparent',
-              fontSize: '16px',
+              fontSize: '15px',
               cursor: 'pointer',
               zIndex: 120,
             }}
@@ -494,6 +487,7 @@ const SearchBar = () => {
 
           {/* 스크롤을 허용하되, 스크롤바는 숨기기 */}
           <div
+          className="t-b"
             style={{
               display: 'flex',
               flexDirection: 'column',
@@ -501,6 +495,8 @@ const SearchBar = () => {
               overflowY: 'auto',  // 세로 스크롤 허용
               marginTop: '30px', // 버튼 아래로 여백 추가
               maxHeight: 'calc(100% - 40px)', // 전체 모달 높이에 맞게 조정
+              
+              
             }}
           >
             {playlists.map((playlist) => (

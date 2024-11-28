@@ -3,8 +3,7 @@ import "./EntireItem.css";
 import Filter from "./Filter.js";
 import Pagination from "../components/Pagination";
 import axios from "axios";
-
-const Modals = lazy(() => import("./Modals")); // 동적 import
+import Mainpageplaylist from '../components/Mainpageplaylist.js'
 
 const fetchPlaylists = async () => {
   try {
@@ -34,7 +33,7 @@ const fetchPlaylistDetails = async (playlistId) => {
 
 const EntireItems = () => {
   const [playlists, setPlaylists] = useState([]);
-  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalLoading, setModalLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -59,23 +58,14 @@ const EntireItems = () => {
     loadPlaylists();
   }, []);
 
-  const handleItemClick = async (playlistId) => {
-    setModalLoading(true);
+  const openModal = (playlistId) => {
+    setSelectedPlaylistId(playlistId);
     setIsModalOpen(true);
-    const data = await fetchPlaylistDetails(playlistId);
-    setModalLoading(false);
-
-    if (data) {
-      setSelectedPlaylist(data);
-    } else {
-      setSelectedPlaylist(null);
-      alert("플레이리스트 데이터를 불러오는데 실패했습니다.");
-    }
   };
-
-  const handleCloseModal = () => {
+  
+  const closeModal = () => {
+    setSelectedPlaylistId(null);
     setIsModalOpen(false);
-    setSelectedPlaylist(null);
   };
 
   const sortedPlaylists = [...playlists];
@@ -114,7 +104,7 @@ const EntireItems = () => {
               <div key={playlist.playlistId}>
                 <div
                   className="grid-item"
-                  onClick={() => handleItemClick(playlist.playlistId)}
+                  onClick={() => openModal(playlist.playlistId)}
                 >
                   <img
                     src={`data:image/jpeg;base64,${playlist.base64Image || ""}`}
@@ -147,14 +137,9 @@ const EntireItems = () => {
           />
         </>
       )}
-      <Suspense fallback={<div>Loading Modal...</div>}>
-        <Modals
-          show={isModalOpen}
-          onClose={handleCloseModal}
-          data={selectedPlaylist}
-          loading={modalLoading}
-        />
-      </Suspense>
+      {isModalOpen && (
+        <Mainpageplaylist playlistId={selectedPlaylistId} onClose={closeModal} />
+      )}
     </div>
   );
 };
