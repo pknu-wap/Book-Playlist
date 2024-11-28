@@ -29,7 +29,6 @@
   border-radius: 8px;
   width: 150px;
   height: 200px;
-  transition: transform 0.3s ease;
   margin-bottom: 200px;
 }
 .grid-bookplaylist-img{
@@ -39,8 +38,9 @@
   border-radius: 10px;
   margin-bottom: 10px;
   box-shadow: 0 4px 8px #0000004d;
+  transition: transform 0.3s ease;
 }
-.grid-bookplaylist-item:hover{ 
+.grid-bookplaylist-img:hover{ 
   transform: scale(1.05);
 }
 .grid-row {

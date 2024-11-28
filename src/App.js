@@ -174,7 +174,8 @@ function App() {
             <>
               <div className="slider-container">
                 <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
-                  <h1 style={{marginLeft: '120px', fontSize:'35px' }}>🔥 BEST SELLER</h1>
+                  <h1 style={{width:"297px",marginLeft: '120px', fontSize:'35px', position:"absolute"}}>🏆</h1>
+                  <h1 style={{width:"242px",marginLeft: '170px', paddingTop:"6px",fontSize:'35px',marginBottom:"10px", boxShadow: "inset 0 -20px 0 #C6E898" }}> BEST SELLER</h1>
                   <SimpleSlider {...settings}>
                     {books.map((book) => (
                       <div key={book.id} style={{ textAlign: 'center', padding: '10px' }}>
@@ -185,7 +186,8 @@ function App() {
                   </SimpleSlider>
                 </section>
                 <section className="slider-section" style={{ padding: '10px', marginRight: '200px' }}>
-                  <h1 style={{ marginLeft: '120px', fontSize:'35px' }}>🔥 TODAY'S PLAYLIST</h1>
+                <h1 style={{width:"375px",marginLeft: '120px', fontSize:'35px',position:"absolute"}}>🔥</h1>
+                  <h1 style={{width:"328px",marginLeft: '120px', paddingTop:"6px",marginLeft:"170px",marginBottom:"10px",fontSize:'35px', boxShadow: "inset 0 -20px 0 #C6E898" }}> TODAY'S PLAYLIST</h1>
                   <SimpleSlider1 playlists={playlists} {...settings}>
                     {playlists.map((playlist) => (
                       <div key={playlist.id} style={{ textAlign: 'center', padding: '10px' }}>
