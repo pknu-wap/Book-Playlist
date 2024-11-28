@@ -181,17 +181,25 @@ function PlaylistModal({ onClose, playlistId }) {
 
   // 책 추가 함수
   const handleAddBook = (book) => {
+    // 중복 체크 (ISBN을 기준으로)
+    const isBookAlreadyAdded = bookList.some((addedBook) => addedBook.isbn === book.isbn);
+  
+    if (isBookAlreadyAdded) {
+      alert('이 책은 이미 추가된 책입니다.');
+      return;
+    }
+  
     const isbn = book.isbn || book.isbn13 || book.isbn10 || '';
-    setBookList((prevBookList) => [
-      ...prevBookList,
-      {
-        title: book.title,
-        author: book.author,
-        publisher: book.publisher,
-        image: book.image,
-        isbn: isbn,
-      },
-    ]);
+    setBookList((prevBookList) => {
+      const updatedBookList = [
+        { title: book.title, author: book.author, publisher: book.publisher, cover: book.image, isbn: isbn }, 
+        ...prevBookList // `selectedBook`이 맨 앞에 오도록 설정
+      ];
+      setSelectedBook(updatedBookList[0]); // 첫 번째 책으로 selectedBook 업데이트
+      return updatedBookList;
+    });
+  
+    alert('책이 추가 되었습니다!');
   };
 
   // 책 삭제 함수

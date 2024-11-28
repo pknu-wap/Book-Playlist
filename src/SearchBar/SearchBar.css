@@ -121,7 +121,7 @@
 
 .adding{
     padding: 20px;
-    font-size: 14px;
+    font-size: 25px;
     border: #000000 1px solid;
     border:none;
     background-color: #ffffff;
@@ -133,7 +133,7 @@
 
   
 .adding:hover {
-    background-color: #b7ff7d;
+    background-color: #e1ffc9;;
 }
 
 .playlists-loading {

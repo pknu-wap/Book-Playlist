@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -41,18 +41,7 @@ const fetchPlaylists = async () => {
   }
 };
 
-const fetchPlaylistDetails = async (playlistId) => {
-  try {
-    const response = await axios.get(
-      `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlistId}`,
-      { withCredentials: true },
-    );
-    return response.data;
-  } catch (error) {
-    console.error(`플레이리스트 ${playlistId} 데이터를 불러오는 데 실패했습니다.`, error);
-    return null;
-  }
-};
+
 
 
 
@@ -60,10 +49,9 @@ function SimpleSlider() {
   const [playlists, setPlaylists] = useState([]);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalLoading, setModalLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [token, setToken] = useState(null); // 토큰 상태 추가
+  const token = useState(null); // 토큰 상태 추가
 useEffect(() => {
   const loadPlaylists = async () => {
     setLoading(true);

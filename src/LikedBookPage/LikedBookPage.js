@@ -1,33 +1,31 @@
-// LikedBookPage.jsx
 import React, { useState, useEffect } from 'react';
-import './LikedBookPage.css'; // CSS 파일 임포트
+import './LikedBookPage.css';
 import { useNavigate } from 'react-router-dom';
 
 const LikedBookPage = () => {
-  const [books, setBooks] = useState([]); // 전체 책 데이터
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const [loading, setLoading] = useState(false); // 로딩 상태
-  const [error, setError] = useState(null); // 오류 상태
-  const [likedBooks, setLikedBooks] = useState([]); // 찜한 책의 ISBN 목록
-  const [likeLoading, setLikeLoading] = useState(null); // 찜하기 로딩 상태
-  const [likeError, setLikeError] = useState(null); // 찜하기 오류 상태
+  const [books, setBooks] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true); // 페이지 로딩 상태
+  const [error, setError] = useState(null);
+  const [likedBooks, setLikedBooks] = useState([]);
+  const [loadingBooks, setLoadingBooks] = useState({}); // Loading 상태를 책별로 관리
+  const [likeError, setLikeError] = useState(null);
   const navigate = useNavigate();
   
   const handleBookClick = (book) => {
-    navigate(`/book/${book.id}`, { state: { book } }); // 책 상세 페이지로 이동
+    navigate(`/book/${book.id}`, { state: { book } });
   };
 
-  const booksPerPage = 25; // 한 페이지에 표시할 책 수
-  const totalPages = Math.ceil(books.length / booksPerPage); // 전체 페이지 수
+  const booksPerPage = 25;
+  const totalPages = Math.ceil(books.length / booksPerPage);
   const getToken = () => {
     return localStorage.getItem('token');
   };
 
   useEffect(() => {
-    // 로컬 스토리지에서 찜한 책 목록을 가져오기
     const storedLikedBooks = JSON.parse(localStorage.getItem('likedBooks')) || [];
     setLikedBooks(storedLikedBooks);
-  
+
     const fetchBooks = async () => {
       setLoading(true);
       try {
@@ -46,38 +44,51 @@ const LikedBookPage = () => {
   
     fetchBooks();
   }, []);
-  
 
-  // 현재 페이지에 표시할 책 데이터 계산
   const indexOfLastBook = currentPage * booksPerPage;
   const indexOfFirstBook = indexOfLastBook - booksPerPage;
   const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
 
-  // 찜하기 핸들러 함수
   const handleLike = async (isbn) => {
-    console.log('책의 ISBN:', isbn);
     if (!isbn) {
       console.error('ISBN 값이 없습니다!');
       return;
     }
-  
+
     if (likedBooks.includes(isbn)) {
       alert('이미 찜한 책입니다.');
       return;
     }
-  
-    setLikeLoading(isbn);
+
+    setLoadingBooks((prev) => ({ ...prev, [isbn]: true })); // 해당 책에 대해 로딩 시작
     setLikeError(null);
     const token = getToken();
     if (!token) {
       alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setLoadingBooks((prev) => ({ ...prev, [isbn]: false })); // 로딩 종료
       return;
     }
-  
+
     const requestBody = { isbn };
-    console.log('요청 본문:', JSON.stringify(requestBody));
-  
+
     try {
+      const checkResponse = await fetch(`https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${isbn}/isLiked`, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!checkResponse.ok) {
+        throw new Error('찜 여부 확인 실패');
+      }
+
+      const checkData = await checkResponse.json();
+
+      if (checkData) {
+        alert('이미 찜한 책입니다.');
+        setLoadingBooks((prev) => ({ ...prev, [isbn]: false })); // 로딩 종료
+        return;
+      }
+
       const response = await fetch('https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/mainpage/like-by-isbn', {
         method: 'POST',
         headers: {
@@ -86,37 +97,42 @@ const LikedBookPage = () => {
         },
         body: JSON.stringify(requestBody),
       });
-  
+
       if (!response.ok) {
         throw new Error(`찜하기 실패! 상태 코드: ${response.status}`);
       }
-  
-      // 찜한 책 목록 업데이트
+
+      // 책의 likeCount를 +1 증가시키기
+      const updatedBooks = books.map((book) => {
+        if (book.isbn === isbn) {
+          return { ...book, likeCount: book.likeCount + 1 }; // likeCount 업데이트
+        }
+        return book;
+      });
+
+      setBooks(updatedBooks); // 업데이트된 책 데이터 설정
+
       setLikedBooks((prevLikedBooks) => {
         const updatedLikedBooks = [...prevLikedBooks, isbn];
-        // 로컬 스토리지에 찜한 책 목록 저장
         localStorage.setItem('likedBooks', JSON.stringify(updatedLikedBooks));
         return updatedLikedBooks;
       });
+
+      alert('찜되었습니다!');
     } catch (err) {
       setLikeError(err.message || '찜하기 중 오류가 발생했습니다.');
     } finally {
-      setLikeLoading(null);
+      setLoadingBooks((prev) => ({ ...prev, [isbn]: false })); // 로딩 종료
     }
   };
-  
 
-  // 페이지 변경 핸들러
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // 페이지 변경 시 스크롤을 맨 위로
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 페이지네이션 버튼 생성
   const renderPagination = () => {
     const pages = [];
-
-    // 이전 페이지 버튼
     pages.push(
       <div className='beforepage-button' key="prev-container">
         <button
@@ -130,7 +146,6 @@ const LikedBookPage = () => {
       </div>
     );
 
-    // 페이지 번호 버튼 (여기서는 1~totalPages 모두 표시)
     for (let i = 1; i <= totalPages; i++) {
       pages.push(
         <button
@@ -143,7 +158,6 @@ const LikedBookPage = () => {
       );
     }
 
-    // 다음 페이지 버튼
     pages.push(
       <div className='nextpage-button' key="next-container">
         <button
@@ -183,32 +197,35 @@ const LikedBookPage = () => {
                   src={book.image}
                   alt={book.title}
                   className="likedbookpage-book-image"
-                  onClick={() => handleBookClick(book)}// ISBN을 쿼리 파라미터로 전달
+                  onClick={() => handleBookClick(book)}
                 />
                 <h3
                   className="likedbookpage-book-title"
-                  onClick={() => handleBookClick(book)} // ISBN을 쿼리 파라미터로 전달
+                  onClick={() => handleBookClick(book)}
                 >
                   {book.title}
                 </h3>
                 <p className="likedbookpage-book-author">
                   {book.author}/{book.publisher}
                 </p>
-                <p
-                  className={`likedbookpage-book-like ${likedBooks.includes(book.isbn) ? "liked" : ""}`}
-                  onClick={() => handleLike(book.isbn)} // book.isbn을 handleLike 함수에 전달
-                  style={{ cursor: "pointer" }}
-                >
-                  ❤️ {book.likeCount}
-                  {likeLoading === book.isbn && (
-                    <span className="like-loading">...</span>
-                  )}
-                </p>
+                <div className="likedbookpage-likecount">
+                  <p
+                    className={`likedbookpage-book-like ${likedBooks.includes(book.isbn) ? "liked" : ""}`}
+                    onClick={() => handleLike(book.isbn)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    ❤️ 
+                    {loadingBooks[book.isbn] ? ( // 로딩 중인 책에 대해서만 로딩 표시
+                      <div className="likedbookpage-likecount-loader"></div>
+                    ) : (
+                      <span className="playlist-plcount-after-p">{book.likeCount}</span> // likeCount 표시
+                    )}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
 
-          {/* 페이지네이션 */}
           {totalPages > 1 && (
             <div className="pagination">{renderPagination()}</div>
           )}

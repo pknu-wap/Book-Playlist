@@ -402,14 +402,14 @@ const SearchBar = () => {
             marginLeft: '20px',
             position: 'absolute',
             marginTop: `${modalPosition.top - 100}px`,
-            marginLeft:"1060px",
+            left: `${modalPosition.left}px`,  // 첫 번째 모달과 일정 간격 두기
             backgroundColor: 'rgba(0, 0, 0, 0)',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 100,
-            width: '200px',
+            width: '100px',
             transform: 'translateY(0)',  // 상대적 위치 조정
           }}
         >
@@ -456,8 +456,8 @@ const SearchBar = () => {
         <div
           style={{
             position: 'absolute',
-            top: `${modalPosition.top + 100}px`,
-            left: `${modalPosition.left + 410}px`,
+            top: `${modalPosition.top + 70}px`,
+            left: `${modalPosition.left + 234}px`,
             transform: 'translate(-50%, -50%)',
             display: 'flex',
             backgroundColor: 'white',
@@ -475,14 +475,12 @@ const SearchBar = () => {
           <button
             style={{
               position: 'absolute',
-              paddingBottom:"10px",
+              marginLeft: '60px',
               border: 'none',
               backgroundColor: 'transparent',
               fontSize: '15px',
               cursor: 'pointer',
-              width:"180px",
               zIndex: 120,
-              borderBottom:'1px solid lightgray'
             }}
             onClick={ThirdModelClose}
           >

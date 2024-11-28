@@ -57,7 +57,7 @@ const EntireItems = () => {
   
   const closeModal = () => {
     setSelectedPlaylistId(null);
-
+    setIsModalOpen(false);
   };  
 
   const sortedPlaylists = [...playlists];
