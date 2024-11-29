@@ -8,6 +8,7 @@ import likedBooksBg from './찜한책.svg';
 import likedPlaylistsBg from './찜한플리.svg';
 
 const MyPage = () => {
+  const [hoveredBook, setHoveredBook] = useState(null);
   const [username, setUsername] = useState('');
   const [playlists, setPlaylists] = useState([]);
   const [likedPlaylists, setLikedPlaylists] = useState([]); // 상태 변수 이름 변경
@@ -169,8 +170,32 @@ const MyPage = () => {
     } catch (error) {
       console.error('Username update error:', error);
       alert('닉네임 변경 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const handleUnlike = async (isbn) => {
+    const token = getToken();
+    if (!token) {
+      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      setIsLoading(false); 
+      return;
+    }
+    try {
+      await axios.delete(`https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/booklikes/${isbn}/unlike`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setLikedBooks((prevBooks) => prevBooks.filter((book) => book.isbn !== isbn)); // 책 목록에서 제거
+      alert('찜 취소가 완료되었습니다.');
+    } catch (error) {
+      console.error('찜 취소 오류:', error);
+      alert('찜 취소 중 오류가 발생했습니다.');
+    }
+  };
+  
 
   return (
     <div>
@@ -342,7 +367,12 @@ const MyPage = () => {
                         console.error('이미지 URL 디코딩 오류:', e);
                       }
                       return (
-                        <div key={book.isbn} className="mypage-playlist-box">
+                        <div
+                          key={book.isbn}
+                          className="mypage-playlist-box"
+                          onMouseEnter={() => setHoveredBook(book.isbn)}
+                          onMouseLeave={() => setHoveredBook(null)}
+                        >
                           <div className="mypage-playlist-hover-container">
                             {imageUrl ? (
                               <img
@@ -355,6 +385,20 @@ const MyPage = () => {
                                 이미지 없음
                               </div>
                             )}
+                            <button
+                              className={`mypage-unlike-button ${
+                                hoveredBook === book.isbn ? "show" : ""
+                              }`}
+                              onClick={() => handleUnlike(book.isbn)}
+                            >
+                            {isLoading ? (
+          
+                            <div className="mypage-unlike-loader"></div>
+            
+                          ) : (
+                              <p>💔 찜취소</p>
+                          )}
+                            </button>
                           </div>
                           <div className="mypage-playlist-title">
                             <p>{book.title}</p>

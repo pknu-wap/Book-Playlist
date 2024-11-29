@@ -60,14 +60,22 @@
   transform: scale(0.98); /* 버튼 살짝 줄이기 */
 }
 
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Pretendard-Regular';
   max-width: 100%;
   width: 1500px;
   margin-left: auto;
   margin-right: auto;
 }
+
 
 header {
   /* Rectangle 12 */
@@ -116,10 +124,18 @@ header {
   width: 250px;
   background-color: #ffffff;
   padding: 20px;
-  height: 100vh; /* ?���? ?���? ?��?�� */
+  height: 100vh; /* ?   ? ?   ? ?  ?   */
   list-style: none;
   border-right: 0.1px solid #e7e4e4;
   float: left;
+}
+
+@font-face {
+  font-family: 'Pretendard Variable';
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/woff2/PretendardVariable-Regular.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/woff/PretendardVariable-Regular.woff') format('woff');
+  font-weight: 100 900; /* Variable Font 지원 */
+  font-style: normal;
 }
 
 .sidebar ul {
@@ -127,7 +143,7 @@ header {
   padding: 0;
   margin: 0;
   list-style-type: none;
-  font-family: 'Pretendard Variable', sans-serif;
+  
   font-weight: 500;
   font-size: 18px;
   color: #000000;
@@ -136,6 +152,7 @@ header {
 .sidebar li {
   display: flex;
   align-items: center;
+  font-family: 'Pretendard Variable', sans-serif; /* 기본 폰트 적용 */
   height: 40px;
   margin-bottom: 20px;
 }
@@ -150,6 +167,7 @@ header {
 .sidebar nav ul li a {
   text-decoration: none;
   color: #333;
+  font-family: 'Pretendard Variable'; /* Pretendard를 최우선 적용 */
 }
 
 /* 활성화된 링크 스타일 */
