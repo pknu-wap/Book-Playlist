@@ -28,8 +28,7 @@ const EntireItems = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOrder, setSortOrder] = useState("latest");
-  const [loadingStates, setLoadingStates] = useState({}); 
-  const [likeCount, setLikeCount] = useState(0);
+  
   const itemsPerPage = 15;
   
 
@@ -49,121 +48,7 @@ const EntireItems = () => {
     loadPlaylists();
   }, []);
 
-  useEffect(()=>{
-    const fetchLikeData = async (playlistId)=>{
-      const token = getToken();
-      if(!token){
-        alert("로그인해주세요.");
-        return;
-      }
-      try {
-        const {data: isLikedData} = await axios.get(
-          `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${playlistId.playlistId}/isLiked`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setIsLiked(isLikedData);
-
-      } catch (error){
-        console.error("찜 정보 가져오기 실패:",error);
-      } finally {
-
-      }
-    };
-    const fetchLikeCount = async(playlistId)=>{
-      try{
-        const { data: likeCountData } = await axios.get(
-          `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${playlistId}/likeCount`,
-          { withCredentials: true }
-        );
-        setLikeCount(likeCountData.likeCount);
-      } catch(error){
-        console.error("찜 수 정보 가져오기 실패:",error);
-      } finally{
-
-      }
-    }
-    if (selectedPlaylist && selectedPlaylist.playlistId) {
-      fetchLikeData(selectedPlaylist.playlistId);
-      fetchLikeCount(selectedPlaylist.playlistId);
-    }
-  }, [selectedPlaylist]);
-
-//찜하기 함수
-  const handleLike = (playlistId) => {
-    setLoadingStates((prevState) => ({ ...prevState, [playlistId]: true }));
-    console.log("클릭한 요소:",playlistId);
-    const token = getToken();
-    if (!token) {
-      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
-      setLoadingStates((prevState) => ({ ...prevState, [playlistId]: false }));
-      return;
-    }
   
-    // 요청 URL
-    const likeUrl = `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${playlistId}/like`;
-    const unlikeUrl = `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlistlikes/${playlistId}/unlike`;
-  
-    // 요청 헤더에 Authorization 추가
-    const headers = {
-      Authorization: `Bearer ${token}`,  // 토큰을 Authorization 헤더에 포함
-    };
-  
-    if (!isLiked) {
-      // 찜하기
-      axios
-        .post(likeUrl, {}, {
-          headers: headers,
-          withCredentials: true,
-        })
-        .then(() => {
-          setIsLiked(true);
-          setPlaylists((prevPlaylists) => 
-            prevPlaylists.map((playlist)=>
-              playlist.playlistId === playlistId ? {...playlist, likeCount: playlist.likeCount + 1} : playlist
-            )
-          );
-          alert(`플레이리스트가 찜이 되었습니다!`);
-        })
-        .catch((error) => {
-          console.error("찜하기 실패:", error);
-          alert("이미 찜이 된 플레이리스트입니다.",error);
-        })
-        .finally(() => {
-          setLoadingStates((prevState) => ({ ...prevState, [playlistId]: false }));
-
-          // window.location.reload()
-        });
-    } else {
-      // 찜 취소
-      axios
-        .delete(unlikeUrl, {
-          headers: headers,
-          withCredentials: true,
-        })
-        .then(() => {
-          setIsLiked(false);
-          setPlaylists((prevPlaylists)=>
-            prevPlaylists.map((playlist)=>
-              playlist.playlistId === playlistId ? {...playlist, likeCount: playlist.likeCount - 1} : playlist
-            )
-          );
-          alert("플레이리스트가 찜취소가 되었습니다!");
-        })
-        .catch((error) => {
-          console.error("찜 취소 실패:", error);
-          alert("이미 취소된 플레이리스트입니다.",error);
-        })
-        .finally(() => {
-          setLoadingStates((prevState) => ({ ...prevState, [playlistId]: false }));
-
-          // window.location.reload()
-        });
-    }
-  };
 
   const openModal = (playlistId) => {
     setSelectedPlaylistId(playlistId);
@@ -214,7 +99,7 @@ const EntireItems = () => {
                   onClick={() => openModal(playlist.playlistId)}
                 >
                   <img
-                    src={`data:image/jpeg;base64,${playlist.base64Image}` || ""}
+                    src={`data:image/jpeg;base64,${playlist.base64Image || ""}`}
                     alt={playlist.title}                    
                     className="grid-bookplaylist-img"
                     
@@ -227,12 +112,8 @@ const EntireItems = () => {
                   <p className="gird-bookplaylist-username">만든이 : {playlist.username}</p>
                   <p 
                     className="gird-bookplaylist-likeCount"
-                    onClick={()=>handleLike(playlist.playlistId)}
                   > 
                     ❤️ {playlist.likeCount}
-                    {loadingStates[playlist.playlistId] && (
-                      <span className="like-loading">...</span>
-                    )}
                   </p>
                 </div>
               </div>
