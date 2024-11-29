@@ -30,7 +30,7 @@ const SearchBar = () => {
     const fetchUserData = async () => {
         const token = getToken();
       if (!token) {
-        alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+        
         setIsLoading(false); 
         return;
       }
@@ -152,7 +152,7 @@ const SearchBar = () => {
     setIsLoading(true);
     const token = getToken();
     if (!token) {
-      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      
       setIsLoading(false); 
       return;
     }

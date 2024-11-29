@@ -87,7 +87,7 @@ function LikedPlaylistModal({ onClose, playlistId }) {
     const fetchLikeData = async () => {
       const token = getToken();
       if (!token) {
-        alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+        
         setIsLoading(false);
         return;
       }
@@ -121,7 +121,7 @@ function LikedPlaylistModal({ onClose, playlistId }) {
     setIsLoading(true); // 찜하기 버튼 클릭 시 로딩 시작
     const token = getToken();
     if (!token) {
-      alert('로그인 정보가 없습니다. 다시 로그인해주세요.');
+      
       setIsLoading(false); 
       return;
     }
