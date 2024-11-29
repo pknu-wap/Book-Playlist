@@ -1,10 +1,9 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import "./EntireItem.css";
 import Filter from "./Filter.js";
 import Pagination from "../components/Pagination";
 import axios from "axios";
-
-const Modals = lazy(() => import("./Modals")); // 동적 import
+import Mainpageplaylist from '../components/Mainpageplaylist.js'
 
 const fetchPlaylists = async () => {
   try {
@@ -19,25 +18,12 @@ const fetchPlaylists = async () => {
   }
 };
 
-const fetchPlaylistDetails = async (playlistId) => {
-  try {
-    const response = await axios.get(
-      `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlistId}`,
-      { withCredentials: true }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(`플레이리스트 ${playlistId} 데이터를 불러오는 데 실패했습니다.`, error);
-    return null;
-  }
-};
 
 const EntireItems = () => {
-  const [isLiked, setIsLiked] = useState(false); //찜 상태
+  
   const [playlists, setPlaylists] = useState([]);
-  const [selectedPlaylist, setSelectedPlaylist] = useState(null); //현재 선택한 플리 id
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalLoading, setModalLoading] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,9 +31,7 @@ const EntireItems = () => {
   const [loadingStates, setLoadingStates] = useState({}); 
   const [likeCount, setLikeCount] = useState(0);
   const itemsPerPage = 15;
-  const getToken = () => {
-    return localStorage.getItem('token');
-  };
+  
 
   useEffect(() => {
     const loadPlaylists = async () => {
@@ -181,25 +165,15 @@ const EntireItems = () => {
     }
   };
 
-  const handleItemClick = async (playlistId) => {
-    setModalLoading(true);
+  const openModal = (playlistId) => {
+    setSelectedPlaylistId(playlistId);
     setIsModalOpen(true);
-    const data = await fetchPlaylistDetails(playlistId);
-    console.log("클릭한 플레이리스트:", playlistId);
-    setModalLoading(false);
-
-    if (data) {
-      setSelectedPlaylist(data);
-    } else {
-      setSelectedPlaylist(null);
-      alert("플레이리스트 데이터를 불러오는데 실패했습니다.");
-    }
   };
-
-  const handleCloseModal = () => {
+  
+  const closeModal = () => {
+    setSelectedPlaylistId(null);
     setIsModalOpen(false);
-    setSelectedPlaylist(null);
-  };
+  };  
 
   const sortedPlaylists = [...playlists];
   switch(sortOrder){
@@ -236,13 +210,14 @@ const EntireItems = () => {
             {currentItems.map((playlist) => (
               <div key={playlist.playlistId}>
                 <div
-                  className="grid-bookplaylist-item"
+                  className="grid-item"
+                  onClick={() => openModal(playlist.playlistId)}
                 >
                   <img
                     src={`data:image/jpeg;base64,${playlist.base64Image}` || ""}
                     alt={playlist.title}                    
                     className="grid-bookplaylist-img"
-                    onClick={() => handleItemClick(playlist.playlistId)}
+                    
                   />
                   <h3 
                     className="grid-bookplaylist-title"
@@ -271,14 +246,9 @@ const EntireItems = () => {
           />
         </>
       )}
-      <Suspense fallback={<div>Loading Modal...</div>}>
-        <Modals
-          show={isModalOpen}
-          onClose={handleCloseModal}
-          data={selectedPlaylist}
-          loading={modalLoading}
-        />
-      </Suspense>
+      {isModalOpen && (
+        <Mainpageplaylist playlistId={selectedPlaylistId} onClose={closeModal} />
+      )}
     </div>
   );
 };

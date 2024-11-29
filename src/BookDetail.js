@@ -251,21 +251,33 @@ const handleDeleteComment = async (commentId) => {
         </div>
         <div className="book-title"> 
           <h1>{book.title}</h1>
-        <div className="book-authorpublisheraverage">
+        <div className="book-authorpublisher">
           <p>
             <strong>저자:</strong> {book.author}
-            </p> 
-          <p>
+            <span className="separator"></span>
             <strong>출판사:</strong> {book.publisher}
-            </p>
+            </p> 
+        <div className="book-average">
           <p>
-            <strong>평점:</strong>{" "}
-            {averageRating ? averageRating.toFixed(1) : "평가 없음"}
+          <strong>평점:</strong>{" "}
+          {averageRating > 0 ? averageRating.toFixed(1) : "평가 없음"}
+          {averageRating > 0 && (
+           <span className="average-rating-stars">
+             {[1, 2, 3, 4, 5].map((star) => (
+              <span
+              key={star}
+              className={`star ${Math.round(averageRating) >= star ? "active" : ""}`}
+              >    
+                ★
+               </span>
+            ))}
+          </span>
+          )}
           </p>
-          <div className="book-description">
-          <p>
-            <strong>설명:</strong> {book.description}
-          </p>
+        </div>
+        <div className="book-description">
+        <h3>줄거리</h3> 
+        <p>{book.description}</p>
           <button
             className="like-button"
             onClick={toggleLike}
@@ -305,7 +317,8 @@ const handleDeleteComment = async (commentId) => {
           comments.map((comment) => (
             <div key={comment.id} className="comment-item">
               <div className="comment-header">
-                <span className="username">{comment.username || "익명"}</span>
+              <span className="username">{comment.username || "익명"}</span>
+              <div className="date-button-container">
                 <span className="date">
                   {comment.createdAt
                     ? new Date(comment.createdAt).toLocaleDateString()
@@ -329,6 +342,7 @@ const handleDeleteComment = async (commentId) => {
                     ★
                   </span>
                 ))}
+              </div>
               </div>
               <p className="comment-text">{comment.content}</p>
             </div>

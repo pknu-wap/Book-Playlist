@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import PlaylistModal from './Mypageplaylist'; 
-import LikedPlaylistModal from './Likedplaylist';
+import Mainpageplaylist from '../components/Mainpageplaylist';
 import './Mypage.css';
 import myPlaylistsBg from './내가만든플리.svg';
 import likedBooksBg from './찜한책.svg';
@@ -420,7 +420,7 @@ const MyPage = () => {
         <PlaylistModal playlistId={selectedPlaylistId} onClose={closeModal} />
       )}
       {isLikedModalOpen && (
-        <LikedPlaylistModal playlistId={selectedPlaylistId} onClose={closeModal} />
+        <Mainpageplaylist playlistId={selectedPlaylistId} onClose={closeModal} />
       )}
     </div>
   );

@@ -1,41 +1,42 @@
 /* 전체 페이지 레이아웃 스타일 */
 .page {
     display: flex;
-    width: 100%;
-    height: 100vh;
-    background-image: url('./login-background.png'); 
-    background-size: cover; 
+    width: 1650px !important;
+    height: 690px !important;
+    background-image: url('./login-background.png') !important; 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: -60px center !important;
     align-items: center;
     justify-content: center;
-    margin-bottom: 100px;
+    overflow: hidden !important; /* 스크롤 비활성화 */
+    margin-left: -350px !important;
+    margin-bottom: -20px !important;
+    margin-top: -5px;
+    background-color: #FAFFF4;
 }
 
-/* 왼쪽 배경에 이미지 설정 */
-.leftSection {
-    width: 50%;
-    height: 100%;
-    background-image: url('./login-background.png') !important; 
-    background-size: cover !important; 
-
-}
 
 /* 오른쪽 로그인/회원가입 폼 영역 */
 .rightSection {
-    width: 50%;
+    width: 40%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: 400px;
 }
 
 /* 폼 컨테이너 스타일 */
 .formContainer {
-    width: 440px;
+    width: 500px;
     padding: 40px;
     box-sizing: border-box;
     background: #FFFFFF;
-    border-radius: 30px;
+    border-radius: 50px;
     border: 1.5px solid #999999;
+    position: relative;
+    left: 50px;
 }
 
 /* 제목 스타일 */
@@ -54,9 +55,9 @@
     margin-top: 20px;
     display: flex;
     border-radius: 8px;
-    padding: 16px;
+    padding: 14px;
     background-color: #ffffff;
-    border: 1.5px solid #999999;
+    border: 2px solid #999999;
 }
 
 .input {
@@ -75,7 +76,7 @@
     margin-top: 30px;
     border: none;
     font-weight: 800;
-    background-color: #999999;
+    background-color: #8AC140;
     border-radius: 30px;
     color: #FFFFFF;
     cursor: pointer;
@@ -92,7 +93,7 @@
 .registerLink {
     font-size: 16px;
     font-weight: 500;
-    color: #999999;
+    color: #8AC140;
     cursor: pointer;
     text-align: center;
     text-decoration: underline;

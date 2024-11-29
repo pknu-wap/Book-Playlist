@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -6,8 +6,7 @@ import "../styles/SimpleSlider.css";
 import axios from "axios";
 import LeftArrow from "../BookPlaylist/left-arrow.svg"
 import RightArrow from "../BookPlaylist/right-arrow.svg"
-
-const Modals = lazy(() => import("../BookPlaylist/Modals")); // 동적 import
+import Mainpageplaylist from './Mainpageplaylist'
 
 const arrowCss = {
   width: '30px',
@@ -42,29 +41,17 @@ const fetchPlaylists = async () => {
   }
 };
 
-const fetchPlaylistDetails = async (playlistId) => {
-  try {
-    const response = await axios.get(
-      `https://past-ame-jinmo5845-211ce4c8.koyeb.app/api/playlist/${playlistId}`,
-      { withCredentials: true },
-    );
-    return response.data;
-  } catch (error) {
-    console.error(`플레이리스트 ${playlistId} 데이터를 불러오는 데 실패했습니다.`, error);
-    return null;
-  }
-};
+
 
 
 
 function SimpleSlider() {
   const [playlists, setPlaylists] = useState([]);
-  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalLoading, setModalLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [token, setToken] = useState(null); // 토큰 상태 추가
+  const token = useState(null); // 토큰 상태 추가
 useEffect(() => {
   const loadPlaylists = async () => {
     setLoading(true);
@@ -80,6 +67,17 @@ useEffect(() => {
 
   loadPlaylists();
 },[]); // 토큰 변경 시 재요청
+
+
+const openModal = (playlistId) => {
+  setSelectedPlaylistId(playlistId);
+  setIsModalOpen(true);
+};
+
+const closeModal = () => {
+  setSelectedPlaylistId(null);
+  setIsModalOpen(false);
+};
 
   const settings = {
     arrows: true,
@@ -109,24 +107,7 @@ useEffect(() => {
     loadPlaylists();
   }, []);
 
-  const handleItemClick = async (playlistId) => {
-    setModalLoading(true);
-    setIsModalOpen(true);
-    const data = await fetchPlaylistDetails(playlistId);
-    setModalLoading(false);
-
-    if (data) {
-      setSelectedPlaylist(data);
-    } else {
-      setSelectedPlaylist(null);
-      alert("플레이리스트 데이터를 불러오는 데 실패했습니다.");
-    }
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedPlaylist(null);
-  };
+  
   const containerStyle = {
     width: '100%',
     maxWidth: '1200px',
@@ -151,7 +132,7 @@ useEffect(() => {
             .map((playlist) => (
               <div
                 key={playlist.playlistId}
-                onClick={() => handleItemClick(playlist.playlistId)}
+                onClick={() => openModal(playlist.playlistId)}
                 style={{
                   textAlign: "center",
                   margin: "0 5px",
@@ -174,7 +155,7 @@ useEffect(() => {
                 <h3
                   style={{
                     margin: "10px 0 0 40px",
-                    width: "100px",
+                    width: "180px",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
@@ -182,9 +163,9 @@ useEffect(() => {
                 >{playlist.title}</h3>
                 <p 
                   style={{
-                    color:'lightgray',
+                    color:'darkgray',
                     margin: "10px 0 0 40px",
-                    width: "100px",
+                    width: "180px",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
@@ -196,14 +177,9 @@ useEffect(() => {
           ))}
         </Slider>
       )}
-      <Suspense fallback={<div>Loading Modal...</div>}>
-        <Modals
-          show={isModalOpen}
-          onClose={handleCloseModal}
-          data={selectedPlaylist}
-          loading={modalLoading}
-        />
-      </Suspense>
+      {isModalOpen && (
+        <Mainpageplaylist playlistId={selectedPlaylistId} onClose={closeModal} />
+      )}
     </main>
   );
 }

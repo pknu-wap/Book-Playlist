@@ -191,7 +191,7 @@ const SearchBar = () => {
   };
 
   const resultItemStyle = {
-    width: '100%',
+    width: '720px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -228,18 +228,7 @@ const SearchBar = () => {
     marginBottom: '5px',
   };
 
-  const buttonStyle = {
-    position: "relative",
-    marginRight:"20px",
-    padding: '8px 15px 10px 10px',
-    backgroundColor: '#ffffff',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
-
-  };
+  
 
   const handleBookClick = (book) => {
     closeModal();
@@ -280,18 +269,19 @@ const SearchBar = () => {
     <div>
       {/* 검색 바 디자인 */}
       <div
+      className="search-bar-box"
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           top: "20px",
-          marginLeft:'120%',
+          marginLeft:'105%',
           transform: "translateX(-50%)",
           zIndex: 1000,
-          width: "600px", // 검색 바 전체 폭
+          width: "750px", 
           maxWidth: "800px",
-          padding: "10px",
-          backgroundColor: "#f5f5f5", // 검색창 배경색
+          height: "60px",
+          backgroundColor: "white", 
           borderRadius: "30px",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         }}
@@ -302,13 +292,12 @@ const SearchBar = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="Search for books..."
+          placeholder="책을 검색해주세요!"
           style={{
             flex: 1,
-            height: "40px",
+            height: "50px",
             border: "none",
             outline: "none",
-            padding: "0 15px",
             fontSize: "16px",
             borderRadius: "30px 0 0 30px",
             backgroundColor: "#fff",
@@ -318,17 +307,17 @@ const SearchBar = () => {
           className="search-button"
           onClick={handleSearch}
           style={{
-            padding: "0 20px",
+            
             height: "40px",
             fontSize: "16px",
             border: "none",
-            borderRadius: "10px 30px 30px 10px",
-            backgroundColor: "#F0F0F0",
-            color: "black",
+            borderRadius: "0 30px 30px 0",
+            backgroundColor: "white",
+            color: "#61d87b",
             cursor: "pointer",
           }}
         >
-          검색
+          <span className="material-symbols-outlined">Search</span>
         </button>
       </div>
     
@@ -337,12 +326,13 @@ const SearchBar = () => {
         <div
           style={{
             position: "absolute",
-            top: "75px",
+            top: "77px",
+            left: "80px",
+            right: "0",
             backgroundColor: "rgba(0, 0, 0, 0)",
             display: "flex",
-            bottom:'0',
-            paddingRight:"50%",
-            paddingLeft:"440px",
+            justifyContent: "center",
+            alignItems: "flex-start",
             zIndex: 99,
             paddingTop: "10px",
           }}
@@ -355,8 +345,9 @@ const SearchBar = () => {
               border:'1px solid lightgray',
               backgroundColor: "white",
               borderRadius: "30px",
-              width: "600px",
-              maxWidth: "700px",
+              width: "750px",
+              maxWidth: "750px",
+              maxHeight: "70vh",
               overflowY: "auto",
             }}
             onClick={(e) =>e.stopPropagation()}
@@ -379,12 +370,12 @@ const SearchBar = () => {
                       <p style={titleStyle}>{item.title}</p>
                       <p style={authorStyle}>{item.author}</p>
                     </div>
-                    <button
-                      style={buttonStyle}
-                      onClick={(e) => handleButtonClick(e, item)}
+                    <div className='dots'
+                    
+                    onClick={(e) => handleButtonClick(e, item)}
                     >
-                      <img src={Moreview} alt="더보기" style={{width:'20px', height:'20px'}}></img>
-                    </button>
+                     
+                   </div> 
                   </div>
                 ))
               ) : (
@@ -411,14 +402,14 @@ const SearchBar = () => {
             marginLeft: '20px',
             position: 'absolute',
             marginTop: `${modalPosition.top - 100}px`,
-            marginLeft:"1060px",
+            left: `${modalPosition.left}px`,  // 첫 번째 모달과 일정 간격 두기
             backgroundColor: 'rgba(0, 0, 0, 0)',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 100,
-            width: '180px',
+            width: '100px',
             transform: 'translateY(0)',  // 상대적 위치 조정
           }}
         >
@@ -426,7 +417,7 @@ const SearchBar = () => {
             {selectedItem ? (
               <>
                 <button onClick={closeSecondModal} style={{
-                  width:'220px',
+                  width:'140px',
                   margin:'0 0 0 0',
                   border: 'none',
                   backgroundColor: 'transparent',
@@ -441,7 +432,7 @@ const SearchBar = () => {
                   className="searchbar-modal-button"
                   onClick={(e) => handleSecondButtonClick(e)}
                 >
-                  플레이리스트 추가
+                  <p className="s-p">플레이리스트 추가</p>
                 </button>
                 {isLoading ? (<div className="playlists1-loading"></div>):(
                   <button 
@@ -465,32 +456,31 @@ const SearchBar = () => {
         <div
           style={{
             position: 'absolute',
-            top: `${modalPosition.top + 135}px`,
-            marginLeft:'1375px',
+            top: `${modalPosition.top + 70}px`,
+            left: `${modalPosition.left + 234}px`,
             transform: 'translate(-50%, -50%)',
             display: 'flex',
             backgroundColor: 'white',
             borderRadius: '30px',
-            padding: '20px',
+            padding: '10px',
             border: '1px solid lightgray',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             zIndex: 110,
             flexDirection: 'column',
-            width: '180px',
-            height: '300px',
+            width: '150px',
+            height: '200px',
+            overflow: 'hidden',  // 전체 모달 영역에서 스크롤 숨기기
           }}
         >
           <button
             style={{
               position: 'absolute',
-              paddingBottom:"10px",
+              marginLeft: '60px',
               border: 'none',
               backgroundColor: 'transparent',
-              fontSize: '16px',
+              fontSize: '15px',
               cursor: 'pointer',
-              width:"180px",
               zIndex: 120,
-              borderBottom:'1px solid lightgray'
             }}
             onClick={ThirdModelClose}
           >
@@ -499,7 +489,15 @@ const SearchBar = () => {
 
           {/* 스크롤을 허용하되, 스크롤바는 숨기기 */}
           <div
-            className="addtoplaylists"
+            className="t-b"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              overflowX: 'hidden',
+              overflowY: 'auto',  // 세로 스크롤 허용
+              marginTop: '30px', // 버튼 아래로 여백 추가
+              maxHeight: 'calc(100% - 40px)', // 전체 모달 높이에 맞게 조정
+              }}
           >
             {playlists.map((playlist) => (
               <div key={playlist.playlistId} className="playlist-item">
