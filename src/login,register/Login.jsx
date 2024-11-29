@@ -104,8 +104,8 @@ export default function Login({ onLogin }) { // onLogin prop을 통해 로그인
     }, [emailValid, pwValid]);
 
     return (
-        <div className="page">
-            <div className="rightSection">
+        <div className="page" onClick={() => navigate('/')}> {/* 폼 바깥 클릭 시 메인 페이지 이동 */}
+            <div className="rightSection" onClick={(e) => e.stopPropagation()}> {/* 클릭 이벤트 전파 중지 */}
                 <div className="formContainer">
                     <div className="titleWrap">Welcome to BookPlayList! 😊📚</div>
                     <div className="contentWrap">
@@ -159,4 +159,4 @@ export default function Login({ onLogin }) { // onLogin prop을 통해 로그인
             </div>
         </div>
     );
-}
+}    

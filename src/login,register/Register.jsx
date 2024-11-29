@@ -59,7 +59,7 @@ export default function Register() {
 
             const data = await response.json();
             if (data.success) {
-                alert(data.message); // 사용 가능한 이메일 또는 중복된 이메일 메시지
+                alert(data.message);
                 setIsEmailChecked(data.success);
             } else {
                 alert(data.message);
@@ -83,12 +83,12 @@ export default function Register() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(username), // 백엔드에서 username 직접 받도록 수정
+                body: JSON.stringify(username),
             });
 
             const data = await response.json();
             if (data.success) {
-                alert(data.message); // 사용 가능한 닉네임 또는 중복된 닉네임 메시지
+                alert(data.message);
                 setIsUsernameChecked(data.success);
             } else {
                 alert(data.message);
@@ -126,7 +126,7 @@ export default function Register() {
 
             const data = await response.json();
             if (data.success) {
-                alert(data.message); // 회원가입 성공 메시지
+                alert(data.message); 
                 navigate('/login'); // 회원가입 성공 시 로그인 페이지로 이동
             } else {
                 alert(data.message || '회원가입 중 문제가 발생했습니다.');
@@ -141,12 +141,17 @@ export default function Register() {
         setNotAllow(!(emailValid && passwordValid && usernameValid && passwordMatch));
     }, [emailValid, passwordValid, usernameValid, passwordMatch]);
 
+    // 폼 바깥 영역을 클릭했을 때 메인 페이지로 이동하도록 하는 함수
+    const handlePageClick = () => {
+        navigate('/'); // 메인 페이지로 이동
+    };
+
     return (
-        <div className="page">
+        <div className="page" onClick={handlePageClick}>
             <div className="leftSection">
                 {/* 추가적인 설명 영역 */}
             </div>
-            <div className="rightSection">
+            <div className="rightSection" onClick={(e) => e.stopPropagation()}>
                 <div className="registerForm">
                     <div className="titleWrap">회원가입</div>
                     <div className="inputWrap">
