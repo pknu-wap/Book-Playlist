@@ -164,11 +164,12 @@ const closeModal = () => {
                 <p 
                   style={{
                     color:'darkgray',
-                    margin: "10px 0 0 40px",
+                    margin: "10px 0 0 10px",
                     width: "180px",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
+                    textAlign: "center", // 텍스트 가운데 정렬
                   }}
                 >
                   만든이: {playlist.username}
