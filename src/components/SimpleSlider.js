@@ -111,11 +111,12 @@ const SimpleSlider = () => {
               <h3
                 className="book-title"
                 style={{
-                  margin: "10px 0 0 50px",
+                  margin: "10px 0 0 35px",
                   width: "143.81px",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
+                  textAlign: "center", // 텍스트 가운데 정렬
                 }}
               >
                 {book.title}

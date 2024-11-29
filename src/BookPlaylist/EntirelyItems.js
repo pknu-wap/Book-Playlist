@@ -97,6 +97,7 @@ const EntireItems = () => {
                 <div
                   className="grid-item"
                   onClick={() => openModal(playlist.playlistId)}
+                  style={{textAlign:"center"}}
                 >
                   <img
                     src={`data:image/jpeg;base64,${playlist.base64Image || ""}`}

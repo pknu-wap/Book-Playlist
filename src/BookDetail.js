@@ -251,13 +251,13 @@ const handleDeleteComment = async (commentId) => {
         </div>
         <div className="book-title"> 
           <h1>{book.title}</h1>
-        <div className="book-authorpublisheraverage">
+        <div className="book-authorpublisher">
           <p>
             <strong>저자:</strong> {book.author}
-            </p> 
-          <p>
+            <span className="separator"></span>
             <strong>출판사:</strong> {book.publisher}
-            </p>
+            </p> 
+        <div className="book-average">
           <p>
           <strong>평점:</strong>{" "}
           {averageRating > 0 ? averageRating.toFixed(1) : "평가 없음"}
@@ -273,17 +273,23 @@ const handleDeleteComment = async (commentId) => {
             ))}
           </span>
           )}
-       </p>
-          <div className="book-description">
-          <p>
-            <strong>설명:</strong> {book.description}
           </p>
+        </div>
+        <div className="book-description">
+        <h3>줄거리</h3> 
+        <p>{book.description}</p>
           <button
-            className="like-button"
+            className={`like-button ${isLoadingLike ? "loading" : ""}`}
             onClick={toggleLike}
             disabled={isLoadingLike}
           >
-            {isLiked ? "♥ 찜 취소" : "♡ 찜하기"}
+            {isLoadingLike ? (
+              <div className="loader"></div> /* 로딩 애니메이션 표시 */
+             ) : isLiked ? (
+                "♥ 찜 취소"
+             ) : (
+              "♡ 찜하기"
+             )}
           </button>
         </div>
         </div>
