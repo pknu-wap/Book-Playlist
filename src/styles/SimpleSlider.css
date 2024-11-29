@@ -5,6 +5,7 @@
   height: 190.4px;
   border-radius: 10px;
   transition:transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .book_image:hover{
@@ -21,4 +22,8 @@
   border-radius: 50%;
   animation: playlist-spin 0.8s linear infinite;
   margin-top: 50px;
+}
+
+.slider-container img {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

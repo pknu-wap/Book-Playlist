@@ -154,11 +154,12 @@ const closeModal = () => {
                 />
                 <h3
                   style={{
-                    margin: "10px 0 0 40px",
+                    margin: "10px 0 0 20px",
                     width: "180px",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
+                    textAlign:"center",
                   }}
                 >{playlist.title}</h3>
                 <p 

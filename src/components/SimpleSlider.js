@@ -111,7 +111,7 @@ const SimpleSlider = () => {
               <h3
                 className="book-title"
                 style={{
-                  margin: "10px 0 0 35px",
+                  margin: "10px 0 0 40px",
                   width: "143.81px",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
@@ -124,11 +124,13 @@ const SimpleSlider = () => {
               <p
                 style={{
                   color: "darkgray",
-                  margin: "10px 0 0 55px",
+                  marginTop: '10px',
+                  marginLeft: '40px',
                   width: "143.81px",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
+                  textAlign: 'center',
                 }}
               >
                 {book.author}
