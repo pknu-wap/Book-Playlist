@@ -34,7 +34,7 @@ const Sidebar = () => {
                 to="/mypage" 
                 className={({ isActive }) => (isActive ? 'active-link' : '')} // active 클래스를 추가
               >
-                마이페이지
+                <p>마이페이지</p>
               </NavLink>
             </li>
             <li>

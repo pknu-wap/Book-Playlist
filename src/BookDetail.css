@@ -1,8 +1,15 @@
-/* 전체 페이지 스타일 */
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/woff2/Pretendard-Regular.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/woff/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
 .book-detail-page {
-    font-family: Arial, sans-serif;
+    font-family: 'Pretendard-Regular'; /* Pretendard 폰트를 우선 적용 */
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: #f9f9f9; /* 배경색 */
     max-width: 1080px; /* 페이지 너비 */
     margin: 0 auto; /* 중앙 정렬 */
 }
