@@ -50,24 +50,52 @@
 .like-button {
     position: absolute;
     top: 10px; /* 카드 내부 상단 */
-    right: 10px; /* 카드 우측 */
+    right: 70px; /* 카드 우측 */
     background-color: transparent;
     border: none;
     font-size: 20px;
     cursor: pointer;
     transition: transform 0.2s ease, color 0.2s ease; /* 부드러운 애니메이션 효과 */
     color: #000000; /* 기본 회색 */
-}
-
-/* 찜하기 상태일 때 빨간색으로 변경 */
-.like-button.active {
-    color: #ff4d4d; /* 찜하기 상태일 때 빨간색 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .like-button:hover {
     transform: scale(1.2); /* 호버 시 크기 확대 */
     color: #007bff; /* 호버 시 파란색 강조 */
 }
+
+.like-button.loading {
+    pointer-events: none; /* 로딩 중 클릭 방지 */
+    opacity: 0.7; /* 로딩 중 반투명 효과 */
+    color: #ccc; /* 로딩 중 회색 */
+}
+
+/* 로딩 애니메이션 */
+.like-button .loader {
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent; /* 투명한 배경 */
+    border-top: 2px solid #007bff; /* 로딩 바의 색상 */
+    border-radius: 50%;
+    animation: spin 1s linear infinite; /* 회전 애니메이션 */
+    position: absolute;
+    top:-40px;
+    left:-50px;
+}
+
+/* 로딩 애니메이션 키프레임 */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 
 /*책 제목 */
 .book-title {
